@@ -1,3 +1,4 @@
+#include "src/loader.h"
 #include <stdio.h>  /* printf && scanf */
 #include <stdlib.h> /* EXIT_SUCCESS; */
 

@@ -7,10 +7,10 @@ CFLAGS = -g -Wall -pedantic -O3 -std=c11
 # On force la derniere norme de compilation qui est C11
 
 #Liste des fichiers *.o à rassembler en un executable
-FICHIER =
+FICHIER = game.o piece.o main.o
 
 #Programme après la compilation
-OUT =
+OUT = test.exe
 
 #Compilation séparé
 CCSEP = $(CC) -c $(FLAGS)
@@ -23,6 +23,14 @@ all:$(FICHIER)
 # Exemple
 #cercle.o : cercle.c
 #	$(CCSEP) cercle.c
+
+game.o:src/game.c
+	gcc -c $(CFLAGS) src/game.c
+
+piece.o:src/piece.c
+	$(CCSEP) src/piece.c
+main.o:main.c
+	$(CCSEP) main.c
 
 # NE PAS TOUCHER EN BAS DE CETTE LIGNE
 # Nettoie les junk .o et le prog, surement pour recompiler à zéro

@@ -5,7 +5,7 @@
 ## Quick summary ##
 
 Repertoire Git pour le développement du projet de programmation impérative, Université Paris 13.
-Dylan, Mohammed, Rakib, Yoann
+(Dylan), Mohammed, Rakib
 
 # Version #
 * **v0.0**
