@@ -10,8 +10,8 @@ Dylan, Mohammed, Rakib, Yoann
 # Version #
 * **v0.0**
 
-*En attente du sujet...*
-*Le sujet devrait disponible le lundi 20 mars*
+**Le jeu à faire : Le Shigô**
+*Le sujet devrait disponible le mardi 21 mars d'après le prof*
 
 *1 mois pour boucler le projet*
 
