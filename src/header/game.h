@@ -24,4 +24,5 @@ typedef struct game_s {
 void afficher_echiquier(game_t *game_v);
 game_t *partie_creer();
 void partie_detruire(game_t *game_v);
+game_t *partie_nouvelle();
 #endif

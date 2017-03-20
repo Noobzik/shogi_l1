@@ -25,7 +25,7 @@ all:$(FICHIER)
 #	$(CCSEP) cercle.c
 
 game.o:src/game.c
-	gcc -c $(CFLAGS) src/game.c
+	$(CCSEP) src/game.c
 
 piece.o:src/piece.c
 	$(CCSEP) src/piece.c
