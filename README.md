@@ -111,6 +111,23 @@ Comme ça, s'il y a un problème, on peut revenir en arrière !!
 **Si vous trouvez un bug, Signalez le sur le bitbucket, pour pas qu'on l'oublie.
 L'objectif est 0 Warning + 0 Erreurs + 0 Probleme de mémoire (segmentation fault + pas le même nombre de malloc et free) + 0 bug / comportement fausse du programme**
 
+* Au sujets des mallocs *
+Je ne sais pas pourquoi, mais écrire les mallocs de la façon suivante
+```
+#!c
+int n = 5;
+int *tableau = malloc(sizeof(int)*n);
+free(tableau); 
+```
+Fait planter mon compilateur.
+Du coups écrivez comme ça pour le moment le temps que je règle mon problème...
+```
+#!c
+int n = 5;
+int *tableau =(int *) malloc(sizeof(int)*n);
+free(tableau); 
+```
+
 * En cas de segmentation fault, Debuggez le prog avec ** *valgrind* **
 * Pour signaler le(s) bug(s), reportez vous dans la partie Signalement de bug
 
