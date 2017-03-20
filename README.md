@@ -10,7 +10,7 @@ Dylan, Mohammed, Rakib, Yoann
 # Version #
 * **v0.0**
 
-**Le jeu à faire : Le Shigô**
+**Le jeu à faire : Le Shôgi**
 *Le sujet devrait disponible le mardi 21 mars d'après le prof*
 
 *1 mois pour boucler le projet*
@@ -89,7 +89,7 @@ Un exemple :
 #!c
 /**
  * Permet de connaitre si la case actuelle peut être selectionnable par l'utilisateur
- * en fonction du type de piece. Fait appel aux autres fonctions déplacement_diagonal / 
+ * en fonction du type de piece. Fait appel aux autres fonctions déplacement_diagonal /
  * pion / vertical / horizontal
  * @param une case
  * @return un entier
@@ -117,7 +117,7 @@ Je ne sais pas pourquoi, mais écrire les mallocs de la façon suivante
 #!c
 int n = 5;
 int *tableau = malloc(sizeof(int)*n);
-free(tableau); 
+free(tableau);
 ```
 Fait planter mon compilateur.
 Du coups écrivez comme ça pour le moment le temps que je règle mon problème...
@@ -125,7 +125,7 @@ Du coups écrivez comme ça pour le moment le temps que je règle mon problème.
 #!c
 int n = 5;
 int *tableau =(int *) malloc(sizeof(int)*n);
-free(tableau); 
+free(tableau);
 ```
 
 * En cas de segmentation fault, Debuggez le prog avec ** *valgrind* **
@@ -149,7 +149,7 @@ Procedure de mise en ligne des modification :
 
 
 1. 'Stash' les fichiers que avez modifié
-2. Ecrire un titre dans le commit + Un commentaire 
+2. Ecrire un titre dans le commit + Un commentaire
    * **IMPORTANT écrivez pas de la merde, s'il y a un probème, on va galerer a revenir en arrière !**
 3. Stage files /changes to Commit
 4. Push
