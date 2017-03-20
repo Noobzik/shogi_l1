@@ -172,35 +172,35 @@ char piece_caractere(piece_t piece_v) {
     switch (piece_v.type) {
       {
       case 1:
-        return 'R';
+        return 'r';
       }
       {
       case 2:
-        return 'T';
+        return 't';
       }
       {
       case 3:
-        return 'F';
+        return 'f';
       }
       {
       case 4:
-        return 'G';
+        return 'g';
       }
       {
       case 5:
-        return 'S';
+        return 's';
       }
       {
       case 6:
-        return 'C';
+        return 'c';
       }
       {
       case 7:
-        return 'L';
+        return 'l';
       }
       {
       case 8:
-        return 'P';
+        return 'p';
       }
       {
       case 9:
