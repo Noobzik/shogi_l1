@@ -9,25 +9,26 @@ void afficher_echiquier(game_t *game_v) {
   int x, y;
 
   printf("\n");
-  printf("                      0  1  2  3  4  5  6  7  8\n");
+  printf("                       0  1  2  3  4  5  6  7  8\n");
+  printf("                      __________________________\n");
 
   for (x = 0; x < 9; x++) {
     if (x < 6 && x > 1) {
-      printf("                   %d  ", x);
+      printf("                   %d | ", x);
     } else if (x < 6) {
       /* Player Indicator */
       if (game_v->player == 0) {
-        printf("  NOIR->           %d  ", x);
+        printf("  NOIR->           %d | ", x);
       } else {
-        printf("                   %d  ", x);
+        printf("                   %d | ", x);
       }
 
     } else if (x > 1) {
       /* Player Indicator */
       if (game_v->player == 1) {
-        printf("  BLANC->          %d  ", x);
+        printf("  BLANC->          %d | ", x);
       } else {
-        printf("                   %d  ", x);
+        printf("                   %d | ", x);
       }
     }
 
