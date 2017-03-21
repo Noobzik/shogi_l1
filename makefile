@@ -10,7 +10,7 @@ CFLAGS = -g -Wall -pedantic -O3 -std=c11
 FICHIER = game.o piece.o main.o
 
 #Programme après la compilation
-OUT = test.exe
+OUT = shogi
 
 #Compilation séparé
 CCSEP = $(CC) -c $(FLAGS)

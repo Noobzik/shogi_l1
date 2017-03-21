@@ -17,11 +17,13 @@ typedef enum {
   SELECT
 } piece_type_e;
 
+typedef enum { NON_PROMU, PROMU } piece_statut_e;
 /* Definitions des structures */
 
 typedef struct piece_s {
   piece_color_e color;
   piece_type_e type;
+  piece_statut_e statut;
 } piece_t;
 
 /* Prototype des fonctions */

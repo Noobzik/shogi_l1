@@ -9,13 +9,15 @@
  *
  * @return struct piece_s
  */
-piece_t piece_creer(piece_color_e piece_color_v, piece_type_e piece_type_v) {
+piece_t piece_creer(piece_color_e piece_color_v, piece_type_e piece_type_v,
+                    piece_statut_e piece_statut_v) {
 
   piece_t res;
 
   /* Initialiser */
   res.color = piece_color_v;
   res.type = piece_type_v;
+  res.statut = piece_statut_v;
 
   return res;
 }
@@ -40,72 +42,73 @@ int piece_couleur(piece_t piece_v) { return piece_v.color; }
 piece_t piece_identifier(char caracter_v) {
   if (caracter_v <= 90 && caracter_v >= 65) {
     switch (caracter_v) {
+      // Non promu joueur 0
       {
-      case 'R':
-        return piece_creer(NOIR, ROI);
-      }
-      {
-      case 'T':
-        return piece_creer(NOIR, TOUR);
-      }
-      {
-      case 'F':
-        return piece_creer(NOIR, FOU);
-      }
-      {
-      case 'G':
-        return piece_creer(NOIR, GOLD);
-      }
-      {
-      case 'S':
-        return piece_creer(NOIR, SILVER);
-      }
-      {
-      case 'N':
-        return piece_creer(NOIR, CAVALIER);
+      case 'P':
+        return piece_creer(NOIR, PION, NON_PROMU);
       }
       {
       case 'L':
-        return piece_creer(NOIR, LANCIER);
+        return piece_creer(NOIR, LANCIER, NON_PROMU);
       }
       {
-      case 'P':
-        return piece_creer(NOIR, PION);
+      case 'N':
+        return piece_creer(NOIR, CAVALIER, NON_PROMU);
+      }
+      {
+      case 'B':
+        return piece_creer(NOIR, FOU, NON_PROMU);
+      }
+      {
+      case 'R':
+        return piece_creer(NOIR, TOUR, NON_PROMU);
+      }
+      {
+      case 'S':
+        return piece_creer(NOIR, SILVER, NON_PROMU);
+      }
+      {
+      case 'G':
+        return piece_creer(NOIR, GOLD, NON_PROMU);
+      }
+      {
+      case 'K':
+        return piece_creer(NOIR, ROI, NON_PROMU);
       }
     }
   } else {
     switch (caracter_v) {
       {
-      case 'r':
-        return piece_creer(BLANC, ROI);
-      }
-      {
-      case 't':
-        return piece_creer(BLANC, TOUR);
-      }
-      {
-      case 'f':
-        return piece_creer(BLANC, FOU);
-      }
-      {
-      case 'g':
-        return piece_creer(BLANC, GOLD);
-      }
-      {
-      case 's':
-        return piece_creer(BLANC, SILVER);
-      }
-      {
-      case 'c':
-        return piece_creer(BLANC, CAVALIER);
+      case 'p':
+        return piece_creer(BLANC, PION, NON_PROMU);
       }
       {
       case 'l':
-        return piece_creer(BLANC, LANCIER);
+        return piece_creer(BLANC, LANCIER, NON_PROMU);
       }
       {
-      case 'p':
-        return piece_creer(BLANC, PION);
+      case 'n':
+        return piece_creer(BLANC, CAVALIER, NON_PROMU);
+      }
+      {
+      case 'b':
+        return piece_creer(BLANC, FOU, NON_PROMU);
+      }
+      {
+      case 'r':
+        return piece_creer(BLANC, TOUR, NON_PROMU);
+      }
+      {
+      case 's':
+        return piece_creer(BLANC, SILVER, NON_PROMU);
+      }
+      {
+      case 'g':
+        return piece_creer(BLANC, GOLD, NON_PROMU);
+      }
+      {
+      case 'k':
+        return piece_creer(BLANC, ROI, NON_PROMU);
       }
     }
   }
@@ -160,7 +163,12 @@ char piece_caractere(piece_t piece_v) {
         return 'P';
       }
       {
+
       case 9:
+        return 'D'; // Pions
+      }
+      {
+      case 15:
         return '*';
       }
       {
