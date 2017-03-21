@@ -5,16 +5,15 @@
 // Rakib
 /* Definitions des structures */
 
-/**
+/** Structure connu sous le nom de partie
  * Echiquier
  * Contient un tableau 9*9
  * Une file determinant l'historique des coups jouées
  * Une pile pour la liste des pieces capturées
  * Un booléen pour le tour de joueur
  */
-
 typedef struct game_s {
-  piece_t board[9][9];
+  piece_t board[11][11];
   //  file_list_t *played;
   //  pile_list_t *catched;
   int player;
