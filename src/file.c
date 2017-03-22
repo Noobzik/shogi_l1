@@ -22,6 +22,60 @@ void file_detruire_element(file_list_t *file_element_v) {
   free(file_element_v);
 }
 
+/** file_list_add
+ * Permet d'ajouter un element dans la liste
+ * Avant de l'ajouter, on récup les donénes du mouvement effectué, puis on creer
+ *l'élément et on l'on ajoute dans la liste
+ */
+void file_list_add(file_list_t *file_list_v, movement_t movement_v) {
+  file_element_t *file_element_tmp;
+
+  /* Initialize */
+  file_element_tmp = file_creer_element(movement_v);
+
+  if (file_list_vide(file_list_v)) {
+    file_list_v->debut = file_element_tmp;
+  } else {
+    file_list_v->fin->suivant = file_element_tmp;
+    file_element_tmp->precedent = file_list_v->fin;
+  }
+
+  file_list_v->fin = file_element_tmp;
+  file_list_v->taille++;
+}
+
+/** file_list_extract
+ *  Permet d'extraire un element de la liste
+ * @param  file_list_t - file_list_v
+ * @return  file_element_t
+ */
+file_element_t *file_list_extract(file_list_t *file_list_v) {
+  //======================================================================
+  // Variables
+  //======================================================================
+  file_element_t *res;
+
+  /* Initialize */
+  res = NULL;
+
+  //======================================================================
+  // Main
+  //======================================================================
+  if (!file_list_vide(file_list_v)) {
+    res = file_list_v->debut;
+
+    file_list_v->debut = res->suivant;
+    res->suivant = NULL;
+    file_list_v->taille--;
+
+    if (file_list_vide(file_list_v)) {
+      file_list_v->fin = NULL;
+    }
+  }
+
+  return res;
+}
+
 /** file_creer_list
  * Initialize une liste avec un pointeur vers le premier element et le dernier
  * element.
@@ -67,56 +121,3 @@ int file_list_vide(file_list_t *file_list_v) {
  * @return : int taille
  */
 int file_taille(file_list_t *file_list_v) { return file_list_v->taille; }
-
-/** file_list_extract
- *  Permet d'extraire un element de la liste
- * @param  file_list_t - file_list_v
- * @return  file_element_t
- */
-file_element_t *file_list_extract(file_list_t *file_list_v) {
-  //======================================================================
-  // Variables
-  //======================================================================
-  file_element_t *res;
-
-  /* Initialize */
-  res = NULL;
-
-  //======================================================================
-  // Main
-  //======================================================================
-  if (!file_list_vide(file_list_v)) {
-    res = file_list_v->debut;
-
-    file_list_v->debut = res->suivant;
-    res->suivant = NULL;
-    file_list_v->taille--;
-
-    if (file_list_vide(file_list_v)) {
-      file_list_v->fin = NULL;
-    }
-  }
-
-  return res;
-}
-
-/** file_list_add
- * Permet d'ajouter un element dans la liste
- * Avant de l'ajouter, on récup les donénes du mouvement effectué, puis on creer
- *l'élément et on l'on ajoute dans la liste
- */
-void file_list_add(file_list_t *file_list_v, movement_t movement_v) {
-  file_element_t *file_element_tmp;
-
-  /* Initialize */
-  file_element_tmp = file_creer_element(movement_v);
-
-  if (file_list_vide(file_list_v)) {
-    file_list_v->debut = file_element_tmp;
-  } else {
-    file_list_v->fin->suivant = file_element_tmp;
-  }
-
-  file_list_v->fin = file_element_tmp;
-  file_list_v->taille++;
-}

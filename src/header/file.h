@@ -2,7 +2,6 @@
 #define PILE_H
 #include "game.h"
 
-/* La file c'est pour les historique de coups */
 /* Definitions des structures */
 
 /** Structure Coordinate
@@ -41,7 +40,12 @@ typedef struct file_element_s {
   struct file_element_s *precedent;
 } file_element_t;
 
-/** file list */
+/** file list
+ *  Liste doublement chainé
+ *  Un pointeur vers le premier element de la liste
+ *  Un pointeur vers le dernier element de la liste
+ *  Sa taille
+ */
 typedef struct file_list_s {
   file_element_t *debut;
   file_element_t *fin;
@@ -61,6 +65,7 @@ file_list_t *file_creer_list();
 void file_detruire_list(file_list_t *file_list_v);
 int file_list_vide(file_list_t *file_list_v);
 int file_taille(file_list_t *file_list_v);
+
 void file_thread();
 movement_t file_unthread();
 
