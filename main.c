@@ -39,10 +39,10 @@ int main() {
   m3.output = coordinate;
 
   file_list_t *liste = file_creer_list();
-  file_list_add(liste, m1);
-  file_list_add(liste, m2);
-  file_list_add(liste, m3);
-  file_list_add(liste, m2);
+  file_list_add(liste, m1, 0, 0);
+  file_list_add(liste, m2, 0, 0);
+  file_list_add(liste, m3, 0, 0);
+  file_list_add(liste, m2, 0, 0);
 
   printf("Taille de la liste : %d \n Affichage liste -->\n",
          file_taille(liste));

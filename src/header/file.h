@@ -55,10 +55,12 @@ typedef struct file_list_s {
 //======================================================================
 // Prototype
 //======================================================================
-file_element_t *file_creer_element();
+file_element_t *file_creer_element(movement_t movement_v, int promotion_v,
+                                   int capture_v);
 void file_destruire_element();
 
-void file_list_add(file_list_t *file_list_v, movement_t movement_v);
+void file_list_add(file_list_t *file_list_v, movement_t movement_v,
+                   int promotion_v, int capture_v);
 file_element_t *file_list_extract(file_list_t *file_list_v);
 
 file_list_t *file_creer_list();
@@ -66,6 +68,7 @@ void file_detruire_list(file_list_t *file_list_v);
 int file_list_vide(file_list_t *file_list_v);
 int file_taille(file_list_t *file_list_v);
 
+// Je toucherai sa plus tard...
 void file_thread();
 movement_t file_unthread();
 

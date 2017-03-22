@@ -5,11 +5,16 @@
  * Permet de creer un element de la liste (Maillon)
  * Parameters :
  * @param movement_t movement_v
+ *        int promotion_v
+ *        int capture_v
  * @return file_element_t
  */
-file_element_t *file_creer_element(movement_t movement_v) {
+file_element_t *file_creer_element(movement_t movement_v, int promotion_v,
+                                   int capture_v) {
   file_element_t *res = (file_element_t *)malloc(sizeof(file_element_t));
   res->movement = movement_v;
+  res->promotion = promotion_v;
+  res->capture = capture_v;
   res->suivant = NULL;
   res->precedent = NULL;
   return res;
@@ -27,11 +32,12 @@ void file_detruire_element(file_list_t *file_element_v) {
  * Avant de l'ajouter, on récup les donénes du mouvement effectué, puis on creer
  *l'élément et on l'on ajoute dans la liste
  */
-void file_list_add(file_list_t *file_list_v, movement_t movement_v) {
+void file_list_add(file_list_t *file_list_v, movement_t movement_v,
+                   int promotion_v, int capture_v) {
   file_element_t *file_element_tmp;
 
   /* Initialize */
-  file_element_tmp = file_creer_element(movement_v);
+  file_element_tmp = file_creer_element(movement_v, promotion_v, capture_v);
 
   if (file_list_vide(file_list_v)) {
     file_list_v->debut = file_element_tmp;
