@@ -7,16 +7,16 @@ CFLAGS = -g -Wall -pedantic -O3 -std=c11
 # On force la derniere norme de compilation qui est C11
 
 #Liste des fichiers *.o à rassembler en un executable
-FICHIER = game.o piece.o main.o
+FICHIER = game.o piece.o file.o main.o
 
 #Programme après la compilation
 OUT = shogi
 
 #Compilation séparé
-CCSEP = $(CC) -c $(FLAGS)
+CCSEP = $(CC) -c $(CFLAGS)
 
 all:$(FICHIER)
-	$(CC) $(FICHIER) $(FLAGS)-lm -o $(OUT)
+	$(CC) $(FICHIER) $(CFLAGS) -lm -o $(OUT)
 
 # Ici les dépendances de compilation de chaque ficher
 # La commande à utiliser est $(CCSEP) ficher.c
@@ -29,6 +29,10 @@ game.o:src/game.c
 
 piece.o:src/piece.c
 	$(CCSEP) src/piece.c
+
+file.o:src/file.c
+	$(CCSEP) src/file.c
+
 main.o:main.c
 	$(CCSEP) main.c
 
@@ -42,7 +46,7 @@ clean:
 clean-atom:
 	rm *.o
 	rm $(OUT)
-	rm *.gch
+	rm src/header/*.gch
 
 # Sert a re-compiler à partir de 0
 rebuild:clean all
@@ -54,5 +58,5 @@ rebuild-run: rebuild
 
 # Compile le programme et execute directement, pour les flemmard du fleche haut
 build-run:$(FICHIER)
-	$(CC) $(FICHIER) $(FLAGS)-lm -o $(OUT)
+	$(CC) $(FICHIER) $(CFLAGS) -lm -o $(OUT)
 	./$(OUT)
