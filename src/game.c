@@ -1,4 +1,5 @@
 #include "header/game.h"
+#include "header/file.h"
 #include "header/piece.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,26 +7,25 @@
 
 /** Afficher_echiquier
  * Description :
- * La premiere boucle for permet l'espacement et d'afficher le tour actuelle du joueur
- * La deuxieme boucle for affiche le contenue de chaque case de l'échiquier
- * Parameters :
+ * La premiere boucle for permet l'espacement et d'afficher le tour actuelle du
+ * joueur La deuxieme boucle for affiche le contenue de chaque case de
+ * l'échiquier Parameters :
  * @param : game_t - game_v
  * @return : VOID
-*/
+ */
 void afficher_echiquier(game_t *game_v) {
 
- /* Variables de boucles pour les coordonnes*/
+  /* Variables de boucles pour les coordonnes*/
   int x, y;
 
   printf("\n");
   printf("                       0  1  2  3  4  5  6  7  8  9  10\n");
   printf("                      _________________________________\n");
 
-
   for (x = 0; x < 11; x++) {
     if (x < 6 && x > 2) {
       printf("                   %d  ", x);
-  } else if (x < 6) {
+    } else if (x < 6) {
       /* Player Indicator */
       if (game_v->player == 0) {
         printf("  NOIR->           %d  ", x);
@@ -35,12 +35,12 @@ void afficher_echiquier(game_t *game_v) {
 
     } else if (x > 1) {
       /* Player Indicator */
-        if (game_v->player == 1) {
-          printf("  BLANC->          %d  ", x);
-      } else if(x == 10){
-          printf("                  %d  ", x);
+      if (game_v->player == 1) {
+        printf("  BLANC->          %d  ", x);
+      } else if (x == 10) {
+        printf("                  %d  ", x);
       } else
-          printf("                   %d  ", x);
+        printf("                   %d  ", x);
     }
 
     /* Selection detector */
@@ -155,4 +155,31 @@ game_t *partie_nouvelle() {
   res->board[9][9] = piece_creer(NOIR, LANCIER, NON_PROMU);
 
   return res;
+}
+
+/** Case vide
+ * Permet de savoir si la case est vide ou pas
+ * @param piece_t piece_v
+ * @return int
+ */
+int case_vide(piece_t piece_v) { return (piece_v.type == VIDE) ? 1 : 0; }
+
+/** Modifier case
+ *  Permet de modifier le contenue de la case
+ *  @param game_t *game_v
+ *         piece_t piece_v
+ *         coordinate_t coordonate_v
+ *  @return RIEN
+ */
+void modifier_case(game_t *game_v, piece_t piece_v, coordinate_t coordinate_v) {
+  piece_t res = piece_creer(piece_v.color, piece_v.type, piece_v.statut);
+  game_v->board[coordinate_v.x][coordinate_v.y] = res;
+}
+
+/** Changer joueur
+ * Permet de changer le tour actuelle du joueur
+ * @param game_t *game_v
+ */
+void changer_joueur(game_t *game_v) {
+  (game_v->player == 0) ? (game_v->player = 1) : (game_v->player = 0);
 }

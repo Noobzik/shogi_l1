@@ -1,7 +1,5 @@
 #ifndef PILE_H
 #define PILE_H
-#include "game.h"
-
 /* Definitions des structures */
 
 /** Structure Coordinate
