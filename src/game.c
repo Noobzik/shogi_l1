@@ -89,7 +89,7 @@ game_t *partie_nouvelle() {
   /* Initialize */
   res = partie_creer();
   //    res -> catched = pile_create();
-  //    res -> played  = file_create();
+  //    res -> file  = file_create();
   res->player = 0;
 
   //======================================================================
@@ -182,4 +182,49 @@ void modifier_case(game_t *game_v, piece_t piece_v, coordinate_t coordinate_v) {
  */
 void changer_joueur(game_t *game_v) {
   (game_v->player == 0) ? (game_v->player = 1) : (game_v->player = 0);
+}
+
+/** saisie_case
+ *  Permet de saisir les coordonnées d'une case
+ *  Cette fonction est un substitut du scanf
+ *  Complexite : Temps O(p) Espace  O(1)
+ *  Parameters :
+ *  @param VIDE
+ *  @return coordinate_t
+ */
+coordinate_t saisie_case() {
+
+  coordinate_t res;
+  char *p;
+  char s[100];
+
+  printf("x: ");
+
+  while (fgets(s, sizeof(s), stdin)) {
+    res.y = strtol(s, &p, 10);
+
+    if (p == s || *p != '\n') {
+      printf("x: ");
+    } else {
+      break;
+    }
+  }
+
+  printf("y: ");
+  /* Le fgets marche comme un scanf*/
+  while (fgets(s, sizeof(s), stdin)) {
+    res.x = strtol(s, &p, 10);
+    if (p == s || *p != '\n') {
+      printf("y: ");
+    } else {
+      break;
+    }
+  }
+
+  if (res.x > 0 && res.x < 11) {
+    if (res.y > 0 && res.y < 11) {
+      return res;
+    }
+  }
+  return res;
 }

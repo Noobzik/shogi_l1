@@ -7,7 +7,7 @@
 
 /** Structure connu sous le nom de partie
  * Echiquier
- * Contient un tableau 9*9
+ * Contient un tableau 11*11
  * Une file determinant l'historique des coups jouées
  * Une pile pour la liste des pieces capturées
  * Un booléen pour le tour de joueur
@@ -27,4 +27,5 @@ game_t *partie_nouvelle();
 int case_vide(piece_t piece_v);
 void modifier_case(game_t *game_v, piece_t piece_v, coordinate_t coordinate_v);
 void changer_joueur(game_t *game_v);
+coordinate_t saisie_case();
 #endif
