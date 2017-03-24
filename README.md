@@ -76,10 +76,11 @@ Le prototype des fonctions et des structures doivent être déclarées dans un f
 Les commentaires pour les fonctions auront le style suivant :
 ```
 #!c
-/**
+/** nom_de_la_fonction()
  * Description de la fonction
- * @param
- * @return
+ * Complexité : Espace O() - Temps O()
+ * @param type_t variable_v
+ * @return "juste le type"
  */
 ```
 
@@ -91,8 +92,8 @@ Un exemple :
  * Permet de connaitre si la case actuelle peut être selectionnable par l'utilisateur
  * en fonction du type de piece. Fait appel aux autres fonctions déplacement_diagonal /
  * pion / vertical / horizontal
- * @param une case
- * @return un entier
+ * @param case_t case_v
+ * @return int
  */
 ```
 
