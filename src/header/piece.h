@@ -3,7 +3,7 @@
 
 /* Definitions des énumérations */
 
-typedef enum { NOIR, BLANC, VIDE_PIECE } piece_color_e;
+typedef enum { BLANC, NOIR, VIDE_PIECE } piece_color_e;
 typedef enum {
   VIDE,
   ROI,
@@ -38,7 +38,8 @@ typedef struct piece_s {
 } piece_t;
 
 /* Prototype des fonctions */
-piece_t piece_creer(piece_color_e piece_color_v, piece_type_e piece_type_v, piece_statut_e piece_statut_v);
+piece_t piece_creer(piece_color_e piece_color_v, piece_type_e piece_type_v,
+                    piece_statut_e piece_statut_v);
 int piece_couleur(piece_t piece_v);
 piece_t piece_identifier(char caracter_v);
 char piece_caractere(piece_t piece_v);

@@ -1,5 +1,6 @@
 #ifndef PILE_H
 #define PILE_H
+#include "piece.h"
 /* Definitions des structures */
 
 /** Structure Coordinate
@@ -53,12 +54,12 @@ typedef struct file_list_s {
 //======================================================================
 // Prototype
 //======================================================================
-file_element_t *file_creer_element(movement_t movement_v, int promotion_v,
-                                   int capture_v);
-void file_destruire_element();
+file_element_t *file_creer_element(movement_t movement_v,
+                                   piece_statut_e promotion_v, int capture_v);
+void file_detruire_element();
 
 void file_list_add(file_list_t *file_list_v, movement_t movement_v,
-                   int promotion_v, int capture_v);
+                   piece_statut_e promotion_v, int capture_v);
 file_element_t *file_list_extract(file_list_t *file_list_v);
 
 file_list_t *file_creer_list();

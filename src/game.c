@@ -1,8 +1,13 @@
 #include "header/game.h"
 #include "header/file.h"
 #include "header/piece.h"
+#include "header/pile.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#define MAX_CHAR 256
+coordinate_t COORDINATE_NULL = {42, 42};
 // Rakib
 
 /** Afficher_echiquier
@@ -13,7 +18,7 @@
  * @param : game_t - game_v
  * @return : VOID
  */
-void afficher_echiquier(game_t *game_v) {
+void afficher_echiquier(game_t *game_v, coordinate_t COORDINATE_NULL) {
 
   /* Variables de boucles pour les coordonnes*/
   int x, y;
@@ -71,7 +76,15 @@ game_t *partie_creer() {
 /** partie_detruire
  * Détruit tout simplement l'echiquier
  */
-void partie_detruire(game_t *game_v) { free(game_v); }
+void partie_detruire(game_t *game_v) {
+
+  // ------- TEMPORAIRE ---------------------//
+  //  file_detruire_list(game_v->file);
+  //  pile_detruire(game_v->capture);
+  // --------TEMPORAIRE ---------------------//
+
+  free(game_v);
+}
 
 /** partie_nouvelle
  * Description: Initialize tout les case en piece VIDE
@@ -88,13 +101,9 @@ game_t *partie_nouvelle() {
 
   /* Initialize */
   res = partie_creer();
-  //    res -> catched = pile_create();
-  //    res -> played  = file_create();
+  res->capture = pile_create();
+  res->file = file_creer_list();
   res->player = 0;
-
-  //======================================================================
-  // Main
-  //======================================================================
 
   /* Remplissage case vide */
   for (x = 0; x < 11; x++) {
@@ -182,4 +191,438 @@ void modifier_case(game_t *game_v, piece_t piece_v, coordinate_t coordinate_v) {
  */
 void changer_joueur(game_t *game_v) {
   (game_v->player == 0) ? (game_v->player = 1) : (game_v->player = 0);
+}
+
+/** saisie_case
+ *  Permet de saisir les coordonnées d'une case
+ *  Cette fonction est un substitut du scanf
+ *  Complexite : Temps O(p) Espace  O(1)
+ *  Parameters :
+ *  @param VIDE
+ *  @return coordinate_t
+ */
+coordinate_t saisie_case() {
+
+  coordinate_t res;
+  char *p;
+  char s[100];
+
+  printf("x: ");
+
+  while (fgets(s, sizeof(s), stdin)) {
+    res.y = strtol(s, &p, 10);
+
+    if (p == s || *p != '\n') {
+      printf("x: ");
+    } else {
+      break;
+    }
+  }
+
+  printf("y: ");
+  /* Le fgets marche comme un scanf*/
+  while (fgets(s, sizeof(s), stdin)) {
+    res.x = strtol(s, &p, 10);
+    if (p == s || *p != '\n') {
+      printf("y: ");
+    } else {
+      break;
+    }
+  }
+
+  if (res.x > 0 && res.x < 11) {
+    if (res.y > 0 && res.y < 11) {
+      return res;
+    }
+  }
+  return res;
+}
+
+/** game_seperator
+ */
+void game_seperator() {
+  //======================================================================
+  // Main
+  //======================================================================
+  printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+         "\n\n\n\n\n\n");
+}
+/*-----------------------------------------------------------------------------------------*/
+/**
+ * game buffer
+ */
+void game_buffer() {
+  //======================================================================
+  // Variables
+  //======================================================================
+  char empty_buffer;
+  //======================================================================
+  // Variables
+  //======================================================================
+  do
+    empty_buffer = getchar();
+  while (empty_buffer != '\n' && empty_buffer != EOF);
+}
+
+/**
+ * game exit
+ */
+int game_exit(game_t *game_v) {
+  //======================================================================
+  // Main
+  //======================================================================
+
+  file_detruire_list(game_v->file);
+  pile_detruire(game_v->capture);
+  partie_detruire(game_v);
+
+  return 0;
+}
+
+/**
+ * game select
+ *
+ * Parameters:
+ *     char - game_command
+ *     char - select_v
+ *
+ * @return int
+ */
+int game_selector(char game_command[MAX_CHAR], char select_v[MAX_CHAR]) {
+  //======================================================================
+  // Main
+  //======================================================================
+  if (strcmp(game_command, select_v) == 0) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+void partie_jouer(game_t *game_v) {
+  //======================================================================
+  // Variables
+  //======================================================================
+  char game_command[MAX_CHAR] = "";
+  char *game_save_name = (char *)malloc(MAX_CHAR);
+  char *game_save_path = (char *)malloc(MAX_CHAR);
+  char game_exit_confirmation[MAX_CHAR];
+
+  coordinate_t game_input_tmp, game_output_tmp;
+
+  /* Game setting */
+  int game_command_dev = 0;
+  int game_play = 1;
+
+  //======================================================================
+  // Main
+  //======================================================================
+  /* First chess board display*/
+
+  printf("Je suis une poire.");
+  game_seperator();
+  printf("Nouvelle partie.\n");
+
+  /* Enter loop */
+  afficher_echiquier(game_v, COORDINATE_NULL);
+  printf("\n\n\n");
+
+  /* Main loop */
+  while (game_play) {
+
+    /* Command input */
+    printf("Entrer une commande: ");
+
+    if (scanf("%19s", game_command) != 1) {
+      /* Separator */
+      game_seperator();
+
+      printf("Entrer au moins un caractere.\n");
+
+      /* Enter loop */
+      afficher_echiquier(game_v, COORDINATE_NULL);
+      printf("\n\n\n");
+    }
+
+    game_buffer();
+
+    /* Help command */
+    if (game_selector(game_command, "help")) {
+
+      /* Separator */
+      game_seperator();
+
+      /* Advanced command */
+      if (game_command_dev) {
+        printf("PASS                  Passe le tour du joueur.\n");
+        printf(
+            "FILE                  Affiche lse donnes contenu dans la file.\n");
+        printf(
+            "PILE                  Affiche les donnes contenu dans la pile.\n");
+        printf("CELL                  Inspecter une cellule.\n");
+      } else {
+        printf("DEV                   Pour activer les command developpeur.\n");
+      }
+      printf("\n");
+
+      /* Classic command */
+      printf("SURREND               Declarer forfait.\n");
+      printf(
+          "MOVE                  Selectionner le deplacement d'une piece.\n");
+      printf("BACK                  Restaurer le deplacement precedent.\n");
+      printf("SAVE                  Sauvegarder la partie.\n");
+      printf("EXIT                  Quitter le jeu.\n");
+
+      /* Enter loop */
+      afficher_echiquier(game_v, COORDINATE_NULL);
+      printf("\n\n\n");
+
+      /* Developper command */
+    } else if (game_selector(game_command, "dev")) {
+
+      /* Separator */
+      game_seperator();
+
+      if (game_command_dev == 0) {
+        printf("Les commandes developpeur sont active,\nsaisissez 'help' pour "
+               "en savoir plus sur les commandes.\n");
+        game_command_dev = 1;
+      } else {
+        printf("Les commandes developpeur ont ete desactive.\n");
+        game_command_dev = 0;
+      }
+
+      /* Enter loop */
+      afficher_echiquier(game_v, COORDINATE_NULL);
+      printf("\n\n\n");
+
+      /* Developper command */
+    } else if (game_selector(game_command, "pass") && game_command_dev) {
+
+      /* Separator */
+      game_seperator();
+
+      changer_joueur(game_v);
+
+      /* Enter loop */
+      afficher_echiquier(game_v, COORDINATE_NULL);
+      printf("\n\n\n");
+
+      /* Developper command file */
+    } else if (game_selector(game_command, "file") && game_command_dev) {
+
+      /* Separator */
+      game_seperator();
+
+      //      debug_file(game_v);
+
+      /* Enter loop */
+      afficher_echiquier(game_v, COORDINATE_NULL);
+      printf("\n\n\n");
+
+      /* Developper command pile */
+      //    } else if (game_selector(game_command, "pile") && game_command_dev)
+      //    {
+
+      /* Separator */
+      //      game_seperator();
+
+      //      debug_pile(game_v);
+
+      /* Enter loop */
+      afficher_echiquier(game_v, COORDINATE_NULL);
+      printf("\n\n\n");
+
+      /* Developper command clear */
+    } else if (game_selector(game_command, "cell") && game_command_dev) {
+
+      /* Input */
+      /* Separator */
+      game_seperator();
+      printf("Saisir les coordonnees d'une piece:\n");
+
+      /* Enter loop */
+      afficher_echiquier(game_v, COORDINATE_NULL);
+      printf("\n\n\n");
+      game_input_tmp = saisie_case();
+
+      /* Separator */
+      game_seperator();
+
+      //      debug_cell(game_v, game_input_tmp);
+
+      /* Enter loop */
+      afficher_echiquier(game_v, COORDINATE_NULL);
+      printf("\n\n\n");
+
+      /* Surrend command */
+    } else if (game_selector(game_command, "surrend")) {
+
+      /* Separator */
+      game_seperator();
+
+      changer_joueur(game_v);
+      printf("Le joueur ");
+
+      if (game_v->player == 0) {
+        printf("1");
+      } else if (game_v->player == 1) {
+        printf("2");
+      }
+
+      printf(" a gagner la partie.\n");
+
+      /* Exit loop */
+      afficher_echiquier(game_v, COORDINATE_NULL);
+      game_play = 0;
+
+      /* Move command */
+    } else if (game_selector(game_command, "move")) {
+
+      /* Input */
+      // do {
+      /* Separator */
+      game_seperator();
+      printf("Saisir les coordonnees d'une piece:\n");
+
+      /* Enter loop */
+      afficher_echiquier(game_v, COORDINATE_NULL);
+      printf("\n\n\n");
+      game_input_tmp = saisie_case();
+      //} while (!movement_valid_input(game_v, game_input_tmp));
+
+      printf("\n");
+
+      /* Output */
+      // do {
+      /* Separator */
+      game_seperator();
+      printf("Vous avez selectionner la piece '");
+      piece_afficher(game_v->board[game_input_tmp.x][game_input_tmp.y]);
+      printf("' de coordonnees (%d;%d) du joueur ", game_input_tmp.x,
+             game_input_tmp.y);
+      printf("%d.", game_v->board[game_input_tmp.x][game_input_tmp.y].color);
+      printf("\nSaisir les coordonnees du movement:\n");
+
+      /* Enter loop */
+      afficher_echiquier(game_v, game_input_tmp);
+      printf("\n\n\n");
+      game_output_tmp = saisie_case();
+      //} while (!movement_valid_output(game_v, game_output_tmp));
+
+      /* Separator */
+      game_seperator();
+      // depalcement_valide(game_v, game_input_tmp, game_output_tmp);
+
+      /* Enter loop */
+      afficher_echiquier(game_v, COORDINATE_NULL);
+      printf("\n\n\n");
+
+      /* Back command */
+    } else if (game_selector(game_command, "back")) {
+
+      /* Separator */
+      game_seperator();
+
+      if (!file_list_vide(game_v->file)) {
+        printf("L'annulation a ete effectue.\n");
+        // annuler_deplacement(game_v);
+      } else {
+        printf("L'annulation a echoue.\n");
+      }
+
+      /* Enter loop */
+      afficher_echiquier(game_v, COORDINATE_NULL);
+      printf("\n\n\n");
+
+      /* Save command */
+    } else if (game_selector(game_command, "exit")) {
+
+      /* Separator */
+      game_seperator();
+
+      printf("Quitter.\n");
+
+      /* Enter loop */
+      afficher_echiquier(game_v, COORDINATE_NULL);
+      printf("\n\n");
+      printf("Etes vous sur de quitter sans sauvegarder? (oui/non)\n");
+
+      if (scanf("%19s", game_exit_confirmation) != 1) {
+        /* Separator */
+        game_seperator();
+
+        printf("Entrer au moins un caractere.\n");
+
+        /* Enter loop */
+        afficher_echiquier(game_v, COORDINATE_NULL);
+        printf("\n\n\n");
+      }
+
+      if (strcmp(game_exit_confirmation, "oui") == 0) {
+
+        /* Separator */
+        game_seperator();
+        printf("Merci d'avoir jouer a ce jeu.\n");
+
+        /* Enter loop */
+        afficher_echiquier(game_v, COORDINATE_NULL);
+        free(game_save_name);
+        free(game_save_path);
+
+        game_play = game_exit(game_v);
+      } else {
+        /* Separator */
+        game_seperator();
+
+        printf("Sauvegarde.\n");
+
+        /* Enter loop */
+        afficher_echiquier(game_v, COORDINATE_NULL);
+        printf("\n\n\n");
+
+        printf("Entrer le nom de la partie:");
+        fgets(game_save_name, MAX_CHAR, stdin);
+
+        /* Separator */
+        game_seperator();
+
+        /* Enter loop */
+        afficher_echiquier(game_v, COORDINATE_NULL);
+        printf("\n\n\n");
+
+        printf("Entrer l'emplacement de la sauvegarder:");
+
+        fgets(game_save_path, MAX_CHAR, stdin);
+
+        /* Separator */
+        game_seperator();
+
+        printf("La partie a ete sauvergarder.");
+
+        //        partie_sauvegarder(game_v, game_save_name, game_save_path);
+
+        /* Enter loop */
+        afficher_echiquier(game_v, COORDINATE_NULL);
+
+        game_play = game_exit(game_v);
+        free(game_save_name);
+        free(game_save_path);
+      }
+
+      /* Unknown command */
+    } else {
+
+      /* Separator */
+      game_seperator();
+
+      printf("'%s' n'est pas reconnu comme une commande,\nsaisissez 'help' "
+             "pour en savoir plus sur les commandes.\n",
+             game_command);
+
+      /* Enter loop */
+      afficher_echiquier(game_v, COORDINATE_NULL);
+      printf("\n\n\n");
+    }
+  }
 }

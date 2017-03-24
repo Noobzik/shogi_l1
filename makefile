@@ -7,7 +7,7 @@ CFLAGS = -g -Wall -pedantic -O3 -std=c11
 # On force la derniere norme de compilation qui est C11
 
 #Liste des fichiers *.o à rassembler en un executable
-FICHIER = game.o piece.o file.o main.o
+FICHIER = game.o piece.o file.o pile.o main.o
 
 #Programme après la compilation
 OUT = shogi
@@ -33,6 +33,9 @@ piece.o:src/piece.c
 file.o:src/file.c
 	$(CCSEP) src/file.c
 
+pile.o:src/pile.c
+	$(CCSEP) src/pile.c
+
 main.o:main.c
 	$(CCSEP) main.c
 
@@ -44,9 +47,9 @@ clean:
 
 # Nettoie les fichier junk généré par Atom linter, en plus du prog, si vous avez touché au .h et .c en meme temps
 clean-atom:
+	rm src/header/*.gch
 	rm *.o
 	rm $(OUT)
-	rm src/header/*.gch
 
 # Sert a re-compiler à partir de 0
 rebuild:clean all

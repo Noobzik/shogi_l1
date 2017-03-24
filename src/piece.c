@@ -176,8 +176,7 @@ piece_t piece_identifier(char caracter_v) {
  * Permet d'associer chaque numéro à chaque piece en fonction du type enuméré
  * et de la couleur de piece
  * Parameters:
- *     piece_t - piece_v
- *
+ * @param    piece_t - piece_v
  * @return char
  */
 char piece_caractere(piece_t piece_v) {

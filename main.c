@@ -1,4 +1,4 @@
-#include "src/header/file.h"
+//#include "src/header/file.h"
 #include "src/header/game.h"
 #include <stdio.h>  /* printf && scanf */
 #include <stdlib.h> /* EXIT_SUCCESS; */
@@ -15,11 +15,8 @@ int main() {
   /* Déclarations des variables */
 
   game_t *game_new = partie_nouvelle();
-
+  partie_jouer(game_new);
   /* Début du programme principale */
-
-  afficher_echiquier(game_new);
-  partie_detruire(game_new);
 
   /* Valeur de fonction */
 

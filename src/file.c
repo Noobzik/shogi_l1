@@ -1,4 +1,5 @@
 #include "header/file.h"
+#include "header/piece.h"
 #include <stdlib.h>
 
 /**file creer Element
@@ -9,8 +10,8 @@
  *        int capture_v
  * @return file_element_t
  */
-file_element_t *file_creer_element(movement_t movement_v, int promotion_v,
-                                   int capture_v) {
+file_element_t *file_creer_element(movement_t movement_v,
+                                   piece_statut_e promotion_v, int capture_v) {
   file_element_t *res = (file_element_t *)malloc(sizeof(file_element_t));
   res->movement = movement_v;
   res->promotion = promotion_v;
@@ -33,7 +34,7 @@ void file_detruire_element(file_list_t *file_element_v) {
  *l'élément et on l'on ajoute dans la liste
  */
 void file_list_add(file_list_t *file_list_v, movement_t movement_v,
-                   int promotion_v, int capture_v) {
+                   piece_statut_e promotion_v, int capture_v) {
   file_element_t *file_element_tmp;
 
   /* Initialize */
