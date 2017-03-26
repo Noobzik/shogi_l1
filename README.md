@@ -5,10 +5,19 @@
 ## Quick summary ##
 
 Repertoire Git pour le développement du projet de programmation impérative, Université Paris 13.
-(Dylan), Mohammed, Rakib
+Rakib
 
 # Version #
-* **v0.0**
+* **v0.1**
+
+## CHANGELOGS : ##
+* Implémentation de 4 Fichier sources avec leur header respectif(game.c / file.c / pile.c /piece.c)
+* Remise en conformité au sujet en date du 21 mars 2017 v2
+### Notes ###
+* Le main servira actuellement de test
+### Changements à venir ###
+* Détails des commentaires dans certaines parties du programme
+* Introductions aux validation des mouvement et de leurs restrictions (Avec implémentation de l'aide visuel SELECT)
 
 **Le jeu à faire : Le Shôgi**
 *Le sujet devrait disponible le mardi 21 mars d'après le prof*
