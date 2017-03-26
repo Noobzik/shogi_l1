@@ -5,36 +5,47 @@
 ## Quick summary ##
 
 Repertoire Git pour le développement du projet de programmation impérative, Université Paris 13.
-Rakib
-
-# Version #
-* **v0.1**
-
-## CHANGELOGS : ##
-* Implémentation de 4 Fichier sources avec leur header respectif(game.c / file.c / pile.c /piece.c)
-* Remise en conformité au sujet en date du 21 mars 2017 v2
-### Notes ###
-* Le main servira actuellement de test
-### Changements à venir ###
-* Détails des commentaires dans certaines parties du programme
-* Introductions aux validation des mouvement et de leurs restrictions (Avec implémentation de l'aide visuel SELECT)
+* Rakib
 
 **Le jeu à faire : Le Shôgi**
-*Le sujet devrait disponible le mardi 21 mars d'après le prof*
+*Le sujet est disponible sur l'ENT, on attend la version définitif avant de l'inclure dans le répertoire*
 
 *1 mois pour boucler le projet*
 
-### How do I get set up? ###
+# Version : 0.1 #
 
-* Summary of set up
+# CHANGELOGS : #
+* Implémentation de 4 Fichier sources avec leur header respectif(game.c / file.c / pile.c /piece.c)
+* Remise en conformité au sujet en date du 21 mars 2017 v2
+## Notes ##
+* Le main servira actuellement de test
+## Changements à venir ##
+* Détails des commentaires dans certaines parties du programme
+* Introductions aux validation des mouvement et de leurs restrictions (Avec implémentation de l'aide visuel SELECT)
 
-Il faut installer GitKraken pour pouvoir mettre à jour le prog. (Les détails sont en bas).
+## Ce qui reste à faire ##
+* Mouvements avec leurs validations et leurs restrictions
+* La gestions des sauvegardes des fichiers
 
-* Configuration
 
-* Compilation du projet - Commandes make
+# Méthodes de travail #
 
-Le fichier makefile fourni dans ce projet possède plusieurs options pour les dévellopeurs. La liste complète ce trouve ici.
+On va utiliser un repertoire privée en ligne sur bitbucket (Un alternative de GitHub)
+L'avantage est de ne plus utiliser de clées USB : source de versions différentes et de problème de synchronisations
+On pourra determiner plusieurs versions pas à pas, c'est à dire qu'il y aura une version pour les mouvement, une autre pour l'affichage etc etc...
+On pourra retracer l'historique des modifications
+Un gestion de signalement de bug qui vont prendre du temps à les régler, pour pas qu'on le zape
+
+## Gitkraken ##
+
+
+Il faut installer GitKraken (ou autre logiciel de gestion de repertoire si vous êtes à l'aise) pour pouvoir mettre à jour le prog. (Les détails sont en bas).
+
+## Configuration, MAKEFILE ##
+
+## Compilation du projet - Commandes make ##
+
+Le fichier makefile fourni dans ce projet possède plusieurs options pour les développeurs. La liste complète se trouve ici.
 
 La compilation se fait avec :
 ```
@@ -75,11 +86,11 @@ make rebuild-run
 Qui permet de recompiler a partir de 0, puis lance directement le programme, conseillé aux plus chaud qui codent sans warning et sans erreurs
 
 * Deployment instructions
-Demandez un merge vers le master
+Demandez un merge vers le master c'est moi qui m'en occupe
 
-### Méthode de programmation ###
+## Méthodes de compilations ##
 
-Il faut absolument mettre des commentaires dans vos programme, surtout dans la rédaction de vos fonctions.
+Il faut absolument mettre des commentaires dans vos programmes, surtout dans la rédaction de vos fonctions.
 Le prototype des fonctions et des structures doivent être déclarées dans un fichier Header ( * .h)
 
 Les commentaires pour les fonctions auront le style suivant :
@@ -118,28 +129,15 @@ Lorsque vous push une modification, mettez un commentaire ce que vous avez modif
 Comme ça, s'il y a un problème, on peut revenir en arrière !!
 
 # IMPORTANT #
-**Si vous trouvez un bug, Signalez le sur le bitbucket, pour pas qu'on l'oublie.
+**Si vous trouvez un bug, [Signalez le]https://bitbucket.org/asiat/prog_imp_2017/issues?status=new&status=open
+ sur le bitbucket, pour pas qu'on l'oublie.
 L'objectif est 0 Warning + 0 Erreurs + 0 Probleme de mémoire (segmentation fault + pas le même nombre de malloc et free) + 0 bug / comportement fausse du programme**
 
-* Au sujets des mallocs *
-Je ne sais pas pourquoi, mais écrire les mallocs de la façon suivante
-```
-#!c
-int n = 5;
-int *tableau = malloc(sizeof(int)*n);
-free(tableau);
-```
-Fait planter mon compilateur.
-Du coups écrivez comme ça pour le moment le temps que je règle mon problème...
-```
-#!c
-int n = 5;
-int *tableau =(int *) malloc(sizeof(int)*n);
-free(tableau);
-```
 
-* En cas de segmentation fault, Debuggez le prog avec ** *valgrind* **
-* Pour signaler le(s) bug(s), reportez vous dans la partie Signalement de bug
+* En cas de segmentation fault, Debuggez le prog avec ** *valgrind* ** voir même avec le flag -q pour ceux qui ont la flemme de lire/chercher (affiche seulement les erreur quand il y en a)
+
+* Pour signaler le(s) bug(s), reportez vous dans la partie [Signalez de bug]https://bitbucket.org/asiat/prog_imp_2017/issues?status=new&status=open
+
 
 On évite aussi de travailler sur le même ficher, pour éviter les conflits de push.
 
@@ -176,7 +174,7 @@ Procedure de mise en ligne des modification :
 
 On pourra savoir qui a modifié/créer quoi, il y a un historique
 
-**Note Important : Oubliez pas de supprimer les fichiers .o avant de push **
+**Note Important : Oubliez pas de supprimer les fichiers .o avant de push, la commande make clean est la pour ça. **
 
 Pour récuperer/synchro les données vers la version récente:
 - Pull
