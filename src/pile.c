@@ -15,7 +15,7 @@ pile_element_t *pile_creer_element(piece_t piece_v) {
 
   /* Initialize */
 
-  res = (pile_element_t *)malloc(sizeof(pile_element_t));
+  res = malloc(sizeof(pile_element_t));
   res->piece = piece_v;
   res->suivant = NULL;
 
@@ -103,7 +103,7 @@ pile_list_t *pile_create() {
 
   /* Initialize */
 
-  res = (pile_list_t *)malloc(sizeof(pile_list_t));
+  res = malloc(sizeof(pile_list_t));
   res->suivant = NULL;
   res->last = NULL;
   res->taille = 0;

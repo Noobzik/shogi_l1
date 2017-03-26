@@ -12,7 +12,7 @@
  */
 file_element_t *file_creer_element(movement_t movement_v,
                                    piece_statut_e promotion_v, int capture_v) {
-  file_element_t *res = (file_element_t *)malloc(sizeof(file_element_t));
+  file_element_t *res = malloc(sizeof(file_element_t));
   res->movement = movement_v;
   res->promotion = promotion_v;
   res->capture = capture_v;
@@ -90,7 +90,7 @@ file_element_t *file_list_extract(file_list_t *file_list_v) {
  * @return file_list_t
  */
 file_list_t *file_creer_list() {
-  file_list_t *res = (file_list_t *)malloc(sizeof(file_list_t));
+  file_list_t *res = malloc(sizeof(file_list_t));
   res->debut = NULL;
   res->fin = NULL;
   res->taille = 0;
