@@ -76,10 +76,11 @@ Le prototype des fonctions et des structures doivent être déclarées dans un f
 Les commentaires pour les fonctions auront le style suivant :
 ```
 #!c
-/**
+/** nom_de_la_fonction()
  * Description de la fonction
- * @param
- * @return
+ * Complexité : Espace O() - Temps O()
+ * @param type_t variable_v
+ * @return "juste le type"
  */
 ```
 
@@ -91,8 +92,8 @@ Un exemple :
  * Permet de connaitre si la case actuelle peut être selectionnable par l'utilisateur
  * en fonction du type de piece. Fait appel aux autres fonctions déplacement_diagonal /
  * pion / vertical / horizontal
- * @param une case
- * @return un entier
+ * @param case_t case_v
+ * @return int
  */
 ```
 
@@ -139,16 +140,24 @@ On évite aussi de travailler sur le même ficher, pour éviter les conflits de 
 * La *branche principale* est le ** *master* ** C'est la version principale stable qui sera rendu aux profs.
 * Les *branches secondaires* seront à créer pour les development des fichiers
 
+
+* Avant de creer des fonctions, on doit impérativement utiliser les branches secondaires (Allez dans Branches -> Créer Branches -> Le nom de la branche
+
+
 Actuellement, la priorité actuelle est de créer une interface terminal le plus rapidement possible, pour qu'on puisse se focaliser sur les autres parties du projet
 
 ## Git ##
 
 Je vous conseil d'installer GitKraken pour la gestion du repertoire en ligne. On veut limiter au maximum l'utilisation des clés USB
 
+Pour pouvoir télécharger les données du projet, récuperez vos identifiants SSH en haut à droite de la page du répértoire.
+Ensuite dans GitKraken, Allez dans Fichiers -> Cloner (Ou Crt+N) puis clonez sur le pc.
+
+Vous pouvez désormais commencer à modifier les programmes
+
 Procedure de mise en ligne des modification :
 
-
-1. 'Stash' les fichiers que avez modifié
+1. 'Stage all changes' (ou quelque fichier) les fichiers que avez modifié
 2. Ecrire un titre dans le commit + Un commentaire
    * **IMPORTANT écrivez pas de la merde, s'il y a un probème, on va galerer a revenir en arrière !**
 3. Stage files /changes to Commit
@@ -156,6 +165,9 @@ Procedure de mise en ligne des modification :
 5. ???
 6. Voila !
 
+On pourra savoir qui a modifié/créer quoi, il y a un historique
+
+**Note Important : Oubliez pas de supprimer les fichiers .o avant de push **
 
 Pour récuperer/synchro les données vers la version récente:
 - Pull
@@ -188,11 +200,6 @@ Pour clang-format, il faut avoir installé clang
 #!bash
 sudo apt-get install clang
 ```
-
-* Writing tests
-
-* Code review
-* Other guidelines
 
 ### Who do I talk to? ###
 
