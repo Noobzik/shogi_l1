@@ -5,7 +5,10 @@
 ## Quick summary ##
 
 Repertoire Git pour le développement du projet de programmation impérative, Université Paris 13.
-* Rakib
+
+* Rakib Sheikh (NoobZik)
+* Ibrahim Kouyate
+* Emeric Bayard (Dryska)
 
 **Le jeu à faire : Le Shôgi**
 *Le sujet est disponible sur l'ENT, on attend la version définitif avant de l'inclure dans le répertoire*
@@ -34,7 +37,9 @@ On pourra determiner plusieurs versions pas à pas, c'est à dire qu'il y aura u
 On pourra retracer l'historique des modifications
 Un gestion de signalement de bug qui vont prendre du temps à les régler, pour pas qu'on le zape
 ## Gitkraken ##
-Il faut installer GitKraken (ou autre logiciel de gestion de repertoire si vous êtes à l'aise) pour pouvoir mettre à jour le prog. (Les détails sont en bas).
+Il faut installer [GitKraken](https://www.gitkraken.com/) (ou autre logiciel de gestion de repertoire si vous êtes à l'aise) pour pouvoir mettre à jour le prog. (Les détails sont en bas).
+
+Je ne sais pas si on peut lancer les programmes directement sur une clée usb sur les PC de la fac. J'invite à tester en [téléchargeant l'archive gzip](https://www.gitkraken.com/download/linux-gzip) et de l'executer à partir du terminal
 ***
 ## Configuration ##
 
