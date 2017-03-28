@@ -1,5 +1,6 @@
 #include "header/game.h"
 #include "header/file.h"
+#include "header/mouvement.h"
 #include "header/piece.h"
 #include "header/pile.h"
 #include <stdio.h>
@@ -487,16 +488,16 @@ void partie_jouer(game_t *game_v) {
     } else if (game_selector(game_command, "move")) {
 
       /* Input */
-      // do {
-      /* Separator */
-      game_seperator();
-      printf("Saisir les coordonnées d'une piece:\n");
+      do {
+        /* Separator */
+        game_seperator();
+        printf("Saisir les coordonnées d'une piece:\n");
 
-      /* Enter loop */
-      afficher_echiquier(game_v, COORDINATE_NULL);
-      printf("\n\n\n");
-      game_input_tmp = saisie_case();
-      //} while (!movement_valid_input(game_v, game_input_tmp));
+        /* Enter loop */
+        afficher_echiquier(game_v, COORDINATE_NULL);
+        printf("\n\n\n");
+        game_input_tmp = saisie_case();
+      } while (!movement_valid_input(game_v, game_input_tmp));
 
       printf("\n");
 
@@ -589,7 +590,7 @@ void partie_jouer(game_t *game_v) {
         printf("\n\n\n");
 
         printf("Entrer le nom de la partie:");
-        //        fgets(game_save_name, MAX_CHAR, stdin);
+        fgets(game_save_name, MAX_CHAR, stdin);
 
         /* Separator */
         game_seperator();
@@ -600,12 +601,12 @@ void partie_jouer(game_t *game_v) {
 
         printf("Entrer l'emplacement de la sauvegarder:");
 
-        //        fgets(game_save_path, MAX_CHAR, stdin);
+        fgets(game_save_path, MAX_CHAR, stdin);
 
         /* Separator */
         game_seperator();
 
-        printf("La partie a ete sauvergarder.");
+        printf("La partie a ete sauvergardé.");
 
         //        partie_sauvegarder(game_v, game_save_name, game_save_path);
 
