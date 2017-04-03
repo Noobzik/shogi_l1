@@ -38,7 +38,7 @@ int movement_valid_input(game_t *game_v, coordinate_t coordinate_v) {
  */
 
 int movement_valid_output(coordinate_t coordinate_v) {
-  return (coordinate_v.x < 11 && coordinate_v.y < 11) ? 1 : 0;
+  return (coordinate_v.x < 10 && coordinate_v.y < 10) ? 1 : 0;
 }
 
 /****************** Fin Bloc validation des entrés et sortie ******************/
