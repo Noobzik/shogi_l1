@@ -502,21 +502,21 @@ void partie_jouer(game_t *game_v) {
       printf("\n");
 
       /* Output */
-      // do {
-      /* Separator */
-      game_seperator();
-      printf("Vous avez selectionner la piece '");
-      piece_afficher(game_v->board[game_input_tmp.x][game_input_tmp.y]);
-      printf("' de coordonnees (%d;%d) du joueur ", game_input_tmp.x,
-             game_input_tmp.y);
-      printf("%d.", game_v->board[game_input_tmp.x][game_input_tmp.y].color);
-      printf("\nSaisir les coordonnees du movement:\n");
+      do {
+        /* Separator */
+        game_seperator();
+        printf("Vous avez selectionner la piece '");
+        piece_afficher(game_v->board[game_input_tmp.x][game_input_tmp.y]);
+        printf("' de coordonnees (%d;%d) du joueur ", game_input_tmp.x,
+               game_input_tmp.y);
+        printf("%d.", game_v->board[game_input_tmp.x][game_input_tmp.y].color);
+        printf("\nSaisir les coordonnees du movement:\n");
 
-      /* Enter loop */
-      afficher_echiquier(game_v, game_input_tmp);
-      printf("\n\n\n");
-      game_output_tmp = saisie_case();
-      //} while (!movement_valid_output(game_v, game_output_tmp));
+        /* Enter loop */
+        afficher_echiquier(game_v, game_input_tmp);
+        printf("\n\n\n");
+        game_output_tmp = saisie_case();
+      } while (!movement_valid_output(game_output_tmp));
 
       /* Separator */
       game_seperator();
