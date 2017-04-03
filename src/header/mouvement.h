@@ -25,6 +25,9 @@ int deplacement_valide_gold(game_t *game_v, coordinate_t coordinate_input_v,
                             coordinate_t coordinate_output_v);
 int deplacement_valide_silver(game_t *game_v, coordinate_t coordinate_input_v,
                               coordinate_t coordinate_output_v);
+int deplacement_valide_parachutage(game_t *game_v,
+                                   coordinate_t coordinate_input_v,
+                                   coordinate_t coordinate_output_v);
 /****************** Fin des validations des déplacements   ******************/
 
 int movement_valid_helper(game_t *game_v, coordinate_t coordinate_input_v,

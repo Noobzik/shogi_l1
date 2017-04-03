@@ -318,6 +318,32 @@ int deplacement_valide_silver(game_t *game_v, coordinate_t coordinate_input_v,
 
   return 0;
 }
+
+int deplacement_valide_parachutage(game_t *game_v,
+                                   coordinate_t coordinate_input_v,
+                                   coordinate_t coordinate_output_v) {
+  if (game_v->player == BLANC) {
+    if (coordinate_input_v.x >= 0 && coordinate_input_v.x < 11) {
+      if (coordinate_input_v.y == 10) {
+        return (game_v->board[coordinate_output_v.x][coordinate_output_v.y]
+                    .color == VIDE_PIECE)
+                   ? 1
+                   : 0;
+      }
+    }
+  }
+  if (game_v->player == NOIR) {
+    if (coordinate_input_v.y > 0 && coordinate_input_v.y < 11) {
+      if (coordinate_input_v.x == 10) {
+        return (game_v->board[coordinate_output_v.x][coordinate_output_v.y]
+                    .color == VIDE_PIECE)
+                   ? 1
+                   : 0;
+      }
+    }
+  }
+  return 0;
+}
 /****************** Fin des validations des déplacements   ******************/
 
 /** movement_valid_helper
