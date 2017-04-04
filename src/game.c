@@ -25,12 +25,15 @@ void afficher_echiquier(game_t *game_v, coordinate_t COORDINATE_NULL) {
   int x, y;
 
   printf("\n");
-  printf("                       0  1  2  3  4  5  6  7  8  9  10\n");
+  printf("                      0  1  2  3  4  5  6  7  8  9  10\n");
   printf("                      _________________________________\n");
 
   for (x = 0; x < 11; x++) {
     if ((x < 6 && x > 3) || ((x == 0) || x == 10)) {
-      printf("                   %d  ", x);
+      if (x == 10)
+        printf("                  %d  ", x);
+      else
+        printf("                   %d  ", x);
     } else if (x < 6) {
       /* Player Indicator */
       if (game_v->player == 0) {
@@ -77,15 +80,7 @@ game_t *partie_creer() {
 /** partie_detruire
  * Détruit tout simplement l'echiquier
  */
-void partie_detruire(game_t *game_v) {
-
-  // ------- TEMPORAIRE ---------------------//
-  //  file_detruire_list(game_v->file);
-  //  pile_detruire(game_v->capture);
-  // --------TEMPORAIRE ---------------------//
-
-  free(game_v);
-}
+void partie_detruire(game_t *game_v) { free(game_v); }
 
 /** partie_nouvelle
  * Description: Initialize tout les case en piece VIDE
@@ -194,6 +189,51 @@ void changer_joueur(game_t *game_v) {
   (game_v->player == 0) ? (game_v->player = 1) : (game_v->player = 0);
 }
 
+void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
+                       coordinate_t coordinate_output_v) {
+  //  movement_t game_movement_tmp;
+  /*    game_movement_tmp.input = coordinate_input_v;
+      game_movement_tmp.output = coordinate_output_v;*/
+
+  if (!case_vide(game_v->board[coordinate_input_v.x][coordinate_input_v.y])) {
+
+    /* Checking présence de piece (Si c'est le cas -> capture) */
+
+    if (!case_vide(
+            game_v->board[coordinate_output_v.x][coordinate_output_v.y]) &&
+        piece_couleur(
+            game_v->board[coordinate_output_v.x][coordinate_output_v.y]) !=
+            piece_couleur(
+                game_v->board[coordinate_input_v.x][coordinate_input_v.y])) {
+      /*      pile_stacking(
+                game_v->catched,
+                game_v->board[coordinate_output_v.x][coordinate_output_v.y]);*/
+      //      game_movement_tmp.valeur = 1;
+
+      /* Apply movement */
+
+      game_v->board[coordinate_output_v.x][coordinate_output_v.y] =
+          game_v->board[coordinate_input_v.x][coordinate_input_v.y];
+      game_v->board[coordinate_input_v.x][coordinate_input_v.y] =
+          piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+
+      /* Piece switch */
+
+      //      file_thread(game_v->played, game_movement_tmp);
+      changer_joueur(game_v);
+    } else {
+      game_v->board[coordinate_output_v.x][coordinate_output_v.y] =
+          game_v->board[coordinate_input_v.x][coordinate_input_v.y];
+      game_v->board[coordinate_input_v.x][coordinate_input_v.y] =
+          piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+
+      /* Piece switch */
+
+      //      file_thread(game_v->played, game_movement_tmp);
+      changer_joueur(game_v);
+    }
+  }
+}
 /** saisie_case
  *  Permet de saisir les coordonnées d'une case
  *  Cette fonction est un substitut du scanf
@@ -519,8 +559,9 @@ void partie_jouer(game_t *game_v) {
       } while (!movement_valid_output(game_output_tmp));
 
       /* Separator */
+      is_promoted(game_v, game_input_tmp, game_output_tmp);
       game_seperator();
-      // depalcement_valide(game_v, game_input_tmp, game_output_tmp);
+      deplacement_valide(game_v, game_input_tmp, game_output_tmp);
 
       /* Enter loop */
       afficher_echiquier(game_v, COORDINATE_NULL);

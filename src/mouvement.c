@@ -1,5 +1,9 @@
+#include "header/mouvement.h"
 #include "header/game.h"
+#include "header/piece.h"
 #include <stdio.h>
+#include <string.h>
+#define MAX_CHAR 256
 
 /************ Debut Bloc validation des entrés et sortie **********************/
 
@@ -38,7 +42,224 @@ int movement_valid_input(game_t *game_v, coordinate_t coordinate_v) {
  */
 
 int movement_valid_output(coordinate_t coordinate_v) {
-  return (coordinate_v.x < 10 && coordinate_v.y < 10) ? 1 : 0;
+  return ((coordinate_v.x > 0 || coordinate_v.y < 10) &&
+          (coordinate_v.y > 0 && coordinate_v.y < 10))
+             ? 1
+             : 0;
+}
+
+/**
+ * movement board validator
+ *
+ * Parameters:
+ *     game_t       - game_v
+ *     coordinate_t - coordinate_input_v
+ *     coordinate_t - coordinate_output_v
+ */
+void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
+                        coordinate_t coordinate_output_v) {
+  //======================================================================
+  // Main
+  //======================================================================
+  if ((coordinate_input_v.x != coordinate_output_v.x ||
+       coordinate_input_v.y != coordinate_output_v.y) &&
+      (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color !=
+       game_v->board[coordinate_output_v.x][coordinate_output_v.y].color)) {
+
+    switch (game_v->board[coordinate_input_v.x][coordinate_input_v.y].type) {
+      {
+      case PION:
+
+        if (deplacement_valide_pion(game_v, coordinate_input_v,
+                                    coordinate_output_v)) {
+          deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+          printf("Le PION à été deplacé de (%d;%d) à (%d;%d) avec succès.\n",
+                 coordinate_input_v.x, coordinate_input_v.y,
+                 coordinate_output_v.x, coordinate_output_v.y);
+        } else {
+          printf("Le déplacement du PION à échoué.\n");
+        }
+
+        break;
+      }
+      {
+      case PION_PROMU:
+
+        if (deplacement_valide_pion_promu(game_v, coordinate_input_v,
+                                          coordinate_output_v)) {
+          deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+          printf(
+              "Le PION_PROMU à été deplace de (%d;%d) à (%d;%d) avec succès.\n",
+              coordinate_input_v.x, coordinate_input_v.y, coordinate_output_v.x,
+              coordinate_output_v.y);
+        } else {
+          printf("Le déplacement du PION_PROMU à échoué\n");
+        }
+        break;
+      }
+      {
+      case TOUR:
+
+        if (deplacement_valide_tour(game_v, coordinate_input_v,
+                                    coordinate_output_v)) {
+          deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+          printf("La tour à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
+                 coordinate_input_v.x, coordinate_input_v.y,
+                 coordinate_output_v.x, coordinate_output_v.y);
+        } else {
+          printf("Le deplacement de la tour à échoué.\n");
+        }
+
+        break;
+      }
+      {
+      case TOUR_PROMU:
+
+        if (deplacement_valide_tour_promu(game_v, coordinate_input_v,
+                                          coordinate_output_v)) {
+          deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+          printf(
+              "La TOUR_PROMU à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
+              coordinate_input_v.x, coordinate_input_v.y, coordinate_output_v.x,
+              coordinate_output_v.y);
+        } else {
+          printf("Le déplacement de la TOUR_PROMU à échoué.\n");
+        }
+
+        break;
+      }
+      {
+      case CAVALIER:
+
+        if (deplacement_valide_cavalier(game_v, coordinate_input_v,
+                                        coordinate_output_v)) {
+          deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+          printf(
+              "Le CAVALIER à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
+              coordinate_input_v.x, coordinate_input_v.y, coordinate_output_v.x,
+              coordinate_output_v.y);
+        } else {
+          printf("Le déplacement du CAVALIER à échoué.\n");
+        }
+
+        break;
+      }
+      {
+      case CAVALIER_PROMU:
+
+        if (deplacement_valide_cavalier_promu(game_v, coordinate_input_v,
+                                              coordinate_output_v)) {
+          deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+          printf("Le CAVALIER_PROMU à été déplacé de (%d;%d) a (%d;%d) avec "
+                 "succès.\n",
+                 coordinate_input_v.x, coordinate_input_v.y,
+                 coordinate_output_v.x, coordinate_output_v.y);
+        } else {
+          printf("Le déplacement du CAVALIER_PROMU à échoué.\n");
+        }
+
+        break;
+      }
+      {
+      case FOU:
+
+        if (deplacement_valide_fou(game_v, coordinate_input_v,
+                                   coordinate_output_v)) {
+          deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+          printf("Le FOU à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
+                 coordinate_input_v.x, coordinate_input_v.y,
+                 coordinate_output_v.x, coordinate_output_v.y);
+        } else {
+          printf("Le deplacement du FOU à échoué.\n");
+        }
+
+        break;
+      }
+      {
+      case FOU_PROMU:
+
+        if (deplacement_valide_fou_promu(game_v, coordinate_input_v,
+                                         coordinate_output_v)) {
+          deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+          printf(
+              "Le FOU_PROMU à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
+              coordinate_input_v.x, coordinate_input_v.y, coordinate_output_v.x,
+              coordinate_output_v.y);
+        } else {
+          printf("Le deplacement du FOU_PROMU à échoué.\n");
+        }
+
+        break;
+      }
+      {
+      case GOLD:
+
+        if (deplacement_valide_gold(game_v, coordinate_input_v,
+                                    coordinate_output_v)) {
+          deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+          printf("Le GOLD à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
+                 coordinate_input_v.x, coordinate_input_v.y,
+                 coordinate_output_v.x, coordinate_output_v.y);
+        } else {
+          printf("Le déplacement du GOLD à échoué.\n");
+        }
+
+        break;
+      }
+      {
+      case SILVER:
+
+        if (deplacement_valide_silver(game_v, coordinate_input_v,
+                                      coordinate_output_v)) {
+          deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+          printf("Le SILVER à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
+                 coordinate_input_v.x, coordinate_input_v.y,
+                 coordinate_output_v.x, coordinate_output_v.y);
+        } else {
+          printf("Le déplacement du SILVER à échoué.\n");
+        }
+
+        break;
+      }
+      {
+      case SILVER_PROMU:
+
+        if (deplacement_valide_gold(game_v, coordinate_input_v,
+                                    coordinate_output_v)) {
+          deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+          printf("Le SILVER_PROMU à été déplacé de (%d;%d) a (%d;%d) avec "
+                 "succès.\n",
+                 coordinate_input_v.x, coordinate_input_v.y,
+                 coordinate_output_v.x, coordinate_output_v.y);
+        } else {
+          printf("Le déplacement du SILVER_PROMU à échoué.\n");
+        }
+
+        break;
+      }
+      {
+      case ROI:
+
+        if (deplacement_valide_roi(game_v, coordinate_input_v,
+                                   coordinate_output_v)) {
+          deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+          printf("Le ROI à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
+                 coordinate_input_v.x, coordinate_input_v.y,
+                 coordinate_output_v.x, coordinate_output_v.y);
+        } else {
+          printf("Le deplacement du ROI à échoué.\n");
+        }
+
+        break;
+      }
+      {
+      default:
+        break;
+      }
+    }
+  } else {
+    printf("Le deplacement à été annulée.\n");
+  }
 }
 
 /****************** Fin Bloc validation des entrés et sortie ******************/
@@ -169,12 +390,10 @@ int deplacement_valide_fou(game_t *game_v, coordinate_t coordinate_input_v,
   movement_1_bis_tmp = (coordinate_input_v.x - coordinate_input_v.y);
   movement_2_bis_tmp = (coordinate_output_v.x - coordinate_output_v.y);
 
-  if (movement_1_tmp == movement_2_tmp ||
-      movement_2_bis_tmp == movement_1_bis_tmp) {
-    return 1;
-  }
-
-  return 0;
+  return (movement_1_tmp == movement_2_tmp ||
+          movement_2_bis_tmp == movement_1_bis_tmp)
+             ? 1
+             : 0;
 }
 /** deplacement_valide_roi
  * Permet de valider les déplacement du roi
@@ -319,12 +538,23 @@ int deplacement_valide_silver(game_t *game_v, coordinate_t coordinate_input_v,
   return 0;
 }
 
+/** deplacement_valide_parachutage
+ * Permet de valider un déplacement depuis la réserve
+ * Condition, les coordonées de départs doit correspondre à la reserve du joueur
+ * actuelle et les coordonnees d'arrivée à une case vide
+ */
 int deplacement_valide_parachutage(game_t *game_v,
                                    coordinate_t coordinate_input_v,
                                    coordinate_t coordinate_output_v) {
+
+  /* Parachutage blanc */
   if (game_v->player == BLANC) {
+
+    /* Test si les coordonnées d'entré correspondent a la reserve */
     if (coordinate_input_v.x >= 0 && coordinate_input_v.x < 11) {
       if (coordinate_input_v.y == 10) {
+
+        /* Teste si les coordonnées de sortie est une case vide */
         return (game_v->board[coordinate_output_v.x][coordinate_output_v.y]
                     .color == VIDE_PIECE)
                    ? 1
@@ -332,9 +562,16 @@ int deplacement_valide_parachutage(game_t *game_v,
       }
     }
   }
+
+  /* Parachutage noir */
+
   if (game_v->player == NOIR) {
+
+    /* Test si les coordonnées d'entré correspondent a la reserve */
     if (coordinate_input_v.y > 0 && coordinate_input_v.y < 11) {
       if (coordinate_input_v.x == 10) {
+
+        /* Test si les coordonnées de sortie correspondent à une case vide */
         return (game_v->board[coordinate_output_v.x][coordinate_output_v.y]
                     .color == VIDE_PIECE)
                    ? 1
@@ -345,6 +582,81 @@ int deplacement_valide_parachutage(game_t *game_v,
   return 0;
 }
 /****************** Fin des validations des déplacements   ******************/
+/**************** Debut des validations des déplacements  PROMU *************/
+
+/** deplacement_valide_pion_promu
+ * Algo de GOLD
+ * @params :   game_t          -   game_v
+ *             coordinate_t    -   coordinate_input_v
+ *             coordinate_t    -   coordinate_output_v
+ * @return :   int
+ */
+int deplacement_valide_pion_promu(game_t *game_v,
+                                  coordinate_t coordinate_input_v,
+                                  coordinate_t coordinate_output_v) {
+  return deplacement_valide_gold(game_v, coordinate_input_v,
+                                 coordinate_output_v);
+}
+
+/** deplacement_valide_tour_promu
+ *  Algo de TOUR + ROI
+ *  @params:        game_t          -       game_v
+ *                  coordinate_t    -       coordinate_input_v
+ *                  coordinate_t    -       coordinate_output_v
+ *  @return:        int
+ */
+int deplacement_valide_tour_promu(game_t *game_v,
+                                  coordinate_t coordinate_input_v,
+                                  coordinate_t coordinate_output_v) {
+  return (
+      deplacement_valide_tour(game_v, coordinate_input_v,
+                              coordinate_output_v) ||
+      deplacement_valide_roi(game_v, coordinate_input_v, coordinate_output_v));
+}
+
+/** deplacement_valide_cavalier_promu
+ *  Algo de GOLD
+ *  @params:        game_t          -       game_v
+ *                  coordinate_t    -       coordinate_input_v
+ *                  coordinate_t    -       coordinate_output_v
+ *  @return:        int
+ */
+int deplacement_valide_cavalier_promu(game_t *game_v,
+                                      coordinate_t coordinate_input_v,
+                                      coordinate_t coordinate_output_v) {
+  return (
+      deplacement_valide_gold(game_v, coordinate_input_v, coordinate_output_v));
+}
+
+/** deplacement_valide_fou_promu
+ *  Algo de FOU + ROI
+ *  @params:        game_t          -       game_v
+ *                  coordinate_t    -       coordinate_input_v
+ *                  coordinate_t    -       coordinate_output_v
+ *  @return:        int
+ */
+int deplacement_valide_fou_promu(game_t *game_v,
+                                 coordinate_t coordinate_input_v,
+                                 coordinate_t coordinate_output_v) {
+  return (
+      deplacement_valide_fou(game_v, coordinate_input_v, coordinate_output_v) ||
+      deplacement_valide_roi(game_v, coordinate_input_v, coordinate_output_v));
+}
+
+/** deplacement_valide_silver_promu
+ *  Algo de GOLD
+ *  @params:        game_t          -       game_v
+ *                  coordinate_t    -       coordinate_input_v
+ *                  coordinate_t    -       coordinate_output_v
+ *  @return:        int
+ */
+int deplacement_valide_silver_promu(game_t *game_v,
+                                    coordinate_t coordinate_input_v,
+                                    coordinate_t coordinate_output_v) {
+  return (
+      deplacement_valide_gold(game_v, coordinate_input_v, coordinate_output_v));
+}
+/**************** FIN des validations des déplacements  PROMU ****************/
 
 /** movement_valid_helper
  * movement board validator for helper
@@ -429,4 +741,114 @@ int movement_valid_helper(game_t *game_v, coordinate_t coordinate_input_v,
     }
   }
   return 0;
+}
+
+/** movement is_promoted
+ *  Permet de savoir si la piece en coordonnées d'arrivé a la possibilité d'être
+ *  promu
+ *  @params:    game_t          -   game_v
+ *              coordinate_t    -   coordinate_input_v
+ *              coordinate_t    -   coordinate_output_v
+ *  @return:    void
+ */
+void is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
+                 coordinate_t coordinate_output_v) {
+
+  char promotion_confirmation[MAX_CHAR];
+
+  if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].statut ==
+      NON_PROMU) {
+
+    /* Traitement pour joueur BLANC */
+
+    if (game_v->player == 1) {
+      if (coordinate_output_v.y == 3 || coordinate_output_v.y == 2) {
+
+        printf("Voulez vous promovoir la piece ?\n");
+
+        if (scanf("%19s\n", promotion_confirmation) != 1) {
+          printf("Entrez au moins un caractere\n");
+        }
+
+        if (strcmp(promotion_confirmation, "oui") == 0) {
+          promote_grant(
+              &game_v->board[coordinate_input_v.x][coordinate_input_v.y]);
+          printf("La piece à été promu\n");
+        }
+
+        if (coordinate_output_v.y == 1)
+          promote_grant(
+              &game_v->board[coordinate_input_v.x][coordinate_input_v.y]);
+      }
+    }
+
+    else if (game_v->player == 0) {
+      if (coordinate_output_v.y == 7 || coordinate_output_v.y == 8) {
+
+        printf("Voulez vous promovoir la piece ?\n");
+
+        if (scanf("%19s\n", promotion_confirmation) != 1) {
+          printf("Entrez au moins un caractere\n");
+        }
+
+        if (strcmp(promotion_confirmation, "oui") == 0) {
+          promote_grant(
+              &game_v->board[coordinate_input_v.x][coordinate_input_v.y]);
+          printf("La piece à été promu\n");
+        }
+
+        if (coordinate_output_v.x == 9)
+          promote_grant(
+              &game_v->board[coordinate_input_v.x][coordinate_input_v.y]);
+      }
+    }
+  }
+}
+
+/** promote_grant
+ *  Permet de promovoir la piece
+ *  @params:    piece_t     -   piece
+ *  @return:    void
+ */
+void promote_grant(piece_t *piece) {
+  switch (piece->type) {
+    {
+    case PION:
+      piece->type = PION_PROMU;
+      piece->statut = PROMU;
+      break;
+    }
+    {
+    case LANCIER:
+      piece->type = LANCIER_PROMU;
+      piece->statut = PROMU;
+      break;
+    }
+    {
+    case CAVALIER:
+      piece->type = CAVALIER_PROMU;
+      piece->statut = PROMU;
+      break;
+    }
+    {
+    case FOU:
+      piece->type = FOU_PROMU;
+      piece->statut = PROMU;
+      break;
+    }
+    {
+    case TOUR:
+      piece->type = TOUR_PROMU;
+      piece->statut = PROMU;
+      break;
+    }
+    {
+    case SILVER:
+      piece->type = SILVER_PROMU;
+      piece->statut = PROMU;
+      break;
+    }
+  default:
+    break;
+  }
 }
