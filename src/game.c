@@ -1,4 +1,5 @@
 #include "header/game.h"
+#include "header/debug.h"
 #include "header/file.h"
 #include "header/mouvement.h"
 #include "header/piece.h"
@@ -191,10 +192,15 @@ void changer_joueur(game_t *game_v) {
 
 void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
                        coordinate_t coordinate_output_v) {
-  //  movement_t game_movement_tmp;
-  /*    game_movement_tmp.input = coordinate_input_v;
-      game_movement_tmp.output = coordinate_output_v;*/
+  movement_t game_movement_tmp;
+  game_movement_tmp.input = coordinate_input_v;
+  game_movement_tmp.output = coordinate_output_v;
+  int x, y, test = 1, test_bis = 0;
 
+  // A finir, il doit etre utiliser pour stocker dans la file
+
+  int promotion_v =
+      is_promoted(game_v, coordinate_input_v, coordinate_output_v);
   if (!case_vide(game_v->board[coordinate_input_v.x][coordinate_input_v.y])) {
 
     /* Checking présence de piece (Si c'est le cas -> capture) */
@@ -205,10 +211,106 @@ void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
             game_v->board[coordinate_output_v.x][coordinate_output_v.y]) !=
             piece_couleur(
                 game_v->board[coordinate_input_v.x][coordinate_input_v.y])) {
-      /*      pile_stacking(
-                game_v->catched,
-                game_v->board[coordinate_output_v.x][coordinate_output_v.y]);*/
-      //      game_movement_tmp.valeur = 1;
+
+      /* TOUJOURS DANS LE IF !CASE VIDE*/
+
+      pile_stacking(
+          game_v->capture,
+          game_v->board[coordinate_output_v.x][coordinate_output_v.y]);
+
+      /** Ici une fonction qui met la piece capturé dans la reserve
+       *  On vérifie que la case est vide pour placer la piece, sinon on passe
+       *  au suivant. Si il n'y a plus de place dans l'axe des x, on passe a la
+       *  deuxieme boucle le l'axe des y
+       */
+
+      /** Noir **/
+
+      if (game_v->player == 0) {
+        x = 10;
+
+        while (test == 1) {
+          if (case_vide(game_v->board[0][x]) == 1) {
+            test = 0;
+            game_v->board[0][x] = piece_creer(
+                BLANC,
+                game_v->board[coordinate_output_v.x][coordinate_output_v.y]
+                    .type,
+                game_v->board[coordinate_output_v.x][coordinate_output_v.y]
+                    .statut);
+          }
+          if (x > 0 && test != 0) {
+            x--;
+          } else if (x == 0) {
+            test_bis = 1;
+          }
+        }
+        y = 1;
+
+        while (test_bis == 1) {
+          printf("Suis-je rentrée ici ? je vaux %d\n", y);
+
+          if (case_vide(game_v->board[y][0]) == 1) {
+            printf("Youpi je suis vide et je vaux %d\n", y);
+            test_bis = 0;
+            game_v->board[y][0] = piece_creer(
+                BLANC,
+                game_v->board[coordinate_output_v.x][coordinate_output_v.y]
+                    .type,
+                game_v->board[coordinate_output_v.x][coordinate_output_v.y]
+                    .statut);
+          }
+          if (y < 10 && test != 0) {
+            y++;
+          }
+        }
+      }
+
+      /* Ici une fonction qui met dans la reserve */
+      /** Blanc **/
+      if (game_v->player == 1) {
+        x = 0;
+
+        while (test == 1) {
+          if (case_vide(game_v->board[0][x]) == 1) {
+            test = 0;
+            game_v->board[10][x] = piece_creer(
+                NOIR,
+                game_v->board[coordinate_output_v.x][coordinate_output_v.y]
+                    .type,
+                game_v->board[coordinate_output_v.x][coordinate_output_v.y]
+                    .statut);
+          }
+          if (x < 11 && test != 0) {
+            x++;
+          } else if (x == 10) {
+            test_bis = 1;
+          }
+        }
+        y = 10;
+
+        while (test_bis == 1) {
+          printf("Suis-je rentrée ici ? je vaux %d\n", y);
+
+          if (case_vide(game_v->board[y][0]) == 1) {
+            printf("Youpi je suis vide et je vaux %d\n", y);
+            test_bis = 0;
+            //    game_v->board[y][0] =
+            //        game_v->board[coordinate_output_v.x][coordinate_output_v.y];
+            game_v->board[y][0] = piece_creer(
+                NOIR,
+                game_v->board[coordinate_output_v.x][coordinate_output_v.y]
+                    .type,
+                game_v->board[coordinate_output_v.x][coordinate_output_v.y]
+                    .statut);
+          }
+          if (y > 0 && test_bis != 0) {
+            y--;
+          }
+        }
+      }
+
+      game_movement_tmp.valeur = 1;
 
       /* Apply movement */
 
@@ -219,7 +321,7 @@ void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
 
       /* Piece switch */
 
-      //      file_thread(game_v->played, game_movement_tmp);
+      file_thread(game_v->file, game_movement_tmp, promotion_v, 1);
       changer_joueur(game_v);
     } else {
       game_v->board[coordinate_output_v.x][coordinate_output_v.y] =
@@ -400,10 +502,10 @@ void partie_jouer(game_t *game_v) {
        */
       if (game_command_dev) {
         printf("PASS                  Passe le tour du joueur.\n");
-        printf(
-            "FILE                  Affiche lse donnes contenu dans la file.\n");
-        printf(
-            "PILE                  Affiche les donnes contenu dans la pile.\n");
+        printf("FILE                  Affiche lse donnes contenu dans la "
+               "file.\n");
+        printf("PILE                  Affiche les donnes contenu dans la "
+               "pile.\n");
         printf("CELL                  Inspecter une cellule.\n");
       } else {
         printf("DEV                   Pour activer les command developpeur.\n");
@@ -461,21 +563,19 @@ void partie_jouer(game_t *game_v) {
       /* Separator */
       game_seperator();
 
-      //      debug_file(game_v);
+      debug_file(game_v);
 
       /* Enter loop */
       afficher_echiquier(game_v, COORDINATE_NULL);
       printf("\n\n\n");
 
       /* Developper command pile */
-      //      } else if (game_selector(game_command, "pile") &&
-      //      game_command_dev)
-      //    {
+    } else if (game_selector(game_command, "pile") && game_command_dev) {
 
       /* Separator */
-      //      game_seperator();
+      game_seperator();
 
-      //      debug_pile(game_v);
+      debug_pile(game_v);
 
       /* Enter loop */
       afficher_echiquier(game_v, COORDINATE_NULL);
@@ -559,7 +659,7 @@ void partie_jouer(game_t *game_v) {
       } while (!movement_valid_output(game_output_tmp));
 
       /* Separator */
-      is_promoted(game_v, game_input_tmp, game_output_tmp);
+      //      is_promoted(game_v, game_input_tmp, game_output_tmp);
       game_seperator();
       deplacement_valide(game_v, game_input_tmp, game_output_tmp);
 

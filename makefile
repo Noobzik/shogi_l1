@@ -7,7 +7,7 @@ CFLAGS = -g -Wall -pedantic -O3 -std=c11
 # On force la derniere norme de compilation qui est C11
 
 #Liste des fichiers *.o à rassembler en un executable
-FICHIER = game.o piece.o file.o pile.o mouvement.o main.o
+FICHIER = game.o piece.o file.o pile.o mouvement.o debug.o main.o
 
 #Programme après la compilation
 OUT = shogi
@@ -38,6 +38,9 @@ pile.o:src/pile.c
 
 mouvement.o:src/mouvement.c
 	$(CCSEP) src/mouvement.c
+
+debug.o:src/debug.c
+	$(CCSEP) src/debug.c
 
 main.o:main.c
 	$(CCSEP) main.c

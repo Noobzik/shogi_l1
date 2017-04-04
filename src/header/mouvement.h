@@ -27,6 +27,8 @@ int deplacement_valide_gold(game_t *game_v, coordinate_t coordinate_input_v,
                             coordinate_t coordinate_output_v);
 int deplacement_valide_silver(game_t *game_v, coordinate_t coordinate_input_v,
                               coordinate_t coordinate_output_v);
+int deplacement_valide_lancier(game_t *game_v, coordinate_t coordinate_input_v,
+                               coordinate_t coordinate_output_v);
 int deplacement_valide_parachutage(game_t *game_v,
                                    coordinate_t coordinate_input_v,
                                    coordinate_t coordinate_output_v);
@@ -47,11 +49,14 @@ int deplacement_valide_fou_promu(game_t *game_v,
 int deplacement_valide_silver_promu(game_t *game_v,
                                     coordinate_t coordinate_input_v,
                                     coordinate_t coordinate_output_v);
+int deplacement_valide_lancier_promu(game_t *game_v,
+                                     coordinate_t coordinate_input_v,
+                                     coordinate_t coordinate_output_v);
 /**************** FIN des validations des déplacements  PROMU ****************/
 
 int movement_valid_helper(game_t *game_v, coordinate_t coordinate_input_v,
                           coordinate_t coordinate_output_v);
-void is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
-                 coordinate_t coordinate_output_v);
+int is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
+                coordinate_t coordinate_output_v);
 void promote_grant(piece_t *piece);
 #endif

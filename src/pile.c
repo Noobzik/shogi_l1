@@ -25,13 +25,13 @@ pile_element_t *pile_creer_element(piece_t piece_v) {
 /** pile_detruire_element
  * pile_detruire_element
  * Permet de détruire l'element
- * @param pile_element_t - pile_link_v
+ * @param pile_element_t - pile_element_v
  */
-void pile_detruire_element(pile_element_t *pile_link_v) {
+void pile_detruire_element(pile_element_t *pile_element_v) {
 
   /* Main */
 
-  free(pile_link_v);
+  free(pile_element_v);
 }
 
 /** pile_list_add
@@ -93,7 +93,7 @@ pile_element_t *pile_list_extract(pile_list_t *pile_list_v) {
 
 /** pile_create
  * Créer tout simplement une liste de pile
- * @return pile_link_t
+ * @return pile_element_t
  */
 pile_list_t *pile_create() {
 

@@ -253,6 +253,32 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
         break;
       }
       {
+      case LANCIER:
+        if (deplacement_valide_lancier(game_v, coordinate_input_v,
+                                       coordinate_output_v)) {
+          deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+          printf("Le LANCIER à été déplacé de (%d;%d) à (%d;%d) avec succès\n",
+                 coordinate_input_v.x, coordinate_input_v.y,
+                 coordinate_output_v.x, coordinate_output_v.y);
+        } else {
+          printf("Le déplacement du LANCIER à échoué\n");
+        }
+        break;
+      }
+      {
+      case LANCIER_PROMU:
+        if (deplacement_valide_lancier_promu(game_v, coordinate_input_v,
+                                             coordinate_output_v)) {
+          deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+          printf("Le LANCIER_PROMU à été déplacé de (%d;%d) à (%d;%d) avec "
+                 "succès\n",
+                 coordinate_input_v.x, coordinate_input_v.y,
+                 coordinate_output_v.x, coordinate_output_v.y);
+        } else {
+          printf("Le déplacement du LANCIER_PROMU à échoué\n");
+        }
+      }
+      {
       default:
         break;
       }
@@ -538,6 +564,18 @@ int deplacement_valide_silver(game_t *game_v, coordinate_t coordinate_input_v,
   return 0;
 }
 
+/** deplacement_valide_lancier
+ *  Le lancier se deplace seulement en vertical
+ *  @params:    game_t          -   game_v
+ *              coordinate_t    -   coordinate_input_v
+ *              coordinate_t    -   coordinate_output_v
+ *  @return:    int
+ */
+int deplacement_valide_lancier(game_t *game_v, coordinate_t coordinate_input_v,
+                               coordinate_t coordinate_output_v) {
+  return (coordinate_input_v.y == coordinate_output_v.y) ? 1 : 0;
+}
+
 /** deplacement_valide_parachutage
  * Permet de valider un déplacement depuis la réserve
  * Condition, les coordonées de départs doit correspondre à la reserve du joueur
@@ -656,6 +694,20 @@ int deplacement_valide_silver_promu(game_t *game_v,
   return (
       deplacement_valide_gold(game_v, coordinate_input_v, coordinate_output_v));
 }
+
+/** deplacement_valide_lancier_promu
+ *  Le lancier se deplace seulement en vertical
+ *  @params:    game_t          -   game_v
+ *              coordinate_t    -   coordinate_input_v
+ *              coordinate_t    -   coordinate_output_v
+ *  @return:    int
+ */
+int deplacement_valide_lancier_promu(game_t *game_v,
+                                     coordinate_t coordinate_input_v,
+                                     coordinate_t coordinate_output_v) {
+  return deplacement_valide_gold(game_v, coordinate_input_v,
+                                 coordinate_output_v);
+}
 /**************** FIN des validations des déplacements  PROMU ****************/
 
 /** movement_valid_helper
@@ -736,6 +788,13 @@ int movement_valid_helper(game_t *game_v, coordinate_t coordinate_input_v,
       break;
     }
     {
+    case LANCIER:
+      return (deplacement_valide_lancier(game_v, coordinate_input_v,
+                                         coordinate_output_v))
+                 ? 1
+                 : 0;
+    }
+    {
     default:
       return 0;
     }
@@ -751,8 +810,8 @@ int movement_valid_helper(game_t *game_v, coordinate_t coordinate_input_v,
  *              coordinate_t    -   coordinate_output_v
  *  @return:    void
  */
-void is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
-                 coordinate_t coordinate_output_v) {
+int is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
+                coordinate_t coordinate_output_v) {
 
   char promotion_confirmation[MAX_CHAR];
 
@@ -766,19 +825,21 @@ void is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
 
         printf("Voulez vous promovoir la piece ?\n");
 
-        if (scanf("%19s\n", promotion_confirmation) != 1) {
+        if (scanf("%s", promotion_confirmation) != 1) {
           printf("Entrez au moins un caractere\n");
         }
 
         if (strcmp(promotion_confirmation, "oui") == 0) {
           promote_grant(
               &game_v->board[coordinate_input_v.x][coordinate_input_v.y]);
-          printf("La piece à été promu\n");
+          printf("La piece à été promu.\n");
+          return 1;
         }
 
         if (coordinate_output_v.y == 1)
           promote_grant(
               &game_v->board[coordinate_input_v.x][coordinate_input_v.y]);
+        return 1;
       }
     }
 
@@ -787,7 +848,7 @@ void is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
 
         printf("Voulez vous promovoir la piece ?\n");
 
-        if (scanf("%19s\n", promotion_confirmation) != 1) {
+        if (scanf("%19s", promotion_confirmation) != 1) {
           printf("Entrez au moins un caractere\n");
         }
 
@@ -795,14 +856,17 @@ void is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
           promote_grant(
               &game_v->board[coordinate_input_v.x][coordinate_input_v.y]);
           printf("La piece à été promu\n");
+          return 1;
         }
 
         if (coordinate_output_v.x == 9)
           promote_grant(
               &game_v->board[coordinate_input_v.x][coordinate_input_v.y]);
+        return 1;
       }
     }
   }
+  return 0;
 }
 
 /** promote_grant
