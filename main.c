@@ -15,7 +15,7 @@ int main() {
 
   /* Déclarations des variables */
 
-  game_t *game_new = debug_partie_nouvelle();
+  game_t *game_new = partie_nouvelle();
   partie_jouer(game_new);
   /* Début du programme principale */
 

@@ -1,6 +1,7 @@
 #include "header/mouvement.h"
 #include "header/game.h"
 #include "header/piece.h"
+#include "header/restriction.h"
 #include <stdio.h>
 #include <string.h>
 #define MAX_CHAR 256
@@ -96,14 +97,13 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
           }
 
           /* Si c'est pas le cas , on applique les déplacement */
-          if (test == 0) {
-            printf("Jsuis rentré la ou pas ?\n");
+          if (test == 0 && restriction_detector(game_v, coordinate_output_v)) {
             deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           }
           /* Fin du Develement pour l'algo de Parachutage pion*/
         } else if (deplacement_valide_pion(game_v, coordinate_input_v,
-                                           coordinate_output_v)) {
-          printf("Jsuis rentré la ou pas 2?\n");
+                                           coordinate_output_v) &&
+                   restriction_detector(game_v, coordinate_output_v)) {
 
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf("Le PION à été deplacé de (%d;%d) à (%d;%d) avec succès.\n",
@@ -119,7 +119,8 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       case PION_PROMU:
 
         if (deplacement_valide_pion_promu(game_v, coordinate_input_v,
-                                          coordinate_output_v)) {
+                                          coordinate_output_v) &&
+            restriction_detector(game_v, coordinate_output_v)) {
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf(
               "Le PION_PROMU à été deplace de (%d;%d) à (%d;%d) avec succès.\n",
@@ -134,7 +135,8 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       case TOUR:
 
         if (deplacement_valide_tour(game_v, coordinate_input_v,
-                                    coordinate_output_v)) {
+                                    coordinate_output_v) &&
+            restriction_detector(game_v, coordinate_output_v)) {
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf("La tour à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
                  coordinate_input_v.x, coordinate_input_v.y,
@@ -149,7 +151,8 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       case TOUR_PROMU:
 
         if (deplacement_valide_tour_promu(game_v, coordinate_input_v,
-                                          coordinate_output_v)) {
+                                          coordinate_output_v) &&
+            restriction_detector(game_v, coordinate_output_v)) {
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf(
               "La TOUR_PROMU à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
@@ -165,7 +168,8 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       case CAVALIER:
 
         if (deplacement_valide_cavalier(game_v, coordinate_input_v,
-                                        coordinate_output_v)) {
+                                        coordinate_output_v) &&
+            restriction_detector(game_v, coordinate_output_v)) {
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf(
               "Le CAVALIER à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
@@ -181,7 +185,8 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       case CAVALIER_PROMU:
 
         if (deplacement_valide_cavalier_promu(game_v, coordinate_input_v,
-                                              coordinate_output_v)) {
+                                              coordinate_output_v) &&
+            restriction_detector(game_v, coordinate_output_v)) {
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf("Le CAVALIER_PROMU à été déplacé de (%d;%d) a (%d;%d) avec "
                  "succès.\n",
@@ -197,7 +202,8 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       case FOU:
 
         if (deplacement_valide_fou(game_v, coordinate_input_v,
-                                   coordinate_output_v)) {
+                                   coordinate_output_v) &&
+            restriction_detector(game_v, coordinate_output_v)) {
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf("Le FOU à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
                  coordinate_input_v.x, coordinate_input_v.y,
@@ -212,7 +218,8 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       case FOU_PROMU:
 
         if (deplacement_valide_fou_promu(game_v, coordinate_input_v,
-                                         coordinate_output_v)) {
+                                         coordinate_output_v) &&
+            restriction_detector(game_v, coordinate_output_v)) {
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf(
               "Le FOU_PROMU à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
@@ -228,7 +235,8 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       case GOLD:
 
         if (deplacement_valide_gold(game_v, coordinate_input_v,
-                                    coordinate_output_v)) {
+                                    coordinate_output_v) &&
+            restriction_detector(game_v, coordinate_output_v)) {
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf("Le GOLD à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
                  coordinate_input_v.x, coordinate_input_v.y,
@@ -243,7 +251,8 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       case SILVER:
 
         if (deplacement_valide_silver(game_v, coordinate_input_v,
-                                      coordinate_output_v)) {
+                                      coordinate_output_v) &&
+            restriction_detector(game_v, coordinate_output_v)) {
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf("Le SILVER à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
                  coordinate_input_v.x, coordinate_input_v.y,
@@ -258,7 +267,8 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       case SILVER_PROMU:
 
         if (deplacement_valide_gold(game_v, coordinate_input_v,
-                                    coordinate_output_v)) {
+                                    coordinate_output_v) &&
+            restriction_detector(game_v, coordinate_output_v)) {
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf("Le SILVER_PROMU à été déplacé de (%d;%d) a (%d;%d) avec "
                  "succès.\n",
@@ -274,7 +284,8 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       case ROI:
 
         if (deplacement_valide_roi(game_v, coordinate_input_v,
-                                   coordinate_output_v)) {
+                                   coordinate_output_v) &&
+            restriction_detector(game_v, coordinate_output_v)) {
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf("Le ROI à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
                  coordinate_input_v.x, coordinate_input_v.y,
@@ -288,7 +299,8 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       {
       case LANCIER:
         if (deplacement_valide_lancier(game_v, coordinate_input_v,
-                                       coordinate_output_v)) {
+                                       coordinate_output_v) &&
+            restriction_detector(game_v, coordinate_output_v)) {
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf("Le LANCIER à été déplacé de (%d;%d) à (%d;%d) avec succès\n",
                  coordinate_input_v.x, coordinate_input_v.y,
@@ -301,7 +313,8 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       {
       case LANCIER_PROMU:
         if (deplacement_valide_lancier_promu(game_v, coordinate_input_v,
-                                             coordinate_output_v)) {
+                                             coordinate_output_v) &&
+            restriction_detector(game_v, coordinate_output_v)) {
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf("Le LANCIER_PROMU à été déplacé de (%d;%d) à (%d;%d) avec "
                  "succès\n",

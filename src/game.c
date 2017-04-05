@@ -4,6 +4,7 @@
 #include "header/mouvement.h"
 #include "header/piece.h"
 #include "header/pile.h"
+#include "header/restriction.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,10 +21,11 @@ coordinate_t COORDINATE_NULL = {42, 42};
  * @param : game_t - game_v
  * @return : VOID
  */
-void afficher_echiquier(game_t *game_v, coordinate_t COORDINATE_NULL) {
+void afficher_echiquier(game_t *game_v, coordinate_t game_input_tmp) {
 
   /* Variables de boucles pour les coordonnes*/
   int x, y;
+  movement_restriction_destruct(game_v);
 
   printf("\n");
   printf("           x->     y  0  1  2  3  4  5  6  7  8  9  10\n");
@@ -54,11 +56,11 @@ void afficher_echiquier(game_t *game_v, coordinate_t COORDINATE_NULL) {
     }
 
     /* Selection detector */
-    /*
-        if (game_input_tmp.x != 42 || game_input_tmp.y != 42) {
-          //      movement_restriction(game_v, game_input_tmp);
-        }
-    */
+
+    if (game_input_tmp.x != 42 || game_input_tmp.y != 42) {
+      movement_restriction(game_v, game_input_tmp);
+    }
+
     /* Chess board */
     for (y = 0; y < 11; y++) {
       piece_afficher(game_v->board[x][y]);
@@ -168,7 +170,13 @@ game_t *partie_nouvelle() {
  * @param piece_t piece_v
  * @return int
  */
-int case_vide(piece_t piece_v) { return (piece_v.type == VIDE) ? 1 : 0; }
+int case_vide(piece_t piece_v) {
+  if (piece_v.type == VIDE) {
+    return 1;
+  } else if (piece_v.type == SELECT)
+    return 1;
+  return 0;
+}
 
 /** Modifier case
  *  Permet de modifier le contenue de la case
