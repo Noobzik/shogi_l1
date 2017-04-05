@@ -6,5 +6,6 @@
 
 void debug_pile(game_t *game_v);
 void debug_file(game_t *game_v);
+game_t *debug_partie_nouvelle();
 
 #endif

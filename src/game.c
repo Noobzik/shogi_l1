@@ -26,7 +26,7 @@ void afficher_echiquier(game_t *game_v, coordinate_t COORDINATE_NULL) {
   int x, y;
 
   printf("\n");
-  printf("                      0  1  2  3  4  5  6  7  8  9  10\n");
+  printf("           x->     y  0  1  2  3  4  5  6  7  8  9  10\n");
   printf("                      _________________________________\n");
 
   for (x = 0; x < 11; x++) {
@@ -37,7 +37,7 @@ void afficher_echiquier(game_t *game_v, coordinate_t COORDINATE_NULL) {
         printf("                   %d  ", x);
     } else if (x < 6) {
       /* Player Indicator */
-      if (game_v->player == 0) {
+      if (game_v->player == 1) {
         printf("  NOIR->           %d  ", x);
       } else {
         printf("                   %d  ", x);
@@ -47,7 +47,7 @@ void afficher_echiquier(game_t *game_v, coordinate_t COORDINATE_NULL) {
       /** Player Indicator : BLANC
        *  Premier if = hack pour pas afficher blanc a la 6eme ligne
        */
-      if (game_v->player == 1 && x > 6) {
+      if (game_v->player == 0 && x > 6) {
         printf("  BLANC->          %d  ", x);
       } else
         printf("                   %d  ", x);
@@ -226,7 +226,7 @@ void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
 
       /** Noir **/
 
-      if (game_v->player == 0) {
+      if (game_v->player == 1) {
         x = 10;
 
         while (test == 1) {
@@ -268,7 +268,7 @@ void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
 
       /* Ici une fonction qui met dans la reserve */
       /** Blanc **/
-      if (game_v->player == 1) {
+      if (game_v->player == 0) {
         x = 0;
 
         while (test == 1) {

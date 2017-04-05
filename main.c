@@ -1,4 +1,5 @@
 //#include "src/header/file.h"
+#include "src/header/debug.h"
 #include "src/header/game.h"
 #include <stdio.h>  /* printf && scanf */
 #include <stdlib.h> /* EXIT_SUCCESS; */
@@ -14,7 +15,7 @@ int main() {
 
   /* Déclarations des variables */
 
-  game_t *game_new = partie_nouvelle();
+  game_t *game_new = debug_partie_nouvelle();
   partie_jouer(game_new);
   /* Début du programme principale */
 

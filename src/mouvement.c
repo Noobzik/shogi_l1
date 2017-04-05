@@ -36,14 +36,14 @@ int movement_valid_input(game_t *game_v, coordinate_t coordinate_v) {
 
 /** movement_valid_input
  * Permet de valider les coordonnées d'arrivée, Vérifie si les cordoonées sont
- * dans l'échiquier
+ * dans l'échiquier au format 9x9 (Sans la reserve)
  * @params :    coordinate_t    -   coordinate_v
  * @return :    int
  */
 
 int movement_valid_output(coordinate_t coordinate_v) {
-  return ((coordinate_v.x > 0 || coordinate_v.y < 10) &&
-          (coordinate_v.y > 0 && coordinate_v.y < 10))
+  return (coordinate_v.x > 0 && coordinate_v.y < 10 && coordinate_v.x < 10 &&
+          coordinate_v.y > 0)
              ? 1
              : 0;
 }
@@ -62,6 +62,9 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
   // Main
   //======================================================================
   int test = 0, y;
+  piece_color_e color_tmp =
+      game_v->board[coordinate_input_v.x][coordinate_input_v.y].color;
+
   if ((coordinate_input_v.x != coordinate_output_v.x ||
        coordinate_input_v.y != coordinate_output_v.y) &&
       (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color !=
@@ -84,22 +87,24 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
 
           /* Boucle for pour tester si il y a un pion dans la colonne darrivé*/
           for (y = 1; y < 10; y++) {
-            if (game_v->board[coordinate_output_v.x][y].type == PION) {
+            if (game_v->board[y][coordinate_output_v.x].type == PION &&
+                game_v->board[y][coordinate_output_v.x].color == color_tmp) {
               test = 1;
-              printf("Erreur, Il y a déjà un pion dans la colonne d'arrivée");
+              printf("Erreur, Il y a déjà un pion dans la colonne d'arrivée\n");
+              y = 42;
             }
           }
 
-          /* Si c'est pas le cas , on applique les déplacement, mais justement,
-           * je ne sais pas si deplacement_valide_parachutage est cassé ou
-           * pas...*/
-          if (test == 0)
-            deplacement_valide_parachutage(game_v, coordinate_input_v,
-                                           coordinate_output_v);
-
+          /* Si c'est pas le cas , on applique les déplacement */
+          if (test == 0) {
+            printf("Jsuis rentré la ou pas ?\n");
+            deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+          }
           /* Fin du Develement pour l'algo de Parachutage pion*/
         } else if (deplacement_valide_pion(game_v, coordinate_input_v,
                                            coordinate_output_v)) {
+          printf("Jsuis rentré la ou pas 2?\n");
+
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf("Le PION à été deplacé de (%d;%d) à (%d;%d) avec succès.\n",
                  coordinate_input_v.x, coordinate_input_v.y,
@@ -391,11 +396,11 @@ int deplacement_valide_cavalier(game_t *game_v, coordinate_t coordinate_input_v,
       BLANC) {
 
     /* On vérifie les conditions x+1 et x-1 */
-    if (coordinate_input_v.x - 1 == coordinate_output_v.x ||
-        coordinate_input_v.x + 1 == coordinate_output_v.x) {
+    if (coordinate_input_v.y - 1 == coordinate_output_v.y ||
+        coordinate_input_v.y + 1 == coordinate_output_v.y) {
 
       /* On vérifie les conditions vers l'avant (haut) soit y+2 */
-      if (coordinate_input_v.y + 2 == coordinate_output_v.y) {
+      if (coordinate_input_v.x + 2 == coordinate_output_v.x) {
         return 1;
       }
     }
@@ -405,12 +410,12 @@ int deplacement_valide_cavalier(game_t *game_v, coordinate_t coordinate_input_v,
 
   if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color == NOIR) {
 
-    /* On vérifie les conditions x+1 et x-1 */
-    if (coordinate_input_v.x - 1 == coordinate_output_v.x ||
-        coordinate_input_v.x + 1 == coordinate_output_v.x) {
+    /* On vérifie les conditions y+1 et y-1 */
+    if (coordinate_input_v.y - 1 == coordinate_output_v.y ||
+        coordinate_input_v.y + 1 == coordinate_output_v.y) {
 
-      /* On vérifie les conditions vers l'arriere (bas) soit y-2 */
-      if (coordinate_input_v.y - 2 == coordinate_output_v.y) {
+      /* On vérifie les conditions vers l'arriere (bas) soit x-2 */
+      if (coordinate_input_v.x - 2 == coordinate_output_v.x) {
         return 1;
       }
     }
@@ -449,6 +454,7 @@ int deplacement_valide_fou(game_t *game_v, coordinate_t coordinate_input_v,
              ? 1
              : 0;
 }
+
 /** deplacement_valide_roi
  * Permet de valider les déplacement du roi
  * Conditions : Déplacement d'une case Seulement
@@ -493,35 +499,48 @@ int deplacement_valide_gold(game_t *game_v, coordinate_t coordinate_input_v,
   if (piece_couleur(
           game_v->board[coordinate_input_v.x][coordinate_input_v.y]) == BLANC) {
 
-    /* Verifications déplacement sur x */
-    if (coordinate_input_v.x - 1 == coordinate_output_v.x ||
-        coordinate_input_v.x + 1 == coordinate_output_v.x ||
-        coordinate_input_v.x == coordinate_output_v.x) {
-
-      /* Restrictions déplacement sur y+1 et y*/
-
-      if (coordinate_input_v.y + 1 == coordinate_output_v.y ||
-          coordinate_input_v.y == coordinate_output_v.y) {
+    /* Restriction sur les diagonales en arriere */
+    if (coordinate_input_v.x - 1 == coordinate_output_v.x) {
+      if (coordinate_input_v.y == coordinate_output_v.y)
         return 1;
-      }
-      return 0;
+    }
+    /* Deplacement vers l'avant */
+    if (coordinate_input_v.x + 1 == coordinate_output_v.x) {
+      return 1;
+    }
+    /* Deplacement vers la gauche sur la meme ligne */
+    if (coordinate_input_v.x == coordinate_output_v.x &&
+        coordinate_input_v.y - 1 == coordinate_output_v.y) {
+      return 1;
+    }
+    /* Deplacement vers la droite sur la meme ligne */
+    if (coordinate_input_v.x == coordinate_output_v.x &&
+        coordinate_input_v.y + 1 == coordinate_output_v.y) {
+      return 1;
     }
   }
 
   if (piece_couleur(
           game_v->board[coordinate_input_v.x][coordinate_input_v.y]) == NOIR) {
 
-    /* Verifications déplacement sur y */
-    if (coordinate_input_v.x - 1 == coordinate_output_v.x ||
-        coordinate_input_v.x + 1 == coordinate_output_v.x ||
-        coordinate_input_v.x == coordinate_output_v.x) {
-
-      /* Restrictions déplacement sur y-1 et y */
-      if (coordinate_input_v.y - 1 == coordinate_output_v.y ||
-          coordinate_input_v.y == coordinate_output_v.y) {
+    /* Restriction sur les diagonales en arriere */
+    if (coordinate_input_v.x + 1 == coordinate_output_v.x) {
+      if (coordinate_input_v.y == coordinate_output_v.y)
         return 1;
-      }
-      return 0;
+    }
+    /* Deplacement vers l'avant */
+    if (coordinate_input_v.x - 1 == coordinate_output_v.x) {
+      return 1;
+    }
+    /* Deplacement vers la gauche sur la meme ligne */
+    if (coordinate_input_v.x == coordinate_output_v.x &&
+        coordinate_input_v.y - 1 == coordinate_output_v.y) {
+      return 1;
+    }
+    /* Deplacement vers la droite sur la meme ligne */
+    if (coordinate_input_v.x == coordinate_output_v.x &&
+        coordinate_input_v.y + 1 == coordinate_output_v.y) {
+      return 1;
     }
   }
 
@@ -530,7 +549,7 @@ int deplacement_valide_gold(game_t *game_v, coordinate_t coordinate_input_v,
 
 /** deplacement_valide_silver
  * Permet de valider les déplacement du silver
- * Reprends le Prototype du roi et silver, mais avec une Restrictions de pas de
+ * Reprends le Prototype du roi et gold, mais avec une Restrictions de pas de
  * déplacement sur x et y+1 pour les noir
  * @params :  game_t       - game_v
  *            coordinate_t - coordinate_input_v
@@ -539,54 +558,43 @@ int deplacement_valide_gold(game_t *game_v, coordinate_t coordinate_input_v,
  */
 int deplacement_valide_silver(game_t *game_v, coordinate_t coordinate_input_v,
                               coordinate_t coordinate_output_v) {
+
+  /* En faite c'est les noir ici */
   if (piece_couleur(
           game_v->board[coordinate_input_v.x][coordinate_input_v.y]) == BLANC) {
 
-    /* Verifications déplacement sur les cases Diagonnales (coins) */
-    if (coordinate_input_v.x - 1 == coordinate_output_v.x ||
-        coordinate_input_v.x + 1 == coordinate_output_v.x) {
-
-      /* Restrictions déplacement sur y et y-1*/
-
+    /* Restrictions au déplacement ligne +1 et ses diagonales +1 */
+    if (coordinate_input_v.x + 1 == coordinate_output_v.x) {
       if (coordinate_input_v.y + 1 == coordinate_output_v.y ||
-          coordinate_input_v.y - 1 == coordinate_output_v.y) {
+          coordinate_input_v.y - 1 == coordinate_output_v.y)
         return 1;
-      }
-      return 0;
+      return 1;
     }
 
-    /* Restriction sur y+1 */
-    else if (coordinate_input_v.x == coordinate_output_v.x) {
-      if (coordinate_input_v.y + 1 == coordinate_output_v.y) {
-        return 1;
-      }
-    }
-    return 0;
+    /* Restrictions aux diagonales arriere */
+    if (coordinate_input_v.x - 1 == coordinate_output_v.x &&
+        (coordinate_input_v.y + 1 == coordinate_output_v.y ||
+         coordinate_input_v.y - 1 == coordinate_output_v.y))
+      return 1;
   }
 
+  /* En faite c'est les blanc ici */
   if (piece_couleur(
           game_v->board[coordinate_input_v.x][coordinate_input_v.y]) == NOIR) {
 
-    /* Verifications déplacement sur les cases Diagonnales (coins) */
-    if (coordinate_input_v.x - 1 == coordinate_output_v.x ||
-        coordinate_input_v.x + 1 == coordinate_output_v.x) {
-
-      /* Restrictions déplacement sur y et y-1*/
-
+    /* Restrictions au déplacement ligne +1 et ses diagonales +1 */
+    if (coordinate_input_v.x - 1 == coordinate_output_v.x) {
       if (coordinate_input_v.y + 1 == coordinate_output_v.y ||
-          coordinate_input_v.y - 1 == coordinate_output_v.y) {
+          coordinate_input_v.y - 1 == coordinate_output_v.y)
         return 1;
-      }
-      return 0;
+      return 1;
     }
 
-    /* Restriction sur y-1 */
-    else if (coordinate_input_v.x == coordinate_output_v.x) {
-      if (coordinate_input_v.y - 1 == coordinate_output_v.y) {
-        return 1;
-      }
-    }
-    return 0;
+    /* Restrictions aux diagonales arriere */
+    if (coordinate_input_v.x + 1 == coordinate_output_v.x &&
+        (coordinate_input_v.y + 1 == coordinate_output_v.y ||
+         coordinate_input_v.y - 1 == coordinate_output_v.y))
+      return 1;
   }
 
   return 0;
@@ -626,38 +634,38 @@ int deplacement_valide_parachutage(game_t *game_v,
                                    coordinate_t coordinate_input_v,
                                    coordinate_t coordinate_output_v) {
 
-  /* Parachutage blanc */
-  if (game_v->player == BLANC) {
+  /*  Parachutage blanc
+   if (game_v->player == BLANC) {
 
-    /* Test si les coordonnées d'entré correspondent a la reserve */
-    if (coordinate_input_v.x >= 0 && coordinate_input_v.x < 11) {
-      if (coordinate_input_v.y == 10) {
+      Test si les coordonnées d'entré correspondent a la reserve
+     if (coordinate_input_v.x >= 0 && coordinate_input_v.x < 11) {
+       if (coordinate_input_v.y == 10) {
 
-        /* Teste si les coordonnées de sortie est une case vide */
-        return (game_v->board[coordinate_output_v.x][coordinate_output_v.y]
-                    .color == VIDE_PIECE)
-                   ? 1
-                   : 0;
-      }
-    }
-  }
+         Teste si les coordonnées de sortie est une case vide
+         return (game_v->board[coordinate_output_v.x][coordinate_output_v.y]
+                     .color == VIDE_PIECE)
+                    ? 1
+                    : 0;
+       }
+     }
+   }
 
-  /* Parachutage noir */
+    Parachutage noir
 
-  if (game_v->player == NOIR) {
+   if (game_v->player == NOIR) {
 
-    /* Test si les coordonnées d'entré correspondent a la reserve */
-    if (coordinate_input_v.y > 0 && coordinate_input_v.y < 11) {
-      if (coordinate_input_v.x == 10) {
+      Test si les coordonnées d'entré correspondent a la reserve
+     if (coordinate_input_v.y > 0 && coordinate_input_v.y < 11) {
+       if (coordinate_input_v.x == 10) {
 
-        /* Test si les coordonnées de sortie correspondent à une case vide */
-        return (game_v->board[coordinate_output_v.x][coordinate_output_v.y]
-                    .color == VIDE_PIECE)
-                   ? 1
-                   : 0;
-      }
-    }
-  }
+          Test si les coordonnées de sortie correspondent à une case vide
+         return (game_v->board[coordinate_output_v.x][coordinate_output_v.y]
+                     .color == VIDE_PIECE)
+                    ? 1
+                    : 0;
+       }
+     }
+ }*/
   return 0;
 }
 /****************** Fin des validations des déplacements   ******************/
@@ -857,15 +865,19 @@ int is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
 
   char promotion_confirmation[MAX_CHAR];
 
-  if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].statut ==
-      NON_PROMU) {
+  /* On veut pas promouvoir les roi et les gold */
 
-    /* Traitement pour joueur BLANC */
+  if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].type == GOLD ||
+      game_v->board[coordinate_input_v.x][coordinate_input_v.y].type == ROI) {
+    return 0;
+  }
+  /* Application des règle spécifique de promotion pour le cavalier */
 
-    if (game_v->player == 1) {
-      if (coordinate_output_v.y == 3 || coordinate_output_v.y == 2) {
-
-        printf("Voulez vous promovoir la piece ?\n");
+  if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].type ==
+      CAVALIER) {
+    if (game_v->player == 0) {
+      if (coordinate_output_v.x == 3) {
+        printf("Voulez vous promovoir la piece ? (oui/non)\n");
 
         if (scanf("%s", promotion_confirmation) != 1) {
           printf("Entrez au moins un caractere\n");
@@ -874,37 +886,109 @@ int is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
         if (strcmp(promotion_confirmation, "oui") == 0) {
           promote_grant(
               &game_v->board[coordinate_input_v.x][coordinate_input_v.y]);
-          printf("La piece à été promu.\n");
+          printf("La pièce à été promu.\n");
           return 1;
         }
-
-        if (coordinate_output_v.y == 1)
-          promote_grant(
-              &game_v->board[coordinate_input_v.x][coordinate_input_v.y]);
+      } else if (coordinate_output_v.x == 2 || coordinate_output_v.x == 1) {
+        printf("(Info) Votre pièce a été directement promu\n");
+        promote_grant(
+            &game_v->board[coordinate_input_v.x][coordinate_input_v.y]);
         return 1;
       }
     }
 
-    else if (game_v->player == 0) {
-      if (coordinate_output_v.y == 7 || coordinate_output_v.y == 8) {
+    else if (game_v->player == 1) {
+      if (coordinate_output_v.x == 7) {
+        printf("Voulez vous promovoir la piece ? (oui/non)\n");
 
-        printf("Voulez vous promovoir la piece ?\n");
-
-        if (scanf("%19s", promotion_confirmation) != 1) {
+        if (scanf("%s", promotion_confirmation) != 1) {
           printf("Entrez au moins un caractere\n");
         }
 
         if (strcmp(promotion_confirmation, "oui") == 0) {
           promote_grant(
               &game_v->board[coordinate_input_v.x][coordinate_input_v.y]);
-          printf("La piece à été promu\n");
+          printf("La pièce à été promu.\n");
+          return 1;
+        }
+      } else if (coordinate_output_v.x == 8 || coordinate_output_v.x == 9) {
+        printf("(Info) Votre pièce a été directement promu\n");
+        promote_grant(
+            &game_v->board[coordinate_input_v.x][coordinate_input_v.y]);
+        return 1;
+      }
+    }
+  }
+
+  /* Si la piece selectionné est une piece de la reserve, on arrete la fonction
+   */
+  if (((coordinate_input_v.x == 0 && coordinate_input_v.y < 10) ||
+       (coordinate_input_v.x == 10 && coordinate_input_v.y < 10))) {
+    return 0;
+  }
+
+  /* Sinon : Application du cas général */
+  else {
+    if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].statut ==
+        NON_PROMU) {
+
+      /* Traitement pour joueur BLANC */
+
+      if (game_v->player == 0) {
+
+        /* Test si la pièce à atteint les deux premiers ligne adverse */
+        if (coordinate_output_v.x == 3 || coordinate_output_v.x == 2) {
+
+          /* Application strict du règlement : Laisser le choix*/
+          printf("Voulez vous promovoir la piece ? (oui/non)\n");
+
+          if (scanf("%s", promotion_confirmation) != 1) {
+            printf("Entrez au moins un caractere\n");
+          }
+
+          if (strcmp(promotion_confirmation, "oui") == 0) {
+            promote_grant(
+                &game_v->board[coordinate_input_v.x][coordinate_input_v.y]);
+            printf("La pièce à été promu.\n");
+            return 1;
+          }
+
+          /* Application strict du règlement : Promouvoir automatiquement*/
+        } else if (coordinate_output_v.x == 1) {
+          printf("(Info) Votre pièce a été directement promu\n");
+          promote_grant(
+              &game_v->board[coordinate_input_v.x][coordinate_input_v.y]);
           return 1;
         }
 
-        if (coordinate_output_v.x == 9)
+      }
+
+      else if (game_v->player == 1) {
+
+        /* Test si la pièce à atteint les deux premiers ligne adverse */
+        if (coordinate_output_v.x == 7 || coordinate_output_v.x == 8) {
+
+          /* Application strict du règlement : Laisser le choix*/
+          printf("Voulez vous promovoir la pièce ? (oui/non)\n");
+
+          if (scanf("%19s", promotion_confirmation) != 1) {
+            printf("Entrez au moins un caractere\n");
+          }
+
+          if (strcmp(promotion_confirmation, "oui") == 0) {
+            promote_grant(
+                &game_v->board[coordinate_input_v.y][coordinate_input_v.x]);
+            printf("La pièce à été promu\n");
+            return 1;
+          }
+
+          /* Application strict du règlement : Promouvoir automatiquement*/
+        } else if (coordinate_output_v.x == 9) {
+          printf("(Info) Votre pièce a été directement promu\n");
           promote_grant(
               &game_v->board[coordinate_input_v.x][coordinate_input_v.y]);
-        return 1;
+          return 1;
+        }
       }
     }
   }

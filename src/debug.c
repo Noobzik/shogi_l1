@@ -59,3 +59,31 @@ void debug_file(game_t *game_v) {
   }
   printf("\n");
 }
+
+game_t *debug_partie_nouvelle() {
+  //======================================================================
+  // Variables
+  //======================================================================
+  int x, y;
+  game_t *res;
+
+  /* Initialize */
+  res = partie_creer();
+  res->capture = pile_create();
+  res->file = file_creer_list();
+  res->player = 0;
+
+  /* Remplissage case vide */
+  for (x = 0; x < 11; x++) {
+
+    for (y = 0; y < 11; y++) {
+      res->board[y][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+      res->board[y][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+    }
+  }
+
+  /* Pions */
+  res->board[5][5] = piece_creer(NOIR, LANCIER, NON_PROMU);
+
+  return res;
+}

@@ -184,73 +184,6 @@ char piece_caractere(piece_t piece_v) {
     switch (piece_v.type) {
       {
       case ROI:
-        return 'K';
-      }
-      {
-      case TOUR:
-        return 'R';
-      }
-      {
-      case FOU:
-        return 'B';
-      }
-      {
-      case GOLD:
-        return 'G';
-      }
-      {
-      case SILVER:
-        return 'S';
-      }
-      {
-      case CAVALIER:
-        return 'N';
-      }
-      {
-      case LANCIER:
-        return 'L';
-      }
-      {
-      case PION:
-        return 'P';
-      }
-      {
-      case PION_PROMU:
-        return 'D'; // PION PROMU
-      }
-      {
-      case LANCIER_PROMU:
-        return 'J'; // LANCIER PROMU
-      }
-      {
-      case CAVALIER_PROMU:
-        return 'C'; // CAVALIER PROMU
-      }
-      {
-      case FOU_PROMU:
-        return 'F'; // FOU PROMU
-      }
-      {
-      case TOUR_PROMU:
-        return 'T'; // TOUR PROMU
-      }
-      {
-      case SILVER_PROMU:
-        return 'A'; // SILVER PROMU
-      }
-      {
-      case SELECT:
-        return '*';
-      }
-      {
-      default:
-        return '.';
-      }
-    }
-  } else {
-    switch (piece_v.type) {
-      {
-      case ROI:
         return 'k';
       }
       {
@@ -304,6 +237,73 @@ char piece_caractere(piece_t piece_v) {
       {
       case SILVER_PROMU:
         return 'a'; // SILVER PROMU
+      }
+      {
+      case SELECT:
+        return '*';
+      }
+      {
+      default:
+        return '.';
+      }
+    }
+  } else {
+    switch (piece_v.type) {
+      {
+      case ROI:
+        return 'K';
+      }
+      {
+      case TOUR:
+        return 'R';
+      }
+      {
+      case FOU:
+        return 'B';
+      }
+      {
+      case GOLD:
+        return 'G';
+      }
+      {
+      case SILVER:
+        return 'S';
+      }
+      {
+      case CAVALIER:
+        return 'N';
+      }
+      {
+      case LANCIER:
+        return 'L';
+      }
+      {
+      case PION:
+        return 'P';
+      }
+      {
+      case PION_PROMU:
+        return 'D'; // PION PROMU
+      }
+      {
+      case LANCIER_PROMU:
+        return 'J'; // LANCIER PROMU
+      }
+      {
+      case CAVALIER_PROMU:
+        return 'C'; // CAVALIER PROMU
+      }
+      {
+      case FOU_PROMU:
+        return 'F'; // FOU PROMU
+      }
+      {
+      case TOUR_PROMU:
+        return 'T'; // TOUR PROMU
+      }
+      {
+      case SILVER_PROMU:
+        return 'A'; // SILVER PROMU
       }
       {
       case SELECT:
