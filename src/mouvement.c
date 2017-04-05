@@ -593,7 +593,8 @@ int deplacement_valide_silver(game_t *game_v, coordinate_t coordinate_input_v,
 }
 
 /** deplacement_valide_lancier
- *  Le lancier se deplace seulement en vertical
+ *  Le lancier se deplace seulement en vertical, il ne peut pas revenir en
+ * arrière
  *  @params:    game_t          -   game_v
  *              coordinate_t    -   coordinate_input_v
  *              coordinate_t    -   coordinate_output_v
@@ -601,13 +602,25 @@ int deplacement_valide_silver(game_t *game_v, coordinate_t coordinate_input_v,
  */
 int deplacement_valide_lancier(game_t *game_v, coordinate_t coordinate_input_v,
                                coordinate_t coordinate_output_v) {
-  return (coordinate_input_v.y == coordinate_output_v.y) ? 1 : 0;
+
+  if (coordinate_input_v.y == coordinate_output_v.y) {
+    if ((coordinate_input_v.x < coordinate_output_v.x) &&
+        piece_couleur(
+            game_v->board[coordinate_input_v.x][coordinate_input_v.y]) == BLANC)
+      return 1;
+    else if ((coordinate_input_v.x > coordinate_output_v.x) &&
+             piece_couleur(
+                 game_v->board[coordinate_input_v.x][coordinate_input_v.y]) ==
+                 NOIR)
+      return 1;
+  }
+  return 0;
 }
 
 /** deplacement_valide_parachutage
  * Permet de valider un déplacement depuis la réserve
- * Condition, les coordonées de départs doit correspondre à la reserve du joueur
- * actuelle et les coordonnees d'arrivée à une case vide
+ * Condition, les coordonées de départs doit correspondre à la reserve du
+ * joueur actuelle et les coordonnees d'arrivée à une case vide
  */
 int deplacement_valide_parachutage(game_t *game_v,
                                    coordinate_t coordinate_input_v,
@@ -736,7 +749,8 @@ int deplacement_valide_lancier_promu(game_t *game_v,
   return deplacement_valide_gold(game_v, coordinate_input_v,
                                  coordinate_output_v);
 }
-/**************** FIN des validations des déplacements  PROMU ****************/
+/**************** FIN des validations des déplacements  PROMU
+ * ****************/
 
 /** movement_valid_helper
  * movement board validator for helper
@@ -831,8 +845,8 @@ int movement_valid_helper(game_t *game_v, coordinate_t coordinate_input_v,
 }
 
 /** movement is_promoted
- *  Permet de savoir si la piece en coordonnées d'arrivé a la possibilité d'être
- *  promu
+ *  Permet de savoir si la piece en coordonnées d'arrivé a la possibilité
+ * d'être promu
  *  @params:    game_t          -   game_v
  *              coordinate_t    -   coordinate_input_v
  *              coordinate_t    -   coordinate_output_v
