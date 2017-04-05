@@ -61,6 +61,7 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
   //======================================================================
   // Main
   //======================================================================
+  int test = 0, y;
   if ((coordinate_input_v.x != coordinate_output_v.x ||
        coordinate_input_v.y != coordinate_output_v.y) &&
       (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color !=
@@ -70,8 +71,35 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       {
       case PION:
 
-        if (deplacement_valide_pion(game_v, coordinate_input_v,
-                                    coordinate_output_v)) {
+        /* Develement des Parachutage du PION
+         * Algo => Pas deuxieme pion sur la meme colonne
+         */
+
+        /* Ce gros if doit vérifier si les coordonnées d'entré sont dans la
+         * reserve ou pas */
+        if ((coordinate_input_v.x == 0 &&
+             (coordinate_input_v.y < 11 && coordinate_input_v.y > -1)) ||
+            (coordinate_input_v.y == 0 &&
+             (coordinate_input_v.x < 11 && coordinate_input_v.y >= 0))) {
+
+          /* Boucle for pour tester si il y a un pion dans la colonne darrivé*/
+          for (y = 1; y < 10; y++) {
+            if (game_v->board[coordinate_output_v.x][y].type == PION) {
+              test = 1;
+              printf("Erreur, Il y a déjà un pion dans la colonne d'arrivée");
+            }
+          }
+
+          /* Si c'est pas le cas , on applique les déplacement, mais justement,
+           * je ne sais pas si deplacement_valide_parachutage est cassé ou
+           * pas...*/
+          if (test == 0)
+            deplacement_valide_parachutage(game_v, coordinate_input_v,
+                                           coordinate_output_v);
+
+          /* Fin du Develement pour l'algo de Parachutage pion*/
+        } else if (deplacement_valide_pion(game_v, coordinate_input_v,
+                                           coordinate_output_v)) {
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf("Le PION à été deplacé de (%d;%d) à (%d;%d) avec succès.\n",
                  coordinate_input_v.x, coordinate_input_v.y,
