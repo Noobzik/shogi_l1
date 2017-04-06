@@ -605,7 +605,7 @@ void partie_jouer(game_t *game_v) {
       /* Separator */
       game_seperator();
 
-      //      debug_cell(game_v, game_input_tmp);
+      debug_cell(game_v, game_input_tmp);
 
       /* Enter loop */
       afficher_echiquier(game_v, COORDINATE_NULL);
@@ -670,6 +670,8 @@ void partie_jouer(game_t *game_v) {
       //      is_promoted(game_v, game_input_tmp, game_output_tmp);
       game_seperator();
       deplacement_valide(game_v, game_input_tmp, game_output_tmp);
+
+      game_play = movement_valid_win(game_v, game_output_tmp);
 
       /* Enter loop */
       afficher_echiquier(game_v, COORDINATE_NULL);

@@ -180,7 +180,6 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       }
       {
       case CAVALIER:
-
         if ((coordinate_input_v.x != coordinate_output_v.x ||
              coordinate_input_v.y != coordinate_output_v.y) &&
             (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color !=
@@ -189,20 +188,18 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
           movement_restriction_parachute(game_v);
         }
 
-        else if (deplacement_valide_cavalier(game_v, coordinate_input_v,
-                                             coordinate_output_v) ||
-                 restriction_detector(game_v, coordinate_output_v)) {
-          printf("Cavalier est-il rentré ici?\n");
-
+        if (deplacement_valide_cavalier(game_v, coordinate_input_v,
+                                        coordinate_output_v) &&
+            restriction_detector(game_v, coordinate_output_v)) {
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf(
-              "Le CAVALIER à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
+              "Le cavalier à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
               coordinate_input_v.x, coordinate_input_v.y, coordinate_output_v.x,
               coordinate_output_v.y);
         }
 
         else {
-          printf("Le déplacement du CAVALIER à échoué.\n");
+          printf("Le deplacement du cavalier à échoué.\n");
         }
 
         break;
@@ -395,6 +392,25 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
   } else {
     printf("Le deplacement à été annulée.\n");
   }
+}
+
+int movement_valid_win(game_t *game_v, coordinate_t coordinate_v) {
+  if (game_v->player == 1) {
+
+    if (game_v->board[coordinate_v.x][coordinate_v.y].type == ROI) {
+      printf("La partie est gagné par les BLANCS\n");
+      return 0;
+    }
+  }
+
+  else if (game_v->player == 0) {
+    if (game_v->board[coordinate_v.x][coordinate_v.y].type == ROI) {
+      printf("La partie est gagné par les NOIR\n");
+      return 0;
+    }
+  }
+
+  return 1;
 }
 
 /****************** Fin Bloc validation des entrés et sortie ******************/
@@ -1002,8 +1018,8 @@ int is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
   }
   /* Application des règle spécifique de promotion pour le cavalier */
 
-  if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].type ==
-      CAVALIER) {
+  else if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].type ==
+           CAVALIER) {
     if (game_v->player == 0) {
       if (coordinate_output_v.x == 3) {
         printf("Voulez vous promovoir la piece ? (oui/non)\n");
@@ -1051,8 +1067,8 @@ int is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
 
   /* Si la piece selectionné est une piece de la reserve, on arrete la fonction
    */
-  if (((coordinate_input_v.x == 0 && coordinate_input_v.y < 11) ||
-       (coordinate_input_v.x == 10 && coordinate_input_v.y < 11))) {
+  else if (((coordinate_input_v.x == 0 && coordinate_input_v.y < 11) ||
+            (coordinate_input_v.x == 10 && coordinate_input_v.y < 11))) {
     return 0;
   }
 
@@ -1060,13 +1076,10 @@ int is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
   else {
     if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].statut ==
         NON_PROMU) {
-      printf("Suis-je rentré ici ? C'est dans le ELSE\n");
+
       /* Traitement pour joueur BLANC */
 
       if (game_v->player == 0) {
-        printf("Je suis Player = 0\n"
-               "output.x %d ",
-               coordinate_output_v.x);
 
         /* Test si la pièce à atteint les deux premiers ligne adverse */
         if (coordinate_output_v.x == 3 || coordinate_output_v.x == 2) {

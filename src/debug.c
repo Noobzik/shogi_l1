@@ -42,7 +42,7 @@ void debug_file(game_t *game_v) {
 
   /* Main */
   printf("DEBUG | File\n");
-  printf("Longueur: %d\n", file_list_tmp->taille);
+  printf("Taille: %d\n", file_list_tmp->taille);
 
   if (!file_list_vide(file_list_tmp)) {
     for (file_element_tmp = file_list_tmp->debut, i = 0;
@@ -58,6 +58,28 @@ void debug_file(game_t *game_v) {
     printf("La file ne contient rien.");
   }
   printf("\n");
+}
+
+/**
+ * debug game
+ *
+ * Parameters:
+ *     game_t - game_v
+ */
+void debug_cell(game_t *game_v, coordinate_t coordinate_v) {
+  //======================================================================
+  // Main
+  //======================================================================
+  printf("DEBUG | Cellule\n");
+
+  if (coordinate_v.x < 11 && coordinate_v.y < 11) {
+    printf("Piece: ");
+    piece_afficher(game_v->board[coordinate_v.x][coordinate_v.y]);
+    printf(" (%d; %d)", coordinate_v.x, coordinate_v.y);
+    printf("\nJoueur: %d", game_v->board[coordinate_v.x][coordinate_v.y].color);
+  } else {
+    printf("Cette cellule est invalide.\n");
+  }
 }
 
 game_t *debug_partie_nouvelle() {

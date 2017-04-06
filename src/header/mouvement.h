@@ -9,7 +9,7 @@ int movement_valid_input(game_t *game_v, coordinate_t coordinate_v);
 int movement_valid_output(coordinate_t coordinate_v);
 void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
                         coordinate_t coordinate_output_v);
-
+int movement_valid_win(game_t *game_v, coordinate_t coordinate_v);
 /****************** Debut des validations des déplacements   ******************/
 
 int deplacement_valide_pion(game_t *game_v, coordinate_t coordinate_input_v,
