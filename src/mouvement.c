@@ -88,14 +88,16 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
 
           /* Boucle for pour tester si il y a un pion dans la colonne darrivé*/
           for (y = 1; y < 10; y++) {
-            if (game_v->board[y][coordinate_output_v.x].type == PION &&
-                game_v->board[y][coordinate_output_v.x].color == color_tmp) {
+
+            if (game_v->board[coordinate_output_v.y][y].type == PION &&
+                game_v->board[coordinate_output_v.y][y].color == color_tmp) {
               test = 1;
               printf("Erreur, Il y a déjà un pion dans la colonne d'arrivée\n");
               y = 42;
             }
           }
           if (test == 0)
+
             movement_restriction_parachute(game_v);
 
           /* Si c'est pas le cas , on applique les déplacement */
@@ -1049,8 +1051,8 @@ int is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
 
   /* Si la piece selectionné est une piece de la reserve, on arrete la fonction
    */
-  if (((coordinate_input_v.x == 0 && coordinate_input_v.y < 10) ||
-       (coordinate_input_v.x == 10 && coordinate_input_v.y < 10))) {
+  if (((coordinate_input_v.x == 0 && coordinate_input_v.y < 11) ||
+       (coordinate_input_v.x == 10 && coordinate_input_v.y < 11))) {
     return 0;
   }
 
