@@ -13,22 +13,43 @@ Répertoire Git pour le développement du projet de programmation impérative, U
 **Le jeu à faire : Le Shôgi**
 *Le sujet est disponible sur l'ENT, on attend la version définitif avant de l'inclure dans le répertoire*
 
-*1 mois pour boucler le projet.*
-***
-# Version : 0.1 #
+*Le sujet est rempli de faute de règles, de fonctions, le fautif principal de ces erreurs est **Christophe TOLLU** pour avoir copié collé le sujet du projet de l'an passé par Julien David.
+On note aussi que c'est un flemmard puisque les diapos de cours sont aussi de Julien David*
 
-# CHANGELOGS : #
-* Implémentation de 4 Fichier sources avec leur header respectif (game.c / file.c / pile.c /piece.c).
-* Remise en conformité au sujet en date du 21 mars 2017 v2.
+* Il est interdit d'annoncer à l'adversaire qu'il est en échec (Règle officiel)
+* La fin de partie se caractérise par la capture du Roi adverse
+
+*Plus que 2 semaine pour boucler le projet*
+***
+# Version Actuelle: 0.2 #
+# CHANGELOGS 0.2:
+* +Debug : ils permettent de passer le tour, inspecter la cellule, file et pile
+* +Mouvement : Les mouvements des pièce sont conforme au règlement officiel du shogi
+* +Restrictions : Cette partie permet d'eviter aux pièce de sauter les autres piece lors des déplacements
+* +Promotion des pièces conforme au règlement
+* +Les coordonnées d'arrivées ont maintenant une restriction exclusive sur l'échiquier
+* +Le parachutage des piece de la réserve est opérationnel et conforme au reglèment officiel du shogi
+* +Une aide visuel à été implémenté pour les déplacements
+* +Le makefile à été adapté en conformité avec le code source
+* Une fonction d'arret en cas de victoire par capture de la piece du ROI
+
+
+#### CHANGELOGS 0.1: ####
+* Implémentation de 4 Fichier sources avec leur header respectif (game.c / file.c / pile.c /piece.c)
+* Remise en conformité au sujet en date du 21 mars 2017 v2
+
 ## Notes ##
-* Le main servira actuellement de test.
-## Changements à venir ##
-* Détails des commentaires dans certaines parties du programme.
-* Introduction aux validation des mouvements et de leurs restrictions (Avec implémentation de l'aide visuel SELECT).
+* Le main servira actuellement de test
+***
 
 ## Ce qui reste à faire ##
-* Mouvements avec leurs validations et leurs restrictions.
-* La gestion des sauvegardes des fichiers.
+* Gestion de sauvegardes / chargement de fichier
+* Finalisation des piles et files
+* Commentaires sur tout les fonctions
+* Une interface graphique et éventuellement une intelligence artificiel
+* Annuler déplacement
+* Fixer l'historique des coups jouées qui est actuellement cassé
+* Replay_jouer, charge une partie avec une historique de coups jouer, anime la partie
 ***
 # Méthode de travail #
 On va utiliser un répertoire privée en ligne sur ***bitbucket*** (Un alternative de GitHub)
@@ -139,6 +160,7 @@ L'objectif est 0 Warning + 0 Erreurs + 0 Probleme de mémoire (segmentation faul
 On évite aussi de travailler sur le même ficher, pour éviter les conflits de push (push veut dire mettre en ligne les modifications vers le répertoire git).
 ***
 Actuellement, la priorité actuelle est de créer une interface terminal le plus rapidement possible, pour qu'on puisse se focaliser sur les autres parties du projet
+
 
 ## Gestion du git ##
 Je vous conseil d'installer GitKraken pour la gestion du répertoire en ligne. On veut limiter au maximum l'utilisation des clés USB

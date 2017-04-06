@@ -183,63 +183,63 @@ char piece_caractere(piece_t piece_v) {
   if (!piece_couleur(piece_v)) {
     switch (piece_v.type) {
       {
-      case 1:
-        return 'R';
+      case ROI:
+        return 'k';
       }
       {
-      case 2:
-        return 'T';
+      case TOUR:
+        return 'r';
       }
       {
-      case 3:
-        return 'F';
+      case FOU:
+        return 'b';
       }
       {
-      case 4:
-        return 'G';
+      case GOLD:
+        return 'g';
       }
       {
-      case 5:
-        return 'S';
+      case SILVER:
+        return 's';
       }
       {
-      case 6:
-        return 'C';
+      case CAVALIER:
+        return 'n';
       }
       {
-      case 7:
-        return 'L';
+      case LANCIER:
+        return 'l';
       }
       {
-      case 8:
-        return 'P';
+      case PION:
+        return 'p';
       }
       {
-      case 9:
-        return 'D'; // PION PROMU
+      case PION_PROMU:
+        return 'd'; // PION PROMU
       }
       {
-      case 10:
-        return 'J'; // LANCIER PROMU
+      case LANCIER_PROMU:
+        return 'j'; // LANCIER PROMU
       }
       {
-      case 11:
-        return 'C'; // CAVALIER PROMU
+      case CAVALIER_PROMU:
+        return 'c'; // CAVALIER PROMU
       }
       {
-      case 12:
-        return 'F'; // FOU PROMU
+      case FOU_PROMU:
+        return 'f'; // FOU PROMU
       }
       {
-      case 13:
-        return 'T'; // TOUR PROMU
+      case TOUR_PROMU:
+        return 't'; // TOUR PROMU
       }
       {
-      case 14:
-        return 'A'; // SILVER PROMU
+      case SILVER_PROMU:
+        return 'a'; // SILVER PROMU
       }
       {
-      case 15:
+      case SELECT:
         return '*';
       }
       {
@@ -250,63 +250,63 @@ char piece_caractere(piece_t piece_v) {
   } else {
     switch (piece_v.type) {
       {
-      case 1:
-        return 'r';
+      case ROI:
+        return 'K';
       }
       {
-      case 2:
-        return 't';
+      case TOUR:
+        return 'R';
       }
       {
-      case 3:
-        return 'f';
+      case FOU:
+        return 'B';
       }
       {
-      case 4:
-        return 'g';
+      case GOLD:
+        return 'G';
       }
       {
-      case 5:
-        return 's';
+      case SILVER:
+        return 'S';
       }
       {
-      case 6:
-        return 'c';
+      case CAVALIER:
+        return 'N';
       }
       {
-      case 7:
-        return 'l';
+      case LANCIER:
+        return 'L';
       }
       {
-      case 8:
-        return 'p';
+      case PION:
+        return 'P';
       }
       {
-      case 9:
-        return 'd'; // PION PROMU
+      case PION_PROMU:
+        return 'D'; // PION PROMU
       }
       {
-      case 10:
-        return 'j'; // LANCIER PROMU
+      case LANCIER_PROMU:
+        return 'J'; // LANCIER PROMU
       }
       {
-      case 11:
-        return 'c'; // CAVALIER PROMU
+      case CAVALIER_PROMU:
+        return 'C'; // CAVALIER PROMU
       }
       {
-      case 12:
-        return 'f'; // FOU PROMU
+      case FOU_PROMU:
+        return 'F'; // FOU PROMU
       }
       {
-      case 13:
-        return 't'; // TOUR PROMU
+      case TOUR_PROMU:
+        return 'T'; // TOUR PROMU
       }
       {
-      case 14:
-        return 'a'; // SILVER PROMU
+      case SILVER_PROMU:
+        return 'A'; // SILVER PROMU
       }
       {
-      case 15:
+      case SELECT:
         return '*';
       }
       {

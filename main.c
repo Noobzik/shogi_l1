@@ -1,4 +1,5 @@
 //#include "src/header/file.h"
+#include "src/header/debug.h"
 #include "src/header/game.h"
 #include <stdio.h>  /* printf && scanf */
 #include <stdlib.h> /* EXIT_SUCCESS; */

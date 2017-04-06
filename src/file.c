@@ -128,3 +128,14 @@ int file_list_vide(file_list_t *file_list_v) {
  * @return : int taille
  */
 int file_taille(file_list_t *file_list_v) { return file_list_v->taille; }
+
+/** file_thread
+ * Ajoute un element dans la file
+ */
+void file_thread(file_list_t *file_list_v, movement_t movement_v,
+                 piece_statut_e promotion_v, int capture_v) {
+
+  /* Main */
+
+  file_list_add(file_list_v, movement_v, promotion_v, capture_v);
+}
