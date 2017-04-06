@@ -57,7 +57,7 @@ void movement_restriction(game_t *game_v, coordinate_t coordinate_input_v) {
     }
     {
     case LANCIER:
-      //      movement_restriction_lancier(game_v, coordinate_input_v);
+      movement_restriction_general(game_v, coordinate_input_v);
       break;
     }
     {
@@ -67,8 +67,8 @@ void movement_restriction(game_t *game_v, coordinate_t coordinate_input_v) {
     }
     {
     case TOUR_PROMU:
-      movement_restriction_tour(game_v, coordinate_input_v);
       movement_restriction_general(game_v, coordinate_input_v);
+      movement_restriction_tour(game_v, coordinate_input_v);
       break;
     }
     {
@@ -134,7 +134,7 @@ void movement_restriction_general(game_t *game_v,
 }
 
 /**
- * movement rock restriction
+ * movement tour restriction
  *
  * Parameters:
  *     game_t       - game_v
@@ -151,31 +151,27 @@ void movement_restriction_tour(game_t *game_v,
   //======================================================================
   // Main
   //======================================================================
+
+  /* Boucle for, vers le bas */
   for (movement_checker_1_tmp.x = coordinate_input_v.x + 1;
-       movement_checker_1_tmp.x < 7 &&
+       movement_checker_1_tmp.x < 10 &&
        game_v->board[movement_checker_1_tmp.x][coordinate_input_v.y].type ==
            VIDE;
        movement_checker_1_tmp.x++) {
-    game_v->board[movement_checker_1_tmp.x][coordinate_input_v.y].type = SELECT;
 
-    if (movement_checker_1_tmp.x == 6) {
-      game_v->board[movement_checker_1_tmp.x + 1][coordinate_input_v.y].type =
-          SELECT;
-    }
+    game_v->board[movement_checker_1_tmp.x][coordinate_input_v.y].type = SELECT;
   }
 
+  /* Boucle for, vers la droite */
   for (movement_checker_2_tmp.y = coordinate_input_v.y + 1;
-       movement_checker_2_tmp.y < 7 &&
+       movement_checker_2_tmp.y < 10 &&
        game_v->board[coordinate_input_v.x][movement_checker_2_tmp.y].type ==
            VIDE;
        movement_checker_2_tmp.y++) {
     game_v->board[coordinate_input_v.x][movement_checker_2_tmp.y].type = SELECT;
-
-    if (movement_checker_2_tmp.y == 6) {
-      game_v->board[coordinate_input_v.x][movement_checker_2_tmp.y + 1].type =
-          SELECT;
-    }
   }
+
+  /* Boucle for vers le haut */
 
   for (movement_checker_3_tmp.x = coordinate_input_v.x - 1;
        movement_checker_3_tmp.x > 0 &&
@@ -184,12 +180,9 @@ void movement_restriction_tour(game_t *game_v,
        movement_checker_3_tmp.x--) {
 
     game_v->board[movement_checker_3_tmp.x][coordinate_input_v.y].type = SELECT;
-
-    if (movement_checker_3_tmp.x == 1) {
-      game_v->board[movement_checker_3_tmp.x - 1][coordinate_input_v.y].type =
-          SELECT;
-    }
   }
+
+  /* Boucle for vers la gauche */
 
   for (movement_checker_4_tmp.y = coordinate_input_v.y - 1;
        movement_checker_4_tmp.y > 0 &&
@@ -197,11 +190,6 @@ void movement_restriction_tour(game_t *game_v,
            VIDE;
        movement_checker_4_tmp.y--) {
     game_v->board[coordinate_input_v.x][movement_checker_4_tmp.y].type = SELECT;
-
-    if (movement_checker_4_tmp.y == 1) {
-      game_v->board[coordinate_input_v.x][movement_checker_4_tmp.y - 1].type =
-          SELECT;
-    }
   }
 }
 
@@ -222,19 +210,23 @@ void movement_restriction_fou(game_t *game_v, coordinate_t coordinate_input_v) {
   //======================================================================
   // Main
   //======================================================================
+
+  /* Diagnonal bas droit */
   for (movement_checker_1_tmp.x = coordinate_input_v.x + 1,
       movement_checker_1_tmp.y = coordinate_input_v.y + 1;
-       movement_checker_1_tmp.x < 8 && movement_checker_1_tmp.y < 8 &&
+       movement_checker_1_tmp.x < 10 && movement_checker_1_tmp.y < 10 &&
        game_v->board[movement_checker_1_tmp.x][movement_checker_1_tmp.y].type ==
            VIDE;
        movement_checker_1_tmp.x++, movement_checker_1_tmp.y++) {
+
     game_v->board[movement_checker_1_tmp.x][movement_checker_1_tmp.y].type =
         SELECT;
   }
+  /* Diagonale haut gauche */
 
   for (movement_checker_2_tmp.x = coordinate_input_v.x - 1,
       movement_checker_2_tmp.y = coordinate_input_v.y - 1;
-       movement_checker_2_tmp.x >= 0 && movement_checker_2_tmp.y >= 0 &&
+       movement_checker_2_tmp.x > 0 && movement_checker_2_tmp.y > 0 &&
        game_v->board[movement_checker_2_tmp.x][movement_checker_2_tmp.y].type ==
            VIDE;
        movement_checker_2_tmp.x--, movement_checker_2_tmp.y--) {
@@ -242,9 +234,10 @@ void movement_restriction_fou(game_t *game_v, coordinate_t coordinate_input_v) {
         SELECT;
   }
 
+  /* Diagonale bas gauche */
   for (movement_checker_3_tmp.x = coordinate_input_v.x + 1,
       movement_checker_3_tmp.y = coordinate_input_v.y - 1;
-       movement_checker_3_tmp.x < 8 && movement_checker_3_tmp.y >= 0 &&
+       movement_checker_3_tmp.x < 10 && movement_checker_3_tmp.y > 0 &&
        game_v->board[movement_checker_3_tmp.x][movement_checker_3_tmp.y].type ==
            VIDE;
        movement_checker_3_tmp.x++, movement_checker_3_tmp.y--) {
@@ -252,9 +245,10 @@ void movement_restriction_fou(game_t *game_v, coordinate_t coordinate_input_v) {
         SELECT;
   }
 
+  /* Diagonale haut droit */
   for (movement_checker_4_tmp.x = coordinate_input_v.x - 1,
       movement_checker_4_tmp.y = coordinate_input_v.y + 1;
-       movement_checker_4_tmp.x >= 0 && movement_checker_4_tmp.y < 8 &&
+       movement_checker_4_tmp.x > 0 && movement_checker_4_tmp.y < 10 &&
        game_v->board[movement_checker_4_tmp.x][movement_checker_4_tmp.y].type ==
            VIDE;
        movement_checker_4_tmp.x--, movement_checker_4_tmp.y++) {
@@ -278,9 +272,9 @@ void movement_restriction_destruct(game_t *game_v) {
   //======================================================================
   // Main
   //======================================================================
-  for (x = 0; x < 8; x++) {
+  for (x = 1; x < 10; x++) {
 
-    for (y = 0; y < 8; y++) {
+    for (y = 1; y < 10; y++) {
       movement_checker_tmp.x = x;
       movement_checker_tmp.y = y;
 
@@ -288,6 +282,30 @@ void movement_restriction_destruct(game_t *game_v) {
           SELECT) {
         game_v->board[movement_checker_tmp.x][movement_checker_tmp.y].type =
             VIDE;
+      }
+    }
+  }
+}
+
+void movement_restriction_parachute(game_t *game_v) {
+  //======================================================================
+  // Variables
+  //======================================================================
+  int x, y;
+
+  //======================================================================
+  // Main
+  //======================================================================
+  for (x = 1; x < 10; x++) {
+
+    for (y = 1; y < 10; y++) {
+      movement_checker_tmp.x = x;
+      movement_checker_tmp.y = y;
+
+      if (game_v->board[movement_checker_tmp.x][movement_checker_tmp.y].type ==
+          VIDE) {
+        game_v->board[movement_checker_tmp.x][movement_checker_tmp.y].type =
+            SELECT;
       }
     }
   }

@@ -83,7 +83,7 @@ game_t *debug_partie_nouvelle() {
   }
 
   /* Pions */
-  res->board[5][5] = piece_creer(NOIR, LANCIER, NON_PROMU);
+  res->board[5][5] = piece_creer(NOIR, CAVALIER, NON_PROMU);
 
   return res;
 }
