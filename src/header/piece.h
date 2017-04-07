@@ -3,7 +3,7 @@
 
 /* Definitions des énumérations */
 
-typedef enum { NOIR, BLANC, VIDE_PIECE } piece_color_e;
+typedef enum { BLANC, NOIR, VIDE_PIECE } piece_color_e;
 typedef enum {
   VIDE,
   ROI,

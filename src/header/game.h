@@ -26,6 +26,7 @@ game_t *partie_creer();
 void partie_detruire(game_t *game_v);
 game_t *partie_nouvelle();
 
+void annuler_deplacement();
 int case_vide(piece_t piece_v);
 void modifier_case(game_t *game_v, piece_t piece_v, coordinate_t coordinate_v);
 void changer_joueur(game_t *game_v);

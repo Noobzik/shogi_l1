@@ -6,6 +6,14 @@
 #include <string.h>
 #define MAX_CHAR 256
 
+/********************************** INDEX *************************************
+ */
+/*   1) Bloc de validation d'entré et de sortie (valid_input et valid_output)
+ *    2) Bloc de deplacement_valide et valide_win
+ *    3) Bloc de deplacement_valide_($INSERT_TYPE_DE_PIECE)
+ *    4) Bloc movement_valid_helper
+ *    5) Bloc de is_promoted et promote_grant
+ */
 /************ Debut Bloc validation des entrés et sortie **********************/
 
 /** movement_valid_input
@@ -14,7 +22,7 @@
  * case non vide et une piece du même couleur du joueur
  * @params: game_t       - game_v
  *          coordinate_t - coordinate_v
- * @return  int
+ * @return: int
  */
 int movement_valid_input(game_t *game_v, coordinate_t coordinate_v) {
   //======================================================================
@@ -22,8 +30,8 @@ int movement_valid_input(game_t *game_v, coordinate_t coordinate_v) {
   //======================================================================
   if (coordinate_v.x < 11 && coordinate_v.y < 11) {
 
-    if (game_v->board[coordinate_v.x][coordinate_v.y].type != 0) {
-
+    if (game_v->board[coordinate_v.x][coordinate_v.y].type != VIDE) {
+      printf("Player ID %d\n", game_v->player);
       if (game_v->player ==
           game_v->board[coordinate_v.x][coordinate_v.y].color) {
         return 1;
@@ -49,13 +57,15 @@ int movement_valid_output(coordinate_t coordinate_v) {
              : 0;
 }
 
-/**
- * movement board validator
+/** deplacement_valide
+ *  Permet de valider les deplacement en fonctiont des coordonne de depart (pour
+ * Parachutage) et appelle la fonction deplacement valide adéquate pour les
+ * pieces
  *
- * Parameters:
- *     game_t       - game_v
- *     coordinate_t - coordinate_input_v
- *     coordinate_t - coordinate_output_v
+ * @params:     game_t       - game_v
+ *              coordinate_t - coordinate_input_v
+ *              coordinate_t - coordinate_output_v
+ * @return:     void
  */
 void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
                         coordinate_t coordinate_output_v) {
@@ -65,6 +75,9 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
   int test = 0, y;
   piece_color_e color_tmp =
       game_v->board[coordinate_input_v.x][coordinate_input_v.y].color;
+
+  /* Si cette condition n'est pas vérifié, alors sa déselectionne la piece
+   * selectionné*/
 
   if ((coordinate_input_v.x != coordinate_output_v.x ||
        coordinate_input_v.y != coordinate_output_v.y) &&
@@ -84,8 +97,9 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
         if ((coordinate_input_v.x == 0 &&
              (coordinate_input_v.y < 11 && coordinate_input_v.y > -1)) ||
             (coordinate_input_v.y == 0 &&
-             (coordinate_input_v.x < 11 && coordinate_input_v.y >= 0))) {
+             (coordinate_input_v.x < 11 && coordinate_input_v.x > -1))) {
 
+          movement_restriction_parachute(game_v);
           /* Boucle for pour tester si il y a un pion dans la colonne darrivé*/
           for (y = 1; y < 10; y++) {
 
@@ -94,17 +108,20 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
               test = 1;
               printf("Erreur, Il y a déjà un pion dans la colonne d'arrivée\n");
               y = 42;
+            } else {
+              piece_creer(VIDE_PIECE, SELECT, NON_PROMU);
             }
           }
-          if (test == 0)
+          //        if (test == 0)
 
-            movement_restriction_parachute(game_v);
+          /* Applications des restriction de selections */
+          //        movement_restriction_parachute(game_v);
 
           /* Si c'est pas le cas , on applique les déplacement */
           if (test == 0 && restriction_detector(game_v, coordinate_output_v)) {
             deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           }
-          /* Fin du Develement pour l'algo de Parachutage pion*/
+          /* Fin du Develement pour l'algo de Parachutage pion */
         } else if (deplacement_valide_pion(game_v, coordinate_input_v,
                                            coordinate_output_v) &&
                    restriction_detector(game_v, coordinate_output_v)) {
@@ -113,41 +130,54 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
           printf("Le PION à été deplacé de (%d;%d) à (%d;%d) avec succès.\n",
                  coordinate_input_v.x, coordinate_input_v.y,
                  coordinate_output_v.x, coordinate_output_v.y);
-        } else {
+        }
+
+        else {
           printf("Le déplacement du PION à échoué.\n");
         }
 
         break;
       }
+
       {
       case PION_PROMU:
         if (deplacement_valide_pion_promu(game_v, coordinate_input_v,
                                           coordinate_output_v) &&
             restriction_detector(game_v, coordinate_output_v)) {
+
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+
           printf(
               "Le PION_PROMU à été deplace de (%d;%d) à (%d;%d) avec succès.\n",
               coordinate_input_v.x, coordinate_input_v.y, coordinate_output_v.x,
               coordinate_output_v.y);
-        } else {
+        }
+
+        else {
           printf("Le déplacement du PION_PROMU à échoué\n");
         }
         break;
       }
+
       {
       case TOUR:
-        if ((coordinate_input_v.x != coordinate_output_v.x ||
-             coordinate_input_v.y != coordinate_output_v.y) &&
-            (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color !=
-             game_v->board[coordinate_output_v.x][coordinate_output_v.y]
-                 .color)) {
+        /* La Coordonée entré reserve... */
+        if ((coordinate_input_v.x == 0 &&
+             (coordinate_input_v.y < 11 && coordinate_input_v.y > -1)) ||
+            (coordinate_input_v.y == 0 &&
+             (coordinate_input_v.x < 11 && coordinate_input_v.x > -1))) {
+
           movement_restriction_parachute(game_v);
         }
+
+        /* Sinon ...*/
 
         if (deplacement_valide_tour(game_v, coordinate_input_v,
                                     coordinate_output_v) &&
             restriction_detector(game_v, coordinate_output_v)) {
+
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+
           printf("La tour à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
                  coordinate_input_v.x, coordinate_input_v.y,
                  coordinate_output_v.x, coordinate_output_v.y);
@@ -165,7 +195,9 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
         if (deplacement_valide_tour_promu(game_v, coordinate_input_v,
                                           coordinate_output_v) &&
             restriction_detector(game_v, coordinate_output_v)) {
+
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+
           printf(
               "La TOUR_PROMU à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
               coordinate_input_v.x, coordinate_input_v.y, coordinate_output_v.x,
@@ -180,17 +212,19 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       }
       {
       case CAVALIER:
-        if ((coordinate_input_v.x != coordinate_output_v.x ||
-             coordinate_input_v.y != coordinate_output_v.y) &&
-            (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color !=
-             game_v->board[coordinate_output_v.x][coordinate_output_v.y]
-                 .color)) {
+        /* Ca na pas besoin d'être commenté si vous n'etes pas amnésique */
+        if ((coordinate_input_v.x == 0 &&
+             (coordinate_input_v.y < 11 && coordinate_input_v.y > -1)) ||
+            (coordinate_input_v.y == 0 &&
+             (coordinate_input_v.x < 11 && coordinate_input_v.x > -1))) {
+
           movement_restriction_parachute(game_v);
         }
 
         if (deplacement_valide_cavalier(game_v, coordinate_input_v,
                                         coordinate_output_v) &&
             restriction_detector(game_v, coordinate_output_v)) {
+
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf(
               "Le cavalier à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
@@ -210,6 +244,7 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
         if (deplacement_valide_cavalier_promu(game_v, coordinate_input_v,
                                               coordinate_output_v) &&
             restriction_detector(game_v, coordinate_output_v)) {
+
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf("Le CAVALIER_PROMU à été déplacé de (%d;%d) a (%d;%d) avec "
                  "succès.\n",
@@ -226,18 +261,20 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       {
       case FOU:
 
-        if ((coordinate_input_v.x != coordinate_output_v.x ||
-             coordinate_input_v.y != coordinate_output_v.y) &&
-            (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color !=
-             game_v->board[coordinate_output_v.x][coordinate_output_v.y]
-                 .color)) {
+        if ((coordinate_input_v.x == 0 &&
+             (coordinate_input_v.y < 11 && coordinate_input_v.y > -1)) ||
+            (coordinate_input_v.y == 0 &&
+             (coordinate_input_v.x < 11 && coordinate_input_v.x > -1))) {
+
           movement_restriction_parachute(game_v);
         }
 
-        else if (deplacement_valide_fou(game_v, coordinate_input_v,
-                                        coordinate_output_v) &&
-                 restriction_detector(game_v, coordinate_output_v)) {
+        if (deplacement_valide_fou(game_v, coordinate_input_v,
+                                   coordinate_output_v) &&
+            restriction_detector(game_v, coordinate_output_v)) {
+
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+
           printf("Le FOU à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
                  coordinate_input_v.x, coordinate_input_v.y,
                  coordinate_output_v.x, coordinate_output_v.y);
@@ -255,12 +292,16 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
         if (deplacement_valide_fou_promu(game_v, coordinate_input_v,
                                          coordinate_output_v) &&
             restriction_detector(game_v, coordinate_output_v)) {
+
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+
           printf(
               "Le FOU_PROMU à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
               coordinate_input_v.x, coordinate_input_v.y, coordinate_output_v.x,
               coordinate_output_v.y);
-        } else {
+        }
+
+        else {
           printf("Le deplacement du FOU_PROMU à échoué.\n");
         }
 
@@ -269,18 +310,19 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       {
       case GOLD:
 
-        if ((coordinate_input_v.x != coordinate_output_v.x ||
-             coordinate_input_v.y != coordinate_output_v.y) &&
-            (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color !=
-             game_v->board[coordinate_output_v.x][coordinate_output_v.y]
-                 .color)) {
+        if ((coordinate_input_v.x == 0 &&
+             (coordinate_input_v.y < 11 && coordinate_input_v.y > -1)) ||
+            (coordinate_input_v.y == 0 &&
+             (coordinate_input_v.x < 11 && coordinate_input_v.x > -1))) {
           movement_restriction_parachute(game_v);
         }
 
-        else if (deplacement_valide_gold(game_v, coordinate_input_v,
-                                         coordinate_output_v) &&
-                 restriction_detector(game_v, coordinate_output_v)) {
+        if (deplacement_valide_gold(game_v, coordinate_input_v,
+                                    coordinate_output_v) &&
+            restriction_detector(game_v, coordinate_output_v)) {
+
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+
           printf("Le GOLD à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
                  coordinate_input_v.x, coordinate_input_v.y,
                  coordinate_output_v.x, coordinate_output_v.y);
@@ -293,17 +335,18 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       {
       case SILVER:
 
-        if ((coordinate_input_v.x != coordinate_output_v.x ||
-             coordinate_input_v.y != coordinate_output_v.y) &&
-            (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color !=
-             game_v->board[coordinate_output_v.x][coordinate_output_v.y]
-                 .color)) {
+        if ((coordinate_input_v.x == 0 &&
+             (coordinate_input_v.y < 11 && coordinate_input_v.y > -1)) ||
+            (coordinate_input_v.y == 0 &&
+             (coordinate_input_v.x < 11 && coordinate_input_v.x > -1))) {
+
           movement_restriction_parachute(game_v);
         }
 
-        else if (deplacement_valide_silver(game_v, coordinate_input_v,
-                                           coordinate_output_v) &&
-                 restriction_detector(game_v, coordinate_output_v)) {
+        if (deplacement_valide_silver(game_v, coordinate_input_v,
+                                      coordinate_output_v) &&
+            restriction_detector(game_v, coordinate_output_v)) {
+
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
           printf("Le SILVER à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
                  coordinate_input_v.x, coordinate_input_v.y,
@@ -320,12 +363,16 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
         if (deplacement_valide_gold(game_v, coordinate_input_v,
                                     coordinate_output_v) &&
             restriction_detector(game_v, coordinate_output_v)) {
+
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+
           printf("Le SILVER_PROMU à été déplacé de (%d;%d) a (%d;%d) avec "
                  "succès.\n",
                  coordinate_input_v.x, coordinate_input_v.y,
                  coordinate_output_v.x, coordinate_output_v.y);
-        } else {
+        }
+
+        else {
           printf("Le déplacement du SILVER_PROMU à échoué.\n");
         }
 
@@ -337,11 +384,15 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
         if (deplacement_valide_roi(game_v, coordinate_input_v,
                                    coordinate_output_v) &&
             restriction_detector(game_v, coordinate_output_v)) {
+
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+
           printf("Le ROI à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
                  coordinate_input_v.x, coordinate_input_v.y,
                  coordinate_output_v.x, coordinate_output_v.y);
-        } else {
+        }
+
+        else {
           printf("Le deplacement du ROI à échoué.\n");
         }
 
@@ -350,22 +401,26 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       {
       case LANCIER:
 
-        if ((coordinate_input_v.x != coordinate_output_v.x ||
-             coordinate_input_v.y != coordinate_output_v.y) &&
-            (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color !=
-             game_v->board[coordinate_output_v.x][coordinate_output_v.y]
-                 .color)) {
+        if ((coordinate_input_v.x == 0 &&
+             (coordinate_input_v.y < 11 && coordinate_input_v.y > -1)) ||
+            (coordinate_input_v.y == 0 &&
+             (coordinate_input_v.x < 11 && coordinate_input_v.x > -1))) {
+
           movement_restriction_parachute(game_v);
         }
 
-        else if (deplacement_valide_lancier(game_v, coordinate_input_v,
-                                            coordinate_output_v) &&
-                 restriction_detector(game_v, coordinate_output_v)) {
+        if (deplacement_valide_lancier(game_v, coordinate_input_v,
+                                       coordinate_output_v) &&
+            restriction_detector(game_v, coordinate_output_v)) {
+
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+
           printf("Le LANCIER à été déplacé de (%d;%d) à (%d;%d) avec succès\n",
                  coordinate_input_v.x, coordinate_input_v.y,
                  coordinate_output_v.x, coordinate_output_v.y);
-        } else {
+        }
+
+        else {
           printf("Le déplacement du LANCIER à échoué\n");
         }
         break;
@@ -375,12 +430,16 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
         if (deplacement_valide_lancier_promu(game_v, coordinate_input_v,
                                              coordinate_output_v) &&
             restriction_detector(game_v, coordinate_output_v)) {
+
           deplacement_apply(game_v, coordinate_input_v, coordinate_output_v);
+
           printf("Le LANCIER_PROMU à été déplacé de (%d;%d) à (%d;%d) avec "
                  "succès\n",
                  coordinate_input_v.x, coordinate_input_v.y,
                  coordinate_output_v.x, coordinate_output_v.y);
-        } else {
+        }
+
+        else {
           printf("Le déplacement du LANCIER_PROMU à échoué\n");
         }
       }
@@ -389,13 +448,21 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
         break;
       }
     }
-  } else {
+  }
+
+  else {
     printf("Le deplacement à été annulée.\n");
   }
 }
 
+/** movement_valid_win
+ * Si les coordonnées d'arrivé contient un roi, la partie se termine
+ * @params:    game_t*       -   game_v
+ *             coordinate_t  -   coordinate_v
+ * @return     int
+ */
 int movement_valid_win(game_t *game_v, coordinate_t coordinate_v) {
-  if (game_v->player == 1) {
+  if (game_v->player == 0) {
 
     if (game_v->board[coordinate_v.x][coordinate_v.y].type == ROI) {
       printf("La partie est gagné par les BLANCS\n");
@@ -403,7 +470,7 @@ int movement_valid_win(game_t *game_v, coordinate_t coordinate_v) {
     }
   }
 
-  else if (game_v->player == 0) {
+  else if (game_v->player == 1) {
     if (game_v->board[coordinate_v.x][coordinate_v.y].type == ROI) {
       printf("La partie est gagné par les NOIR\n");
       return 0;
@@ -440,12 +507,12 @@ int deplacement_valide_pion(game_t *game_v, coordinate_t coordinate_input_v,
      * Sinon 0
      */
     if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color ==
-        NOIR) {
+        BLANC) {
       return (movement_tmp == -1) ? 1 : 0;
     }
 
     else if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color ==
-             BLANC) {
+             NOIR) {
       return (movement_tmp == 1) ? 1 : 0;
     }
   }
@@ -482,10 +549,9 @@ int deplacement_valide_tour(game_t *game_v, coordinate_t coordinate_input_v,
 int deplacement_valide_cavalier(game_t *game_v, coordinate_t coordinate_input_v,
                                 coordinate_t coordinate_output_v) {
 
-  /* On vérifie les conditions pour les blancs */
+  /* On vérifie les conditions pour les noir */
 
-  if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color ==
-      BLANC) {
+  if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color == NOIR) {
 
     /* On vérifie les conditions x+1 et x-1 */
     if (coordinate_input_v.y - 1 == coordinate_output_v.y ||
@@ -498,9 +564,10 @@ int deplacement_valide_cavalier(game_t *game_v, coordinate_t coordinate_input_v,
     }
   }
 
-  /* On vérifie les conditions pour les noirs */
+  /* On vérifie les conditions pour les blanc */
 
-  if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color == NOIR) {
+  if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color ==
+      BLANC) {
 
     /* On vérifie les conditions y+1 et y-1 */
     if (coordinate_input_v.y - 1 == coordinate_output_v.y ||
@@ -520,7 +587,8 @@ int deplacement_valide_cavalier(game_t *game_v, coordinate_t coordinate_input_v,
 
 /** deplacement_valide_fou
  * Permet de valider le déplacement du fou (Non promu supposé)
- * Les conditions : Diagonnales
+ * Les conditions : La différence ou la somme des deux coordonées entré sortie
+ * doivent être égales
  * @params  game_t       -   game_v
  *          coordinate_t -   coordinate_input_v
  *          coordinate_t -   coordinate_output_v
@@ -535,12 +603,15 @@ int deplacement_valide_fou(game_t *game_v, coordinate_t coordinate_input_v,
 
   /* Initialize */
 
+  /* Addition */
   movement_1_tmp = (coordinate_output_v.x + coordinate_output_v.y);
   movement_2_tmp = (coordinate_input_v.x + coordinate_input_v.y);
 
+  /* Différence */
   movement_1_bis_tmp = (coordinate_input_v.x - coordinate_input_v.y);
   movement_2_bis_tmp = (coordinate_output_v.x - coordinate_output_v.y);
 
+  /* On regarde si l'un des deux sont égales */
   return (movement_1_tmp == movement_2_tmp ||
           movement_2_bis_tmp == movement_1_bis_tmp)
              ? 1
@@ -559,14 +630,13 @@ int deplacement_valide_fou(game_t *game_v, coordinate_t coordinate_input_v,
  */
 int deplacement_valide_roi(game_t *game_v, coordinate_t coordinate_input_v,
                            coordinate_t coordinate_output_v) {
-  //======================================================================
-  // Main
-  //======================================================================
+
   /* vertical checking */
   if (coordinate_input_v.x - 1 == coordinate_output_v.x ||
       coordinate_input_v.x + 1 == coordinate_output_v.x ||
       coordinate_input_v.x == coordinate_output_v.x) {
 
+    /* horizontal checking*/
     if (coordinate_input_v.y - 1 == coordinate_output_v.y ||
         coordinate_input_v.y + 1 == coordinate_output_v.y ||
         coordinate_input_v.y == coordinate_output_v.y) {
@@ -589,7 +659,7 @@ int deplacement_valide_roi(game_t *game_v, coordinate_t coordinate_input_v,
 int deplacement_valide_gold(game_t *game_v, coordinate_t coordinate_input_v,
                             coordinate_t coordinate_output_v) {
   if (piece_couleur(
-          game_v->board[coordinate_input_v.x][coordinate_input_v.y]) == BLANC) {
+          game_v->board[coordinate_input_v.x][coordinate_input_v.y]) == NOIR) {
 
     /* Restriction sur les diagonales en arriere */
     if (coordinate_input_v.x - 1 == coordinate_output_v.x) {
@@ -616,7 +686,7 @@ int deplacement_valide_gold(game_t *game_v, coordinate_t coordinate_input_v,
   }
 
   if (piece_couleur(
-          game_v->board[coordinate_input_v.x][coordinate_input_v.y]) == NOIR) {
+          game_v->board[coordinate_input_v.x][coordinate_input_v.y]) == BLANC) {
 
     /* Restriction sur les diagonales en arriere */
     if (coordinate_input_v.x + 1 == coordinate_output_v.x) {
@@ -659,7 +729,7 @@ int deplacement_valide_silver(game_t *game_v, coordinate_t coordinate_input_v,
 
   /* En faite c'est les noir ici */
   if (piece_couleur(
-          game_v->board[coordinate_input_v.x][coordinate_input_v.y]) == BLANC) {
+          game_v->board[coordinate_input_v.x][coordinate_input_v.y]) == NOIR) {
 
     /* Restrictions au déplacement ligne +1 et ses diagonales +1 */
     if (coordinate_input_v.x + 1 == coordinate_output_v.x &&
@@ -678,7 +748,7 @@ int deplacement_valide_silver(game_t *game_v, coordinate_t coordinate_input_v,
 
   /* En faite c'est les blanc ici */
   if (piece_couleur(
-          game_v->board[coordinate_input_v.x][coordinate_input_v.y]) == NOIR) {
+          game_v->board[coordinate_input_v.x][coordinate_input_v.y]) == BLANC) {
 
     /* Restrictions au déplacement ligne +1 et ses diagonales +1 */
     if (coordinate_input_v.x - 1 == coordinate_output_v.x &&
@@ -712,60 +782,17 @@ int deplacement_valide_lancier(game_t *game_v, coordinate_t coordinate_input_v,
   if (coordinate_input_v.y == coordinate_output_v.y) {
     if ((coordinate_input_v.x < coordinate_output_v.x) &&
         piece_couleur(
-            game_v->board[coordinate_input_v.x][coordinate_input_v.y]) == BLANC)
+            game_v->board[coordinate_input_v.x][coordinate_input_v.y]) == NOIR)
       return 1;
     else if ((coordinate_input_v.x > coordinate_output_v.x) &&
              piece_couleur(
                  game_v->board[coordinate_input_v.x][coordinate_input_v.y]) ==
-                 NOIR)
+                 BLANC)
       return 1;
   }
   return 0;
 }
 
-/** deplacement_valide_parachutage
- * Permet de valider un déplacement depuis la réserve
- * Condition, les coordonées de départs doit correspondre à la reserve du
- * joueur actuelle et les coordonnees d'arrivée à une case vide
- */
-int deplacement_valide_parachutage(game_t *game_v,
-                                   coordinate_t coordinate_input_v,
-                                   coordinate_t coordinate_output_v) {
-
-  /*  Parachutage blanc
-   if (game_v->player == BLANC) {
-
-      Test si les coordonnées d'entré correspondent a la reserve
-     if (coordinate_input_v.x >= 0 && coordinate_input_v.x < 11) {
-       if (coordinate_input_v.y == 10) {
-
-         Teste si les coordonnées de sortie est une case vide
-         return (game_v->board[coordinate_output_v.x][coordinate_output_v.y]
-                     .color == VIDE_PIECE)
-                    ? 1
-                    : 0;
-       }
-     }
-   }
-
-    Parachutage noir
-
-   if (game_v->player == NOIR) {
-
-      Test si les coordonnées d'entré correspondent a la reserve
-     if (coordinate_input_v.y > 0 && coordinate_input_v.y < 11) {
-       if (coordinate_input_v.x == 10) {
-
-          Test si les coordonnées de sortie correspondent à une case vide
-         return (game_v->board[coordinate_output_v.x][coordinate_output_v.y]
-                     .color == VIDE_PIECE)
-                    ? 1
-                    : 0;
-       }
-     }
- }*/
-  return 0;
-}
 /****************** Fin des validations des déplacements   ******************/
 /**************** Debut des validations des déplacements  PROMU *************/
 
@@ -859,8 +886,7 @@ int deplacement_valide_lancier_promu(game_t *game_v,
  * ****************/
 
 /** movement_valid_helper
- * movement board validator for helper
- *
+ * En fonction de la piece, renvoie si le déplacement est valide ou pas
  * Parameters:
  *     game_t       - game_v
  *     coordinate_t - coordinate_input_v
@@ -999,11 +1025,12 @@ int movement_valid_helper(game_t *game_v, coordinate_t coordinate_input_v,
 
 /** movement is_promoted
  *  Permet de savoir si la piece en coordonnées d'arrivé a la possibilité
- * d'être promu
+ *  d'être promu, renvoie un int pour determiner si la piece à été promu ou non
+ *  pour la file.
  *  @params:    game_t          -   game_v
  *              coordinate_t    -   coordinate_input_v
  *              coordinate_t    -   coordinate_output_v
- *  @return:    void
+ *  @return:    int
  */
 int is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
                 coordinate_t coordinate_output_v) {
@@ -1020,6 +1047,9 @@ int is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
 
   else if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].type ==
            CAVALIER) {
+
+    /* Pour les Blancs */
+
     if (game_v->player == 0) {
       if (coordinate_output_v.x == 3) {
         printf("Voulez vous promovoir la piece ? (oui/non)\n");
@@ -1041,6 +1071,8 @@ int is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
         return 1;
       }
     }
+
+    /* Pour les noir */
 
     else if (game_v->player == 1) {
       if (coordinate_output_v.x == 7) {
@@ -1077,7 +1109,7 @@ int is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
     if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].statut ==
         NON_PROMU) {
 
-      /* Traitement pour joueur BLANC */
+      /* Teste de promotion pour les Blancs*/
 
       if (game_v->player == 0) {
 
@@ -1108,6 +1140,7 @@ int is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
 
       }
 
+      /*  Teste de promotion pour les noirs  */
       else if (game_v->player == 1) {
 
         /* Test si la pièce à atteint les deux premiers ligne adverse */

@@ -2,33 +2,44 @@
 #include "header/file.h"
 
 #include <stdio.h>
+
+/** Info
+ *  BLANC = 0
+ *  NOIR  = 1
+ */
+
 void debug_pile(game_t *game_v) {
+  //======================================================================
+  // Variables
+  //======================================================================
   int i;
-  /* Variables */
   pile_list_t *pile_list_tmp;
   pile_element_t *pile_element_tmp;
 
   /* Initialize */
   pile_list_tmp = game_v->capture;
 
-  /* Main */
+  //======================================================================
+  // Main
+  //======================================================================
   printf("DEBUG | Pile\n");
   printf("Taille: %d\n", pile_list_tmp->taille);
 
   if (!pile_vide(pile_list_tmp)) {
-    for (pile_element_tmp = pile_list_tmp->last, i = 0;
+
+    for (pile_element_tmp = pile_list_tmp->suivant, i = 0;
          pile_element_tmp != NULL;
          i++, pile_element_tmp = pile_element_tmp->suivant) {
+
       printf("Maillon %d | '", i);
       piece_afficher(pile_element_tmp->piece);
-      printf("' (Type : %d; Element : %d)\n", pile_element_tmp->piece.type,
-             pile_element_tmp->piece.color);
+      printf("' (Type: %d; Joueur: %d) Piece : \n",
+             pile_element_tmp->piece.type, pile_element_tmp->piece.color);
     }
-  } else {
-    printf("La pile ne contient rien.");
-  }
 
-  printf("\n");
+  } else {
+    printf("La pile ne contient rien.\n");
+  }
 }
 
 void debug_file(game_t *game_v) {
@@ -93,6 +104,12 @@ game_t *debug_partie_nouvelle() {
   res = partie_creer();
   res->capture = pile_create();
   res->file = file_creer_list();
+
+  /** Info
+   *  BLANC = 1
+   *  NOIR  = 0
+   */
+
   res->player = 0;
 
   /* Remplissage case vide */
@@ -105,7 +122,9 @@ game_t *debug_partie_nouvelle() {
   }
 
   /* Pions */
-  res->board[5][5] = piece_creer(NOIR, CAVALIER, NON_PROMU);
-
+  for (y = 1; y < 8; y++) {
+    res->board[5][y] = piece_creer(NOIR, PION, NON_PROMU);
+  }
+  res->board[5][y] = piece_creer(BLANC, TOUR, NON_PROMU);
   return res;
 }

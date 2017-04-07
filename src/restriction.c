@@ -8,12 +8,10 @@
  */
 coordinate_t movement_checker_tmp;
 
-/**
- * movement restriction
- *
- * Parameters:
- *     game_t       - game_v
- *     coordinate_t - coordinate_input_v
+/** movement_restriction
+ *  En fonction des coordonée, appele la restriction adéquate
+ * @param: game_t       - *game_v
+ *         coordinate_t - coordinate_input_v
  */
 void movement_restriction(game_t *game_v, coordinate_t coordinate_input_v) {
   //======================================================================
@@ -21,13 +19,18 @@ void movement_restriction(game_t *game_v, coordinate_t coordinate_input_v) {
   //======================================================================
 
   /* Develement Restrictions Parachutage */
+  /* Au cas ou vous avez oublié, jsuis gentil jfais un rappel :
+   * Cette condition vérifie si les coordonées d'entré font partie de la reserve
+   */
   if ((coordinate_input_v.x == 0 &&
        (coordinate_input_v.y < 11 && coordinate_input_v.y > -1)) ||
       (coordinate_input_v.y == 0 &&
        (coordinate_input_v.x < 11 && coordinate_input_v.y >= 0))) {
     movement_restriction_parachute(game_v);
-  } else {
-    /* Fin restriction Parachutage*/
+  }
+  /* Fin restriction Parachutage*/
+
+  else {
     switch (game_v->board[coordinate_input_v.x][coordinate_input_v.y].type) {
       {
       case PION:
@@ -109,12 +112,10 @@ void movement_restriction(game_t *game_v, coordinate_t coordinate_input_v) {
   }
 }
 
-/**
- * movement general restriction
- *
- * Parameters:
- *     game_t       - game_v
- *     coordinate_t - coordinate_input_v
+/** movement_restriction_general
+ * Bah, si la case du restriction est valide, on affiche l'aide visuel SELECT
+ * @params:     game_t       - *game_v
+ *              coordinate_t - coordinate_input_v
  */
 void movement_restriction_general(game_t *game_v,
                                   coordinate_t coordinate_input_v) {
@@ -143,24 +144,16 @@ void movement_restriction_general(game_t *game_v,
   }
 }
 
-/**
- * movement tour restriction
- *
- * Parameters:
- *     game_t       - game_v
- *     coordinate_t - coordinate_input_v
+/** movement_restriction_tour
+ * Bah, si la case du restriction est valide, on affiche l'aide visuel SELECT
+ * @params:     game_t       - *game_v
+ *              coordinate_t - coordinate_input_v
  */
 void movement_restriction_tour(game_t *game_v,
                                coordinate_t coordinate_input_v) {
-  //======================================================================
-  // Variables
-  //======================================================================
+
   coordinate_t movement_checker_1_tmp, movement_checker_2_tmp,
       movement_checker_3_tmp, movement_checker_4_tmp;
-
-  //======================================================================
-  // Main
-  //======================================================================
 
   /* Boucle for, vers le bas */
   for (movement_checker_1_tmp.x = coordinate_input_v.x + 1;
@@ -203,9 +196,16 @@ void movement_restriction_tour(game_t *game_v,
   }
 }
 
+/** movement_restriction_lancier
+ * Bah, si la case du restriction est valide, on affiche l'aide visuel SELECT
+ * @params:     game_t       - *game_v
+ *              coordinate_t - coordinate_input_v
+ */
 void movement_restriction_lancier(game_t *game_v,
                                   coordinate_t coordinate_input_v) {
-  if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color == NOIR) {
+  if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].color ==
+      BLANC) {
+
     for (movement_checker_tmp.x = coordinate_input_v.x - 1;
          movement_checker_tmp.x > 0 &&
          game_v->board[movement_checker_tmp.x][coordinate_input_v.y].type ==
@@ -215,6 +215,7 @@ void movement_restriction_lancier(game_t *game_v,
       game_v->board[movement_checker_tmp.x][coordinate_input_v.y].type = SELECT;
     }
   } else {
+
     for (movement_checker_tmp.x = coordinate_input_v.x + 1;
          movement_checker_tmp.x < 10 &&
          game_v->board[movement_checker_tmp.x][coordinate_input_v.y].type ==
@@ -228,20 +229,13 @@ void movement_restriction_lancier(game_t *game_v,
 /**
  * movement bishop restriction
  *
- * Parameters:
- *     game_t       - game_v
- *     coordinate_t - coordinate_input_v
+ * @params:*     game_t       - game_v
+ *               coordinate_t - coordinate_input_v
  */
 void movement_restriction_fou(game_t *game_v, coordinate_t coordinate_input_v) {
-  //======================================================================
-  // Variables
-  //======================================================================
+
   coordinate_t movement_checker_1_tmp, movement_checker_2_tmp,
       movement_checker_3_tmp, movement_checker_4_tmp;
-
-  //======================================================================
-  // Main
-  //======================================================================
 
   /* Diagnonal bas droit */
   for (movement_checker_1_tmp.x = coordinate_input_v.x + 1,
@@ -289,21 +283,14 @@ void movement_restriction_fou(game_t *game_v, coordinate_t coordinate_input_v) {
   }
 }
 
-/**
- * movement restriction destruct
- *
- * Parameters:
- *     game_t - game_v
+/** movement_restriction_destruct
+ * Les cases SELECT sont remis en case VIDE
+ * @params:     game_t - game_v
  */
 void movement_restriction_destruct(game_t *game_v) {
-  //======================================================================
-  // Variables
-  //======================================================================
+
   int x, y;
 
-  //======================================================================
-  // Main
-  //======================================================================
   for (x = 1; x < 10; x++) {
 
     for (y = 1; y < 10; y++) {
@@ -319,15 +306,14 @@ void movement_restriction_destruct(game_t *game_v) {
   }
 }
 
+/** movement_restriction_parachute
+ * Théoriqument vu que c'est un Parachutage, toute les cases vides sont changé
+ * en case SELECT
+ */
 void movement_restriction_parachute(game_t *game_v) {
-  //======================================================================
-  // Variables
-  //======================================================================
+
   int x, y;
 
-  //======================================================================
-  // Main
-  //======================================================================
   for (x = 1; x < 10; x++) {
 
     for (y = 1; y < 10; y++) {
@@ -343,6 +329,13 @@ void movement_restriction_parachute(game_t *game_v) {
   }
 }
 
+/** restriction_detector
+ * Permet de detecter si la case selectionnée est vide ou bien d'une couleur
+ * différente du joueur actuelle pour capture
+ *  @params:  game_t    -       *game_v
+ *            coordinate_t  -   coordinate_output_v
+ *  @return:  int
+ */
 int restriction_detector(game_t *game_v, coordinate_t coordinate_output_v) {
   if (game_v->board[coordinate_output_v.x][coordinate_output_v.y].type ==
           SELECT ||
