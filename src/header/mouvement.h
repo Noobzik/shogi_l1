@@ -28,7 +28,7 @@ int     deplacement_valide_parachutage      (game_t * g, coordinate_t ci, coordi
 
 /****************** Fin des validations des déplacements   ******************/
 
-/**************** Debut des validations des déplacements  PROMU *************/
+/**************** Debut des validations des déplacements  PROMOTED *************/
 
 int     deplacement_valide_pion_promu       (game_t * g, coordinate_t ci, coordinate_t co);
 int     deplacement_valide_tour_promu       (game_t * g, coordinate_t ci, coordinate_t co);
@@ -37,7 +37,7 @@ int     deplacement_valide_fou_promu        (game_t * g, coordinate_t ci, coordi
 int     deplacement_valide_silver_promu     (game_t * g, coordinate_t ci, coordinate_t co);
 int     deplacement_valide_lancier_promu    (game_t * g, coordinate_t ci, coordinate_t co);
 
-/**************** FIN des validations des déplacements  PROMU ****************/
+/**************** FIN des validations des déplacements  PROMOTED ****************/
 
 int     movement_valid_helper               (game_t * g, coordinate_t ci, coordinate_t co);
 int     is_promoted                         (game_t * g, coordinate_t ci, coordinate_t co);

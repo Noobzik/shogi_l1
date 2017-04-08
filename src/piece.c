@@ -62,17 +62,17 @@ piece_t piece_identifier(char c) {
       case 'k':
         return piece_create(BLANC, ROI, NOT_PROMOTED);
       case 'd':
-        return piece_create(BLANC, PION, PROMU);
+        return piece_create(BLANC, PION, PROMOTED);
       case 'j':
-        return piece_create(BLANC, LANCIER, PROMU);
+        return piece_create(BLANC, LANCIER, PROMOTED);
       case 'c':
-        return piece_create(BLANC, CAVALIER, PROMU);
+        return piece_create(BLANC, CAVALIER, PROMOTED);
       case 'f':
-        return piece_create(BLANC, FOU, PROMU);
+        return piece_create(BLANC, FOU, PROMOTED);
       case 't':
-        return piece_create(BLANC, TOUR, PROMU);
+        return piece_create(BLANC, TOUR, PROMOTED);
       case 'a':
-        return piece_create(BLANC, SILVER, PROMU);
+        return piece_create(BLANC, SILVER, PROMOTED);
     }
   if (c >= 97 && c <= 122)
     switch (c) {
@@ -93,17 +93,17 @@ piece_t piece_identifier(char c) {
       case 'K':
         return piece_create(NOIR, ROI, NOT_PROMOTED);
       case 'D':
-        return piece_create(NOIR, PION, PROMU);
+        return piece_create(NOIR, PION, PROMOTED);
       case 'J':
-        return piece_create(NOIR, LANCIER, PROMU);
+        return piece_create(NOIR, LANCIER, PROMOTED);
       case 'C':
-        return piece_create(NOIR, CAVALIER, PROMU);
+        return piece_create(NOIR, CAVALIER, PROMOTED);
       case 'F':
-        return piece_create(NOIR, FOU, PROMU);
+        return piece_create(NOIR, FOU, PROMOTED);
       case 'T':
-        piece_create(NOIR, TOUR, PROMU);
+        piece_create(NOIR, TOUR, PROMOTED);
       case 'A':
-        return piece_create(NOIR, SILVER, PROMU);
+        return piece_create(NOIR, SILVER, PROMOTED);
     }
   return piece_create(EMPTY_PIECE, EMPTY, NOT_PROMOTED);
 }
@@ -135,17 +135,17 @@ char piece_caractere(piece_t p) {
       case PION:
         return 'p';
       case PION_PROMU:
-        return 'd'; // PION PROMU
+        return 'd'; // PION PROMOTED
       case LANCIER_PROMU:
-        return 'j'; // LANCIER PROMU
+        return 'j'; // LANCIER PROMOTED
       case CAVALIER_PROMU:
-        return 'c'; // CAVALIER PROMU
+        return 'c'; // CAVALIER PROMOTED
       case FOU_PROMU:
-        return 'f'; // FOU PROMU
+        return 'f'; // FOU PROMOTED
       case TOUR_PROMU:
-        return 't'; // TOUR PROMU
+        return 't'; // TOUR PROMOTED
       case SILVER_PROMU:
-        return 'a'; // SILVER PROMU
+        return 'a'; // SILVER PROMOTED
       case SELECT:
         return '*';
       default:
@@ -170,17 +170,17 @@ char piece_caractere(piece_t p) {
       case PION:
         return 'P';
       case PION_PROMU:
-        return 'D'; // PION PROMU
+        return 'D'; // PION PROMOTED
       case LANCIER_PROMU:
-        return 'J'; // LANCIER PROMU
+        return 'J'; // LANCIER PROMOTED
       case CAVALIER_PROMU:
-        return 'C'; // CAVALIER PROMU
+        return 'C'; // CAVALIER PROMOTED
       case FOU_PROMU:
-        return 'F'; // FOU PROMU
+        return 'F'; // FOU PROMOTED
       case TOUR_PROMU:
-        return 'T'; // TOUR PROMU
+        return 'T'; // TOUR PROMOTED
       case SILVER_PROMU:
-        return 'A'; // SILVER PROMU
+        return 'A'; // SILVER PROMOTED
       case SELECT:
         return '*';
       default:

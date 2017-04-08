@@ -30,10 +30,10 @@ typedef enum {
 
 typedef enum {
   NOT_PROMOTED,
-  PROMU
+  PROMOTED
 } piece_statut_e;
 
-typedef struct    piece_s {
+typedef struct {
   piece_color_e   color;
   piece_type_e    type;
   piece_statut_e  statut;

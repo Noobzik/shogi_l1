@@ -25,15 +25,13 @@
  * @return: int
  */
 int movement_valid_input(game_t * g, coordinate_t c) {
-  if (c.x > 11 || c.y > 11) {
+  if ((c.x > 11 || c.y > 11) ||
+      g->board[c.x][c.y].type == EMPTY ||
+      g->player != g->board[c.x][c.y].color) {
     printf("Vous avez saisie une case vide ou vous avez saisie la pièce de l'adversaire\n");
     return 0;
   }
-
-  if (g->board[c.x][c.y].type != EMPTY) {
-    printf("Player ID %d\n", g->player);
-    if (g->player == g->board[c.x][c.y].color) return 1;
-  }
+  return 1;
 }
 
 /** movement_valid_input
@@ -778,7 +776,7 @@ int deplacement_valide_lancier(game_t *game_v, coordinate_t ci,
 }
 
 /****************** Fin des validations des déplacements   ******************/
-/**************** Debut des validations des déplacements  PROMU *************/
+/**************** Debut des validations des déplacements  PROMOTED *************/
 
 /** deplacement_valide_pion_promu
  * Algo de GOLD
@@ -866,7 +864,7 @@ int deplacement_valide_lancier_promu(game_t *game_v,
   return deplacement_valide_gold(game_v, ci,
                                  co);
 }
-/**************** FIN des validations des déplacements  PROMU
+/**************** FIN des validations des déplacements  PROMOTED
  * ****************/
 
 /** movement_valid_helper
@@ -1164,29 +1162,41 @@ int is_promoted(game_t *game_v, coordinate_t ci,
  */
 void promote_grant(piece_t * p) {
   switch (p->type) {
+    {
     case PION:
       p->type = PION_PROMU;
-      p->statut = PROMU;
+      p->statut = PROMOTED;
       break;
+    }
+    {
     case LANCIER:
       p->type = LANCIER_PROMU;
-      p->statut = PROMU;
+      p->statut = PROMOTED;
       break;
+    }
+    {
     case CAVALIER:
       p->type = CAVALIER_PROMU;
-      p->statut = PROMU;
+      p->statut = PROMOTED;
       break;
+    }
+    {
     case FOU:
       p->type = FOU_PROMU;
-      p->statut = PROMU;
+      p->statut = PROMOTED;
       break;
+    }
+    {
     case TOUR:
       p->type = TOUR_PROMU;
-      p->statut = PROMU;
+      p->statut = PROMOTED;
       break;
+    }
+    {
     case SILVER:
       p->type = SILVER_PROMU;
-      p->statut = PROMU;
+      p->statut = PROMOTED;
       break;
+    }
   }
 }
