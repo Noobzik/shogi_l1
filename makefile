@@ -7,7 +7,7 @@ CFLAGS = -g -Wall -pedantic -O3 -std=c11
 # On force la derniere norme de compilation qui est C11
 
 #Liste des fichiers *.o à rassembler en un executable
-FICHIER = game.o piece.o file.o pile.o mouvement.o debug.o restriction.o main.o
+FICHIER = game.o piece.o file.o pile.o mouvement.o debug.o restriction.o sauvegardes.o main.o
 
 #Programme après la compilation
 OUT = shogi
@@ -45,6 +45,9 @@ restriction.o:src/restriction.c
 debug.o:src/debug.c
 	$(CCSEP) src/debug.c
 
+sauvegardes.o:src/sauvegardes.c
+	$(CCSEP) src/sauvegardes.c
+
 main.o:main.c
 	$(CCSEP) main.c
 
@@ -59,6 +62,11 @@ clean-atom:
 	rm src/header/*.gch
 	rm *.o
 	rm $(OUT)
+
+# Nettoie littéralement tout
+full-clean:clean-atom
+	rm -rf partie
+	rm -rf plateaux
 
 # Sert a re-compiler à partir de 0
 rebuild:clean all

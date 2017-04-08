@@ -1220,3 +1220,107 @@ void promote_grant(piece_t *piece) {
     break;
   }
 }
+
+/** demote_grant
+ *  Permet de dé-promovoir la piece en changeant de couleur (Pour la reserve)
+ *  @params:    piece_t     -   piece
+ *  @return:    void
+ */
+piece_t demote_grant(piece_t piece) {
+  if (piece.color == BLANC) {
+    switch (piece.type) {
+      {
+      case PION_PROMU:
+        piece.color = NOIR;
+        piece.type = PION;
+        piece.statut = NON_PROMU;
+        break;
+      }
+      {
+      case LANCIER_PROMU:
+        piece.color = NOIR;
+        piece.type = LANCIER;
+        piece.statut = NON_PROMU;
+        break;
+      }
+      {
+      case CAVALIER_PROMU:
+        piece.color = NOIR;
+        piece.type = CAVALIER;
+        piece.statut = NON_PROMU;
+        break;
+      }
+      {
+      case FOU_PROMU:
+        piece.color = NOIR;
+        piece.type = FOU;
+        piece.statut = NON_PROMU;
+        break;
+      }
+      {
+      case TOUR_PROMU:
+        piece.color = NOIR;
+        piece.type = TOUR;
+        piece.statut = NON_PROMU;
+        break;
+      }
+      {
+      case SILVER_PROMU:
+        piece.color = NOIR;
+        piece.type = SILVER;
+        piece.statut = NON_PROMU;
+        break;
+      }
+    default:
+      break;
+    }
+  } else {
+    switch (piece.type) {
+      {
+      case PION_PROMU:
+        piece.color = BLANC;
+        piece.type = PION;
+        piece.statut = NON_PROMU;
+        break;
+      }
+      {
+      case LANCIER_PROMU:
+        piece.color = BLANC;
+        piece.type = LANCIER;
+        piece.statut = NON_PROMU;
+        break;
+      }
+      {
+      case CAVALIER_PROMU:
+        piece.color = BLANC;
+        piece.type = CAVALIER;
+        piece.statut = NON_PROMU;
+        break;
+      }
+      {
+      case FOU_PROMU:
+        piece.color = BLANC;
+        piece.type = FOU;
+        piece.statut = NON_PROMU;
+        break;
+      }
+      {
+      case TOUR_PROMU:
+        piece.color = BLANC;
+        piece.type = TOUR;
+        piece.statut = NON_PROMU;
+        break;
+      }
+      {
+      case SILVER_PROMU:
+        piece.color = BLANC;
+        piece.type = SILVER;
+        piece.statut = NON_PROMU;
+        break;
+      }
+    default:
+      break;
+    }
+  }
+  return piece;
+}

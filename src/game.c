@@ -5,6 +5,7 @@
 #include "header/piece.h"
 #include "header/pile.h"
 #include "header/restriction.h"
+#include "header/sauvegardes.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -296,12 +297,8 @@ void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
         while (test == 1) {
           if (case_vide(game_v->board[0][x]) == 1) {
             test = 0;
-            game_v->board[0][x] = piece_creer(
-                NOIR,
-                game_v->board[coordinate_output_v.x][coordinate_output_v.y]
-                    .type,
-                game_v->board[coordinate_output_v.x][coordinate_output_v.y]
-                    .statut);
+            game_v->board[0][x] = demote_grant(
+                game_v->board[coordinate_output_v.x][coordinate_output_v.y]);
           }
           if (x > 0 && test != 0) {
             x--;
@@ -317,12 +314,8 @@ void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
         while (test_bis == 1) {
           if (case_vide(game_v->board[y][0]) == 1) {
             test_bis = 0;
-            game_v->board[y][0] = piece_creer(
-                NOIR,
-                game_v->board[coordinate_output_v.x][coordinate_output_v.y]
-                    .type,
-                game_v->board[coordinate_output_v.x][coordinate_output_v.y]
-                    .statut);
+            game_v->board[y][0] = demote_grant(
+                game_v->board[coordinate_output_v.x][coordinate_output_v.y]);
           }
           if (y < 10 && test != 0) {
             y++;
@@ -343,12 +336,8 @@ void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
         while (test == 1) {
           if (case_vide(game_v->board[10][x]) == 1) {
             test = 0;
-            game_v->board[10][x] = piece_creer(
-                BLANC,
-                game_v->board[coordinate_output_v.x][coordinate_output_v.y]
-                    .type,
-                game_v->board[coordinate_output_v.x][coordinate_output_v.y]
-                    .statut);
+            game_v->board[10][x] = demote_grant(
+                game_v->board[coordinate_output_v.x][coordinate_output_v.y]);
           }
           if (x < 11 && test != 0) {
             x++;
@@ -365,12 +354,8 @@ void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
           if (case_vide(game_v->board[y][10]) == 1) {
             test_bis = 0;
 
-            game_v->board[y][0] = piece_creer(
-                BLANC,
-                game_v->board[coordinate_output_v.x][coordinate_output_v.y]
-                    .type,
-                game_v->board[coordinate_output_v.x][coordinate_output_v.y]
-                    .statut);
+            game_v->board[y][0] = demote_grant(
+                game_v->board[coordinate_output_v.x][coordinate_output_v.y]);
           }
           if (y > 0 && test_bis != 0) {
             y--;
@@ -675,8 +660,7 @@ int game_selector(char game_command[MAX_CHAR], char select_v[MAX_CHAR]) {
 void partie_jouer(game_t *game_v) {
 
   char game_command[MAX_CHAR] = "";
-  char *game_save_name = malloc(MAX_CHAR);
-  char *game_save_path = malloc(MAX_CHAR);
+  char game_save_name[MAX_CHAR] = "";
   char game_exit_confirmation[MAX_CHAR];
 
   coordinate_t game_input_tmp, game_output_tmp;
@@ -920,7 +904,40 @@ void partie_jouer(game_t *game_v) {
       afficher_echiquier(game_v, COORDINATE_NULL);
       printf("\n\n\n");
 
-      /* Save command */
+    }
+    /* Save command */
+
+    else if (game_selector(game_command, "save")) {
+      /* Separator */
+      game_seperator();
+
+      printf("Sauvegarde.\n");
+
+      /* Enter loop */
+      afficher_echiquier(game_v, COORDINATE_NULL);
+      printf("\n\n\n");
+
+      printf("Entrer le nom de la partie: ");
+
+      //  scanf("%s", game_save_name);
+      // Hack pour warning: ignoring return value of 'scanf'
+
+      if (fgets(game_save_name, MAX_CHAR, stdin) != NULL)
+        ;
+      strtok(game_save_name, "\n");
+
+      /* Separator */
+      game_seperator();
+
+      partie_sauvegarder(game_v, game_save_name);
+
+      printf("La partie a ete sauvergarder.\n");
+
+      /* Exit loop */
+      afficher_echiquier(game_v, COORDINATE_NULL);
+      printf("\n\n\n");
+
+      /* Exit command */
     } else if (game_selector(game_command, "exit")) {
 
       /* Separator */
@@ -951,8 +968,7 @@ void partie_jouer(game_t *game_v) {
         printf("Merci d'avoir jouer a ce jeu.\n");
 
         /* Exit loop */
-        free(game_save_name);
-        free(game_save_path);
+        //  free(game_save_name);
 
         game_play = game_exit(game_v);
       } else {
@@ -966,32 +982,28 @@ void partie_jouer(game_t *game_v) {
         printf("\n\n\n");
 
         printf("Entrer le nom de la partie:");
-        fgets(game_save_name, MAX_CHAR, stdin);
+
+        /* Hack pour supprimer warning: ignoring return value of fgets*/
+        if (fgets(game_save_name, MAX_CHAR, stdin) != NULL)
+          ;
 
         /* Separator */
         game_seperator();
 
         /* Enter loop */
         afficher_echiquier(game_v, COORDINATE_NULL);
-        printf("\n\n\n");
-
-        printf("Entrer l'emplacement de la sauvegarder:");
-
-        fgets(game_save_path, MAX_CHAR, stdin);
 
         /* Separator */
         game_seperator();
 
         printf("La partie a ete sauvergardé.");
 
-        //        partie_sauvegarder(game_v, game_save_name, game_save_path);
+        partie_sauvegarder(game_v, game_save_name);
 
         /* Enter loop */
         afficher_echiquier(game_v, COORDINATE_NULL);
 
         game_play = game_exit(game_v);
-        free(game_save_name);
-        free(game_save_path);
       }
 
       /* Unknown command : Quand vous savez pas écrire des commandes, il y a ce

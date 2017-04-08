@@ -59,4 +59,5 @@ int movement_valid_helper(game_t *game_v, coordinate_t coordinate_input_v,
 int is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
                 coordinate_t coordinate_output_v);
 void promote_grant(piece_t *piece);
+piece_t demote_grant(piece_t piece);
 #endif
