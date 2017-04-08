@@ -19,7 +19,7 @@ pile_element_t *    pile_creer_element(piece_t p) {
 /** pile_destuct_element
  * pile_destuct_element
  * Permet de détruire l'element
- * @param pile_element_t - pile_element_v
+ * @param pile_element_t - e
  */
 void pile_destuct_element(pile_element_t * e) {
   free(e);
@@ -95,13 +95,13 @@ int pile_empty(pile_list_t * l) {
  * @return int
  */
 int pile_size(pile_list_t * l) {
-  return pile_list_v->size;
+  return l->size;
 }
 
 /** pile_stacking
  * Ajoute une piece capturé dans la pile
- * @param pile_list_t - pile_list_v
- *        piece_t     - piece_v
+ * @param pile_list_t - l
+ *        piece_t     - p
  */
 void pile_stacking(pile_list_t * l, piece_t p) {
   pile_list_add(l, p);
@@ -109,7 +109,7 @@ void pile_stacking(pile_list_t * l, piece_t p) {
 
 /** pile_unstacking
  * Permet de retirer une piece capturé
- * @param pile_list_t - pile_list_v
+ * @param pile_list_t - l
  */
 piece_t             pile_unstacking(pile_list_t * l) {
   pile_element_t *  e;
