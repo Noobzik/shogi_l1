@@ -132,7 +132,7 @@ void file_thread(file_list_t * l, movement_t m, piece_statut_e p, int c) {
 file_element_t *    file_unthread(file_list_t * l) {
   file_element_t *  e;
 
-  e = file_list_extract(file_lilst_v);
+  e = file_list_extract(l);
   file_element_t *res = e;
   return res;
 }
