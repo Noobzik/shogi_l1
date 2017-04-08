@@ -109,8 +109,8 @@ game_t *partie_creer() {
 void partie_detruire(game_t *game_v) { free(game_v); }
 
 /** partie_nouvelle
- * Description: Initialize tout les case en piece VIDE
- * Puis Place tout les pieces de debut de partie
+ * Description: Initialize tout les case en piece EMPTY
+ * Puis Place tout les pieces de begin de partie
  * Parameters :
  * @return Retourne un echiquier pret à etre jouer
  */
@@ -124,7 +124,7 @@ game_t *partie_nouvelle() {
   /* Initialize */
   res = partie_creer();
   res->capture = pile_create();
-  res->file = file_creer_list();
+  res->file = file_create_list();
 
   /** Info
    *  BLANC = 0
@@ -137,60 +137,60 @@ game_t *partie_nouvelle() {
   for (x = 0; x < 11; x++) {
 
     for (y = 0; y < 11; y++) {
-      res->board[y][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
-      res->board[y][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+      res->board[y][x] = piece_create(EMPTY_PIECE, EMPTY, NOT_PROMOTED);
+      res->board[y][x] = piece_create(EMPTY_PIECE, EMPTY, NOT_PROMOTED);
     }
   }
 
   /* Pions */
   for (x = 1; x < 10; x++) {
-    res->board[7][x] = piece_creer(BLANC, PION, NON_PROMU);
-    res->board[3][x] = piece_creer(NOIR, PION, NON_PROMU);
+    res->board[7][x] = piece_create(BLANC, PION, NOT_PROMOTED);
+    res->board[3][x] = piece_create(NOIR, PION, NOT_PROMOTED);
   }
 
   /* Tour */
 
-  res->board[8][2] = piece_creer(BLANC, TOUR, NON_PROMU);
-  res->board[2][8] = piece_creer(NOIR, TOUR, NON_PROMU);
+  res->board[8][2] = piece_create(BLANC, TOUR, NOT_PROMOTED);
+  res->board[2][8] = piece_create(NOIR, TOUR, NOT_PROMOTED);
 
   /* Roi */
 
-  res->board[9][5] = piece_creer(BLANC, ROI, NON_PROMU);
-  res->board[1][5] = piece_creer(NOIR, ROI, NON_PROMU);
+  res->board[9][5] = piece_create(BLANC, ROI, NOT_PROMOTED);
+  res->board[1][5] = piece_create(NOIR, ROI, NOT_PROMOTED);
 
   /* Fou */
 
-  res->board[8][8] = piece_creer(BLANC, FOU, NON_PROMU);
-  res->board[2][2] = piece_creer(NOIR, FOU, NON_PROMU);
+  res->board[8][8] = piece_create(BLANC, FOU, NOT_PROMOTED);
+  res->board[2][2] = piece_create(NOIR, FOU, NOT_PROMOTED);
 
   /* Gold */
 
-  res->board[1][4] = piece_creer(NOIR, GOLD, NON_PROMU);
-  res->board[1][6] = piece_creer(NOIR, GOLD, NON_PROMU);
-  res->board[9][4] = piece_creer(BLANC, GOLD, NON_PROMU);
-  res->board[9][6] = piece_creer(BLANC, GOLD, NON_PROMU);
+  res->board[1][4] = piece_create(NOIR, GOLD, NOT_PROMOTED);
+  res->board[1][6] = piece_create(NOIR, GOLD, NOT_PROMOTED);
+  res->board[9][4] = piece_create(BLANC, GOLD, NOT_PROMOTED);
+  res->board[9][6] = piece_create(BLANC, GOLD, NOT_PROMOTED);
 
   /* Sivler */
 
-  res->board[9][3] = piece_creer(BLANC, SILVER, NON_PROMU);
-  res->board[9][7] = piece_creer(BLANC, SILVER, NON_PROMU);
+  res->board[9][3] = piece_create(BLANC, SILVER, NOT_PROMOTED);
+  res->board[9][7] = piece_create(BLANC, SILVER, NOT_PROMOTED);
 
-  res->board[1][3] = piece_creer(NOIR, SILVER, NON_PROMU);
-  res->board[1][7] = piece_creer(NOIR, SILVER, NON_PROMU);
+  res->board[1][3] = piece_create(NOIR, SILVER, NOT_PROMOTED);
+  res->board[1][7] = piece_create(NOIR, SILVER, NOT_PROMOTED);
 
   /* Cavalier */
 
-  res->board[1][2] = piece_creer(NOIR, CAVALIER, NON_PROMU);
-  res->board[1][8] = piece_creer(NOIR, CAVALIER, NON_PROMU);
-  res->board[9][2] = piece_creer(BLANC, CAVALIER, NON_PROMU);
-  res->board[9][8] = piece_creer(BLANC, CAVALIER, NON_PROMU);
+  res->board[1][2] = piece_create(NOIR, CAVALIER, NOT_PROMOTED);
+  res->board[1][8] = piece_create(NOIR, CAVALIER, NOT_PROMOTED);
+  res->board[9][2] = piece_create(BLANC, CAVALIER, NOT_PROMOTED);
+  res->board[9][8] = piece_create(BLANC, CAVALIER, NOT_PROMOTED);
 
   /* Lancier */
 
-  res->board[1][1] = piece_creer(NOIR, LANCIER, NON_PROMU);
-  res->board[1][9] = piece_creer(NOIR, LANCIER, NON_PROMU);
-  res->board[9][1] = piece_creer(BLANC, LANCIER, NON_PROMU);
-  res->board[9][9] = piece_creer(BLANC, LANCIER, NON_PROMU);
+  res->board[1][1] = piece_create(NOIR, LANCIER, NOT_PROMOTED);
+  res->board[1][9] = piece_create(NOIR, LANCIER, NOT_PROMOTED);
+  res->board[9][1] = piece_create(BLANC, LANCIER, NOT_PROMOTED);
+  res->board[9][9] = piece_create(BLANC, LANCIER, NOT_PROMOTED);
 
   return res;
 }
@@ -204,7 +204,7 @@ game_t *partie_nouvelle() {
  * @return int
  */
 int case_vide(piece_t piece_v) {
-  if (piece_v.type == VIDE) {
+  if (piece_v.type == EMPTY) {
     return 1;
   } else if (piece_v.type == SELECT)
     return 1;
@@ -219,7 +219,7 @@ int case_vide(piece_t piece_v) {
  *  @return RIEN
  */
 void modifier_case(game_t *game_v, piece_t piece_v, coordinate_t coordinate_v) {
-  piece_t res = piece_creer(piece_v.color, piece_v.type, piece_v.statut);
+  piece_t res = piece_create(piece_v.color, piece_v.type, piece_v.statut);
   game_v->board[coordinate_v.x][coordinate_v.y] = res;
 }
 
@@ -272,7 +272,7 @@ void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
             piece_couleur(
                 game_v->board[coordinate_input_v.x][coordinate_input_v.y])) {
 
-      /* TOUJOURS DANS LE IF !CASE VIDE*/
+      /* TOUJOURS DANS LE IF !CASE EMPTY*/
 
       /* On met la piece dans la liste des captures*/
       pile_stacking(
@@ -281,7 +281,7 @@ void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
 
       /** Ici un bloc d'instruction qui met la piece capturé dans la reserve
        *  On vérifie que la case est vide pour placer la piece, sinon on passe
-       *  au suivant. Si il n'y a plus de place dans l'axe des x, on passe a la
+       *  au next. Si il n'y a plus de place dans l'axe des x, on passe a la
        *  deuxieme boucle le l'axe des y
        */
 
@@ -296,7 +296,7 @@ void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
         while (test == 1) {
           if (case_vide(game_v->board[0][x]) == 1) {
             test = 0;
-            game_v->board[0][x] = piece_creer(
+            game_v->board[0][x] = piece_create(
                 NOIR,
                 game_v->board[coordinate_output_v.x][coordinate_output_v.y]
                     .type,
@@ -317,7 +317,7 @@ void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
         while (test_bis == 1) {
           if (case_vide(game_v->board[y][0]) == 1) {
             test_bis = 0;
-            game_v->board[y][0] = piece_creer(
+            game_v->board[y][0] = piece_create(
                 NOIR,
                 game_v->board[coordinate_output_v.x][coordinate_output_v.y]
                     .type,
@@ -343,7 +343,7 @@ void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
         while (test == 1) {
           if (case_vide(game_v->board[10][x]) == 1) {
             test = 0;
-            game_v->board[10][x] = piece_creer(
+            game_v->board[10][x] = piece_create(
                 BLANC,
                 game_v->board[coordinate_output_v.x][coordinate_output_v.y]
                     .type,
@@ -365,7 +365,7 @@ void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
           if (case_vide(game_v->board[y][10]) == 1) {
             test_bis = 0;
 
-            game_v->board[y][0] = piece_creer(
+            game_v->board[y][0] = piece_create(
                 BLANC,
                 game_v->board[coordinate_output_v.x][coordinate_output_v.y]
                     .type,
@@ -383,10 +383,10 @@ void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
 
       /* Initialisateur du compteur de coups */
 
-      if (file_list_vide(game_v->file))
+      if (file_empty_list(game_v->file))
         game_movement_tmp.valeur = 1;
       else
-        game_movement_tmp.valeur = game_v->file->taille + 1;
+        game_movement_tmp.valeur = game_v->file->size + 1;
 
       /* Apply movement */
 
@@ -395,7 +395,7 @@ void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
 
       /* Changement en piece vide de la position de départ */
       game_v->board[coordinate_input_v.x][coordinate_input_v.y] =
-          piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+          piece_create(EMPTY_PIECE, EMPTY, NOT_PROMOTED);
 
       /* Piece switch et ajout dans la file*/
 
@@ -412,14 +412,14 @@ void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
 
       /* Changement en piece vide de la position de départ */
       game_v->board[coordinate_input_v.x][coordinate_input_v.y] =
-          piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+          piece_create(EMPTY_PIECE, EMPTY, NOT_PROMOTED);
 
       /* Initialisateur du compteur de coups */
 
-      if (file_list_vide(game_v->file))
+      if (file_empty_list(game_v->file))
         game_movement_tmp.valeur = 1;
       else
-        game_movement_tmp.valeur = game_v->file->taille + 1;
+        game_movement_tmp.valeur = game_v->file->size + 1;
 
       /* Piece switch et ajout dans la file*/
 
@@ -486,7 +486,7 @@ void annuler_deplacement(game_t *game_v) {
 
         if (case_vide(game_v->board[y][0]) == 0) {
           test = 0;
-          game_v->board[y][0] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+          game_v->board[y][0] = piece_create(EMPTY_PIECE, EMPTY, NOT_PROMOTED);
         }
 
         if (y > 0 && test != 0) {
@@ -504,7 +504,7 @@ void annuler_deplacement(game_t *game_v) {
 
         if (case_vide(game_v->board[0][x]) == 0) {
           test_bis = 0;
-          game_v->board[0][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+          game_v->board[0][x] = piece_create(EMPTY_PIECE, EMPTY, NOT_PROMOTED);
         }
         if (x < 11 && test_bis != 0)
           x++;
@@ -526,7 +526,7 @@ void annuler_deplacement(game_t *game_v) {
         printf("Je suis rentré dans cette boucle %d\n", y);
         if (case_vide(game_v->board[y][10]) == 0) {
           test = 0;
-          game_v->board[y][10] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+          game_v->board[y][10] = piece_create(EMPTY_PIECE, EMPTY, NOT_PROMOTED);
         }
         if (y < 10 && test != 0)
           y++;
@@ -543,7 +543,7 @@ void annuler_deplacement(game_t *game_v) {
       while (test_bis == 1) {
         if (case_vide(game_v->board[10][x]) == 0) {
           test_bis = 0;
-          game_v->board[10][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+          game_v->board[10][x] = piece_create(EMPTY_PIECE, EMPTY, NOT_PROMOTED);
         }
         if (x > 0 && test_bis != 0) {
           x--;
@@ -557,12 +557,12 @@ void annuler_deplacement(game_t *game_v) {
   /* Si il n'y pas eu de capture de piece au tour precedent ------------------*/
   else {
     game_v->board[movement_output_tmp.x][movement_output_tmp.y] =
-        piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+        piece_create(EMPTY_PIECE, EMPTY, NOT_PROMOTED);
   }
 
   /* Destruction du maillon et changement de joueur*/
 
-  file_detruire_element(back_element_tmp);
+  file_destruct_element(back_element_tmp);
 
   changer_joueur(game_v);
 }
@@ -571,7 +571,7 @@ void annuler_deplacement(game_t *game_v) {
  *  Cette fonction est un substitut du scanf
  *  Complexite : Temps O(p) Espace  O(1)
  *  Parameters :
- *  @param VIDE
+ *  @param EMPTY
  *  @return coordinate_t
  */
 coordinate_t saisie_case() {
@@ -642,8 +642,8 @@ void game_buffer() {
  */
 int game_exit(game_t *game_v) {
 
-  file_detruire_list(game_v->file);
-  pile_detruire(game_v->capture);
+  file_destruct_list(game_v->file);
+  pile_destuct(game_v->capture);
   partie_detruire(game_v);
 
   return 0;
@@ -907,7 +907,7 @@ void partie_jouer(game_t *game_v) {
       /* Separator */
       game_seperator();
 
-      if (!file_list_vide(game_v->file)) {
+      if (!file_empty_list(game_v->file)) {
         annuler_deplacement(game_v);
         printf("L'annulation à été éffectué.\n");
 

@@ -14,7 +14,7 @@
  *
  * @return struct piece_s
  */
-piece_t piece_creer(piece_color_e piece_color_v, piece_type_e piece_type_v,
+piece_t piece_create(piece_color_e piece_color_v, piece_type_e piece_type_v,
                     piece_statut_e piece_statut_v) {
 
   piece_t res;
@@ -50,60 +50,60 @@ piece_t piece_identifier(char caracter_v) {
       // Non promu joueur 0
       {
       case 'p':
-        return piece_creer(BLANC, PION, NON_PROMU);
+        return piece_create(BLANC, PION, NOT_PROMOTED);
       }
       {
       case 'l':
-        return piece_creer(BLANC, LANCIER, NON_PROMU);
+        return piece_create(BLANC, LANCIER, NOT_PROMOTED);
       }
       {
       case 'n':
-        return piece_creer(BLANC, CAVALIER, NON_PROMU);
+        return piece_create(BLANC, CAVALIER, NOT_PROMOTED);
       }
       {
       case 'b':
-        return piece_creer(BLANC, FOU, NON_PROMU);
+        return piece_create(BLANC, FOU, NOT_PROMOTED);
       }
       {
       case 'r':
-        return piece_creer(BLANC, TOUR, NON_PROMU);
+        return piece_create(BLANC, TOUR, NOT_PROMOTED);
       }
       {
       case 's':
-        return piece_creer(BLANC, SILVER, NON_PROMU);
+        return piece_create(BLANC, SILVER, NOT_PROMOTED);
       }
       {
       case 'g':
-        return piece_creer(BLANC, GOLD, NON_PROMU);
+        return piece_create(BLANC, GOLD, NOT_PROMOTED);
       }
       {
       case 'k':
-        return piece_creer(BLANC, ROI, NON_PROMU);
+        return piece_create(BLANC, ROI, NOT_PROMOTED);
       }
       // Promu Joueur 2
       {
       case 'd':
-        return piece_creer(BLANC, PION, PROMU);
+        return piece_create(BLANC, PION, PROMU);
       }
       {
       case 'j':
-        return piece_creer(BLANC, LANCIER, PROMU);
+        return piece_create(BLANC, LANCIER, PROMU);
       }
       {
       case 'c':
-        return piece_creer(BLANC, CAVALIER, PROMU);
+        return piece_create(BLANC, CAVALIER, PROMU);
       }
       {
       case 'f':
-        return piece_creer(BLANC, FOU, PROMU);
+        return piece_create(BLANC, FOU, PROMU);
       }
       {
       case 't':
-        return piece_creer(BLANC, TOUR, PROMU);
+        return piece_create(BLANC, TOUR, PROMU);
       }
       {
       case 'a':
-        return piece_creer(BLANC, SILVER, PROMU);
+        return piece_create(BLANC, SILVER, PROMU);
       }
     }
   } else {
@@ -111,65 +111,65 @@ piece_t piece_identifier(char caracter_v) {
       // Non Promu Joueur 1
       {
       case 'P':
-        return piece_creer(NOIR, PION, NON_PROMU);
+        return piece_create(NOIR, PION, NOT_PROMOTED);
       }
       {
       case 'L':
-        return piece_creer(NOIR, LANCIER, NON_PROMU);
+        return piece_create(NOIR, LANCIER, NOT_PROMOTED);
       }
       {
       case 'N':
-        return piece_creer(NOIR, CAVALIER, NON_PROMU);
+        return piece_create(NOIR, CAVALIER, NOT_PROMOTED);
       }
       {
       case 'B':
-        return piece_creer(NOIR, FOU, NON_PROMU);
+        return piece_create(NOIR, FOU, NOT_PROMOTED);
       }
       {
       case 'R':
-        return piece_creer(NOIR, TOUR, NON_PROMU);
+        return piece_create(NOIR, TOUR, NOT_PROMOTED);
       }
       {
       case 'S':
-        return piece_creer(NOIR, SILVER, NON_PROMU);
+        return piece_create(NOIR, SILVER, NOT_PROMOTED);
       }
       {
       case 'G':
-        return piece_creer(NOIR, GOLD, NON_PROMU);
+        return piece_create(NOIR, GOLD, NOT_PROMOTED);
       }
       {
       case 'K':
-        return piece_creer(NOIR, ROI, NON_PROMU);
+        return piece_create(NOIR, ROI, NOT_PROMOTED);
       }
       // Promu Joueur 1
       {
       case 'D':
-        return piece_creer(NOIR, PION, PROMU);
+        return piece_create(NOIR, PION, PROMU);
       }
       {
       case 'J':
-        return piece_creer(NOIR, LANCIER, PROMU);
+        return piece_create(NOIR, LANCIER, PROMU);
       }
       {
       case 'C':
-        return piece_creer(NOIR, CAVALIER, PROMU);
+        return piece_create(NOIR, CAVALIER, PROMU);
       }
       {
       case 'F':
-        return piece_creer(NOIR, FOU, PROMU);
+        return piece_create(NOIR, FOU, PROMU);
       }
       {
       case 'T':
-        piece_creer(NOIR, TOUR, PROMU);
+        piece_create(NOIR, TOUR, PROMU);
       }
       {
       case 'A':
-        return piece_creer(NOIR, SILVER, PROMU);
+        return piece_create(NOIR, SILVER, PROMU);
       }
     }
   }
 
-  return piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+  return piece_create(EMPTY_PIECE, EMPTY, NOT_PROMOTED);
 }
 
 /** Detections de piece

@@ -17,7 +17,7 @@ Répertoire Git pour le développement du projet de programmation impérative, U
 On note aussi que c'est un flemmard puisque les diapos de cours sont aussi de Julien David*
 
 * Il est interdit d'annoncer à l'adversaire qu'il est en échec (Règle officiel)
-* La fin de partie se caractérise par la capture du Roi adverse
+* La end de partie se caractérise par la capture du Roi adverse
 
 *Plus que 2 semaine pour boucler le projet*
 ***
@@ -115,7 +115,7 @@ Qui permet de recompiler a partir de 0, puis lance directement le programme, con
 Il faut absolument **mettre des commentaires dans vos programmes**, surtout dans la rédaction de vos fonctions.
 Le prototype des fonctions et des structures doivent être déclarées dans un fichier header (\*.h)
 
-Les commentaires pour les fonctions auront le style suivant :
+Les commentaires pour les fonctions auront le style next :
 ```
 #!c
 /** nom_de_la_fonction()
@@ -138,7 +138,7 @@ Un exemple :
 ```
 
 Les fichiers header (\*.h) doivent être situé dans un dossier src/header.
-Un fichier unique loader.h sera à inclure dans chaque fichier \*.c (A la fin du projet)
+Un fichier unique loader.h sera à inclure dans chaque fichier \*.c (A la end du projet)
 ```
 #!c
 #include "loader.h"
@@ -208,7 +208,7 @@ Il faut aussi qu'on rédige un rapport pdf, il sera mis a disposition ici.
 ***
 ## Atom ##
 
-Je vous conseil fortement de coder avec [Atom](http://atom.io) en installant les plugins suivant :
+Je vous conseil fortement de coder avec [Atom](http://atom.io) en installant les plugins next :
 
 * Pour auto-identer les programmes : [clang-format](https://atom.io/packages/clang-format)
 * Pour eviter de passer sur le terminal pour regler les Warning et les erreurs [linter](https://atom.io/packages/linter) et [linter-gcc](https://atom.io/packages/linter-gcc)

@@ -20,20 +20,16 @@
  * Permet de valider les coordonnées d'entrés
  * Les coordonées doivent être dans l'échiquier, et doivent correspondre à une
  * case non vide et une piece du même couleur du joueur
- * @params: game_t       - game_v
- *          coordinate_t - coordinate_v
+ * @params: game_t       - g
+ *          coordinate_t - c
  * @return: int
  */
-int movement_valid_input(game_t *game_v, coordinate_t coordinate_v) {
-  //======================================================================
-  // Main
-  //======================================================================
-  if (coordinate_v.x < 11 && coordinate_v.y < 11) {
+int movement_valid_input(game_t * g, coordinate_t c) {
+  if (c.x < 11 && c.y < 11) {
 
-    if (game_v->board[coordinate_v.x][coordinate_v.y].type != VIDE) {
-      printf("Player ID %d\n", game_v->player);
-      if (game_v->player ==
-          game_v->board[coordinate_v.x][coordinate_v.y].color) {
+    if (g->board[c.x][c.y].type != EMPTY) {
+      printf("Player ID %d\n", g->player);
+      if (g->player == g->board[c.x][c.y].color) {
         return 1;
       }
     }
@@ -109,7 +105,7 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
               printf("Erreur, Il y a déjà un pion dans la colonne d'arrivée\n");
               y = 42;
             } else {
-              piece_creer(VIDE_PIECE, SELECT, NON_PROMU);
+              piece_create(EMPTY_PIECE, SELECT, NOT_PROMOTED);
             }
           }
           //        if (test == 0)
@@ -1107,7 +1103,7 @@ int is_promoted(game_t *game_v, coordinate_t coordinate_input_v,
   /* Sinon : Application du cas général */
   else {
     if (game_v->board[coordinate_input_v.x][coordinate_input_v.y].statut ==
-        NON_PROMU) {
+        NOT_PROMOTED) {
 
       /* Teste de promotion pour les Blancs*/
 
