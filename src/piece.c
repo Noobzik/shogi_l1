@@ -45,7 +45,7 @@ int piece_couleur(piece_t piece_v) { return piece_v.color; }
  * @return struct piece_s
  */
 piece_t piece_identifier(char caracter_v) {
-  if (caracter_v <= 90 && caracter_v >= 65) {
+  if (caracter_v <= 'z' && caracter_v >= 'a') {
     switch (caracter_v) {
       // Non promu joueur 0
       {

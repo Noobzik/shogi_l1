@@ -3,6 +3,9 @@
 #include "file.h"
 #include "piece.h"
 #include "pile.h"
+
+#define MAX_CHAR 256
+
 // Rakib
 /* Definitions des structures */
 
@@ -33,6 +36,7 @@ void changer_joueur(game_t *game_v);
 void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
                        coordinate_t coordinate_output_v);
 
+int game_selector(char game_command[MAX_CHAR], char select_v[MAX_CHAR]);
 coordinate_t saisie_case();
 void game_seperator();
 void partie_jouer(game_t *game_v);

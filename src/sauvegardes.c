@@ -1,4 +1,5 @@
 #include "header/sauvegardes.h"
+#include "header/game.h"
 #include "header/piece.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -142,4 +143,82 @@ void game_save_meta(game_t *game_v, char *game_save_name, char *cwd) {
     printf("Les coups on été enrengistré\n Chemin de la sauvegarde : %s\n",
            game_part_tmp);
   }
+}
+
+game_t *partie_charger(char *path) {
+
+  game_t *res;
+
+  char load[500];
+  char game_piece_check;
+  char game_check[500];
+  int x, y;
+
+  if (getcwd(load, sizeof(load)))
+    ;
+  strcat(load, "/plateaux");
+  strcat(load, "/");
+  strcat(load, path);
+  strcat(load, ".plt");
+
+  FILE *fp = fopen(load, "r");
+
+  if (!fp) {
+    perror("fopen");
+    printf("Erreur de chargement du plateaux\n");
+    exit(EXIT_FAILURE);
+  }
+
+  else {
+    printf("Le fichier %s est ouvert avec succès\n", path);
+
+    fscanf(fp, "%s\n", game_check);
+
+    if (strcmp(game_check, "PL") == 0) {
+      printf("Je suis rentré ici ?\n");
+      res = partie_creer();
+      res->capture = pile_create();
+      res->file = file_creer_list();
+      res->player = 0;
+
+      /* Initialisation des cases vides Valgrind bypass*/
+
+      /*for (x = 0; x < 11; x++) {
+
+        for (y = 0; y < 11; y++) {
+          res->board[y][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+          res->board[y][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+        }
+      }*/
+
+      /* Chargement du fichier */
+
+      for (x = 0; x < 11; x++) {
+        for (y = 0; y < 11; y++) {
+          game_piece_check = fgetc(fp);
+          if (game_piece_check != '\n') {
+            res->board[x][y] = piece_identifier(game_piece_check);
+          }
+        }
+      }
+
+      for (x = 0; x < 11; x++) {
+        for (y = 0; y < 11; y++) {
+          game_piece_check = fgetc(fp);
+          if (game_piece_check != '\n') {
+            piece_afficher(res->board[x][y]);
+          }
+        }
+        printf("\n");
+      }
+
+    }
+
+    else
+      printf("Ce fichier est corrompu\n");
+
+    fclose(fp);
+  }
+
+  return res;
 }

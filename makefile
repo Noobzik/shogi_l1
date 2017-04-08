@@ -64,7 +64,12 @@ clean-atom:
 	rm $(OUT)
 
 # Nettoie littéralement tout
-full-clean:clean-atom
+full-clean:clean
+	rm -rf partie
+	rm -rf plateaux
+
+# Nettoie littéralement tout en plus des fichiers résiduel atom
+full-clean-atom:clean-atom
 	rm -rf partie
 	rm -rf plateaux
 
