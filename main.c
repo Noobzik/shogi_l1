@@ -21,7 +21,10 @@ int main(int argc, char *argv[]) {
   if (argv[1] != NULL) {
     printf("Fichier à charger : %s\n", argv[1]);
     game_t *load = partie_charger(argv[1]);
-    partie_jouer(load);
+    if(load != NULL)
+      partie_jouer(load);
+    else
+      printf("Fichier inexistant\n");
   }
 
   else {

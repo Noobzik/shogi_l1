@@ -157,7 +157,8 @@ game_t *partie_charger(char *path) {
 
 
   if (getcwd(load, sizeof(load)) == NULL) {
-    exit(EXIT_FAILURE);
+    perror("getcwd");
+    return NULL;
   }
 
   strcat(load, "/plateaux");
@@ -170,7 +171,7 @@ game_t *partie_charger(char *path) {
   if (!fp) {
     perror("fopen");
     printf("Erreur de chargement du plateaux\n");
-    res = NULL;
+    return NULL;
   }
 
   else {
