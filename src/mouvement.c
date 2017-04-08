@@ -128,8 +128,7 @@ void            deplacement_valide(game_t * g, coordinate_t ci, coordinate_t co)
 
     {
     case PION_PROMU:
-      if (deplacement_valide_pion_promu(g, ci,
-                                        co) &&
+      if (deplacement_valide_pion_promu(g, ci, co) &&
           restriction_detector(g, co)) {
 
         deplacement_apply(g, ci, co);
