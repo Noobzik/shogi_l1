@@ -61,9 +61,9 @@ void debug_cell(game_t * g, coordinate_t c) {
   }
 
   printf("Piece: ");
-  piece_afficher(game_v->board[c.x][c.y]);
+  piece_afficher(g->board[c.x][c.y]);
   printf(" (%d; %d)", c.x, c.y);
-  printf("\nJoueur: %d", game_v->board[c.x][c.y].color);
+  printf("\nJoueur: %d", g->board[c.x][c.y].color);
 }
 
 game_t *    debug_new_game() {
@@ -75,7 +75,7 @@ game_t *    debug_new_game() {
   res->file = file_create_list();
   res->player = 0;
 
-  for (x = 0; x < 11; x++) 
+  for (x = 0; x < 11; x++)
     for (y = 0; y < 11; y++) {
       res->board[y][x] = piece_create(EMPTY_PIECE, EMPTY, NOT_PROMOTED);
       res->board[y][x] = piece_create(EMPTY_PIECE, EMPTY, NOT_PROMOTED);
