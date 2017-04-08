@@ -95,7 +95,7 @@ int pile_empty(pile_list_t * l) {
  * @return int
  */
 int pile_size(pile_list_t * l) {
-  return pile_list_v->size;
+  return l->size;
 }
 
 /** pile_stacking
