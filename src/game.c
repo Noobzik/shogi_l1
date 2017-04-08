@@ -267,9 +267,9 @@ void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
 
     if (!case_vide(
             game_v->board[coordinate_output_v.x][coordinate_output_v.y]) &&
-        piece_couleur(
+        piece_color(
             game_v->board[coordinate_output_v.x][coordinate_output_v.y]) !=
-            piece_couleur(
+            piece_color(
                 game_v->board[coordinate_input_v.x][coordinate_input_v.y])) {
 
       /* TOUJOURS DANS LE IF !CASE EMPTY*/

@@ -21,20 +21,20 @@ typedef struct game_s {
 } game_t;
 
 /* Prototype des fonctions */
-void afficher_echiquier(game_t *game_v, coordinate_t);
+void afficher_echiquier(game_t *g, coordinate_t);
 game_t *partie_creer();
-void partie_detruire(game_t *game_v);
+void partie_detruire(game_t *g);
 game_t *partie_nouvelle();
 
 void annuler_deplacement();
 int case_vide(piece_t piece_v);
-void modifier_case(game_t *game_v, piece_t piece_v, coordinate_t coordinate_v);
-void changer_joueur(game_t *game_v);
-void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
+void modifier_case(game_t *g, piece_t piece_v, coordinate_t coordinate_v);
+void changer_joueur(game_t *g);
+void deplacement_apply(game_t *g, coordinate_t coordinate_input_v,
                        coordinate_t coordinate_output_v);
 
 coordinate_t saisie_case();
 void game_seperator();
-void partie_jouer(game_t *game_v);
+void partie_jouer(game_t *g);
 
 #endif
