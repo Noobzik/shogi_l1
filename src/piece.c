@@ -117,7 +117,7 @@ piece_t piece_identifier(char c) {
  */
 char piece_caractere(piece_t p) {
   if (piece_color(p) == BLANC)
-    switch (P.type) {
+    switch (p.type) {
       case ROI:
         return 'k';
       case TOUR:
@@ -152,7 +152,7 @@ char piece_caractere(piece_t p) {
         return '.';
     }
   if (piece_color(p) == NOIR)
-    switch (piece_v.type) {
+    switch (p.type) {
       case ROI:
         return 'K';
       case TOUR:
