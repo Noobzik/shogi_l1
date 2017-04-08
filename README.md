@@ -13,16 +13,46 @@ Répertoire Git pour le développement du projet de programmation impérative, U
 **Le jeu à faire : Le Shôgi**
 *Le sujet est disponible sur l'ENT, on attend la version définitif avant de l'inclure dans le répertoire*
 
-*Le sujet est rempli de faute de règles, de fonctions, le fautif principal de ces erreurs est **Christophe TOLLU** pour avoir copié collé le sujet du projet de l'an passé par Julien David.
-On note aussi que c'est un flemmard puisque les diapos de cours sont aussi de Julien David*
+*Le sujet est rempli de faute de règles, de fonctions*
 
 * Il est interdit d'annoncer à l'adversaire qu'il est en échec (Règle officiel)
 * La fin de partie se caractérise par la capture du Roi adverse
 
 *Plus que 2 semaine pour boucler le projet*
+## Mise en route ##
+
+1. Compilez le ficher avec make
+2. Démarrez le programme avec ./shogi
+  * *Dans le cas où vous avez Permission non accordée, faites*
+  ```
+  #!bash
+  $ chmod +x ./shogi
+  ```
+3. Pour connaitre la liste des commandes disponible
+  ```
+  #!bash
+  help
+  ```
+4. Pour démarrer le programme avec un fichier
+  ```
+  #!bash
+  ./shogi "non_du_fichier_sans_extension"
+  ```
+
 ***
-# Version Actuelle: 0.2 #
-# CHANGELOGS 0.2:
+# Version Actuelle: 0.3 Beta Release candidate #
+## CHANGELOGS 0.3 Release candidate ##
+* Les problèmes de déplacements ont été fixé (Utilisez le signalement de bug si il persistent.
+* Il est désormais possible d'annuler les coups jouées.
+* La gestion des piles et des files sont finalisé.
+* Implémentation de la démotion, (Les pieces capturées promues sont dorénavant placé dans la réserve en changeant de statut vers non promu).
+* La fonction pour sauvegarder l'échiquier et son historique est desormais disponible.
+* La fonction pour charger l'échiquier est disponible, cependant, l'historique n'est pas encore developpé.
+* Passage en Beta Release Candidate, littéralement tout les warnings et les erreurs sont fixés, d'où cette appelation ***Beta Release Candidate***
+* Si le répertoire de sauvegarde n'existe pas, le programme le créera pour vous.
+
+
+#### CHANGELOGS 0.2: ####
 * +Debug : ils permettent de passer le tour, inspecter la cellule, file et pile
 * +Mouvement : Les mouvements des pièce sont conforme au règlement officiel du shogi
 * +Restrictions : Cette partie permet d'eviter aux pièce de sauter les autres piece lors des déplacements
@@ -43,12 +73,9 @@ On note aussi que c'est un flemmard puisque les diapos de cours sont aussi de Ju
 ***
 
 ## Ce qui reste à faire ##
-* Gestion de sauvegardes / chargement de fichier
-* Finalisation des piles et files
+* Finalisation de la Gestion de sauvegardes / chargement de fichier
 * Commentaires sur tout les fonctions
 * Une interface graphique et éventuellement une intelligence artificiel
-* Annuler déplacement
-* Fixer l'historique des coups jouées qui est actuellement cassé
 * Replay_jouer, charge une partie avec une historique de coups jouer, anime la partie
 ***
 # Méthode de travail #
@@ -108,6 +135,18 @@ Qui permet de compiler et de lancer directement le programme, pour les chaud qui
 make rebuild-run
 ```
 Qui permet de recompiler a partir de 0, puis lance directement le programme, conseillé aux plus chaud qui codent sans warning et sans erreurs.
+
+```
+#!bash
+make full-clean
+```
+Cette fonction permet de supprimer proprement les fichiers résiduel, y compris les fichiers de sauvegardes
+
+```
+#!bash
+make full-clean-atom
+```
+Cette fonction permet de supprimer proprement les fichiers résiduel en incluant ceux de atom, y compris les fichiers de sauvegardes
 
 ***
 ## Méthodes de programmation ##

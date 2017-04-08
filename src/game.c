@@ -508,7 +508,6 @@ void annuler_deplacement(game_t *game_v) {
       y = 1;
 
       while (test == 1) {
-        printf("Je suis rentré dans cette boucle %d\n", y);
         if (case_vide(game_v->board[y][10]) == 0) {
           test = 0;
           game_v->board[y][10] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
@@ -607,17 +606,6 @@ void game_seperator() {
          "\n\n\n\n\n\n");
 }
 /*----------------------------------------------------------------------------*/
-/**
- * game buffer
- *//*
-void game_buffer() {
-
-  char empty_buffer;
-
-  do
-    empty_buffer = getchar();
-  while (empty_buffer != '\n' && empty_buffer != EOF);
-}*/
 
 /** game_exit
  * game exit
@@ -696,8 +684,6 @@ void partie_jouer(game_t *game_v) {
       afficher_echiquier(game_v, COORDINATE_NULL);
       printf("\n\n\n");
     }
-
-    //game_buffer();
 
     /** Help command
      *  Permet d'afficher la liste des éventuels commandes disponible

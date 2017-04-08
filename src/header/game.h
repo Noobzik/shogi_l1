@@ -35,7 +35,6 @@ void modifier_case(game_t *game_v, piece_t piece_v, coordinate_t coordinate_v);
 void changer_joueur(game_t *game_v);
 void deplacement_apply(game_t *game_v, coordinate_t coordinate_input_v,
                        coordinate_t coordinate_output_v);
-
 int game_selector(char *game_command, const char *select_v);
 int game_exit(game_t *game_v);
 coordinate_t saisie_case(void);
