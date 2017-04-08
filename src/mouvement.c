@@ -1162,41 +1162,31 @@ int is_promoted(game_t *game_v, coordinate_t ci,
  */
 void promote_grant(piece_t * p) {
   switch (p->type) {
-    {
     case PION:
       p->type = PION_PROMU;
       p->statut = PROMOTED;
       break;
-    }
-    {
     case LANCIER:
       p->type = LANCIER_PROMU;
       p->statut = PROMOTED;
       break;
-    }
-    {
     case CAVALIER:
       p->type = CAVALIER_PROMU;
       p->statut = PROMOTED;
       break;
-    }
-    {
     case FOU:
       p->type = FOU_PROMU;
       p->statut = PROMOTED;
       break;
-    }
-    {
     case TOUR:
       p->type = TOUR_PROMU;
       p->statut = PROMOTED;
       break;
-    }
-    {
     case SILVER:
       p->type = SILVER_PROMU;
       p->statut = PROMOTED;
       break;
-    }
+    default:
+      break;
   }
 }
