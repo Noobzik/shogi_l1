@@ -568,7 +568,7 @@ coordinate_t saisie_case() {
   printf("x: ");
 
   while (fgets(s, sizeof(s), stdin)) {
-    res.y = strtol(s, &p, 10);
+    res.y = (int) strtol(s, &p, 10);
 
     if (p == s || *p != '\n') {
       printf("x: ");
@@ -580,7 +580,7 @@ coordinate_t saisie_case() {
   printf("y: ");
   /* Le fgets marche comme un scanf*/
   while (fgets(s, sizeof(s), stdin)) {
-    res.x = strtol(s, &p, 10);
+    res.x = (int) strtol(s, &p, 10);
     if (p == s || *p != '\n') {
       printf("y: ");
     } else {
@@ -609,7 +609,7 @@ void game_seperator() {
 /*----------------------------------------------------------------------------*/
 /**
  * game buffer
- */
+ *//*
 void game_buffer() {
 
   char empty_buffer;
@@ -617,7 +617,7 @@ void game_buffer() {
   do
     empty_buffer = getchar();
   while (empty_buffer != '\n' && empty_buffer != EOF);
-}
+}*/
 
 /** game_exit
  * game exit
@@ -640,7 +640,7 @@ int game_exit(game_t *game_v) {
  *            char - select_v
  * @return int
  */
-int game_selector(char game_command[MAX_CHAR], char select_v[MAX_CHAR]) {
+int game_selector(char *game_command, const char *select_v) {
   if (strcmp(game_command, select_v) == 0) {
     return 1;
   } else {
@@ -697,7 +697,7 @@ void partie_jouer(game_t *game_v) {
       printf("\n\n\n");
     }
 
-    game_buffer();
+    //game_buffer();
 
     /** Help command
      *  Permet d'afficher la liste des éventuels commandes disponible
@@ -922,8 +922,20 @@ void partie_jouer(game_t *game_v) {
       //  scanf("%s", game_save_name);
       // Hack pour warning: ignoring return value of 'scanf'
 
-      if (fgets(game_save_name, MAX_CHAR, stdin) != NULL)
-        ;
+      //fgets(game_save_name, MAX_CHAR, stdin);
+
+      if (scanf("%s", game_save_name) != 1) {
+
+        /* Separator */
+        game_seperator();
+
+        printf("Entrer au moins un caractere.\n");
+
+        /* Enter loop */
+        afficher_echiquier(game_v, COORDINATE_NULL);
+        printf("\n\n\n");
+      }
+
       strtok(game_save_name, "\n");
 
       /* Separator */
@@ -983,9 +995,17 @@ void partie_jouer(game_t *game_v) {
 
         printf("Entrer le nom de la partie:");
 
-        /* Hack pour supprimer warning: ignoring return value of fgets*/
-        if (fgets(game_save_name, MAX_CHAR, stdin) != NULL)
-          ;
+        if (scanf("%s", game_save_name) != 1) {
+
+          /* Separator */
+          game_seperator();
+
+          printf("Entrer au moins un caractere.\n");
+
+          /* Enter loop */
+          afficher_echiquier(game_v, COORDINATE_NULL);
+          printf("\n\n\n");
+        }
 
         /* Separator */
         game_seperator();
@@ -996,9 +1016,10 @@ void partie_jouer(game_t *game_v) {
         /* Separator */
         game_seperator();
 
+        partie_sauvegarder(game_v, game_save_name);
+
         printf("La partie a ete sauvergardé.");
 
-        partie_sauvegarder(game_v, game_save_name);
 
         /* Enter loop */
         afficher_echiquier(game_v, COORDINATE_NULL);

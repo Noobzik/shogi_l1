@@ -13,8 +13,9 @@ void partie_sauvegarder(game_t *game_v, char *game_save_name) {
   char cwd[10000];
 
   /* Hack pour supprimer les warning: ignoring return value of 'getcwd'*/
-  if (getcwd(cwd, sizeof(cwd)))
-    ;
+    if (getcwd(cwd,sizeof(cwd)) == NULL) {
+      perror("getcwd :");
+    }
 
   printf("CWD : %s\n", cwd);
 
@@ -147,15 +148,18 @@ void game_save_meta(game_t *game_v, char *game_save_name, char *cwd) {
 
 game_t *partie_charger(char *path) {
 
-  game_t *res;
+  game_t *res = NULL;
 
   char load[500];
-  char game_piece_check;
-  char game_check[500];
+  int game_piece_check;
+  char game_check[50];
   int x, y;
 
-  if (getcwd(load, sizeof(load)))
-    ;
+
+  if (getcwd(load, sizeof(load)) == NULL) {
+    exit(EXIT_FAILURE);
+  }
+
   strcat(load, "/plateaux");
   strcat(load, "/");
   strcat(load, path);
@@ -166,13 +170,15 @@ game_t *partie_charger(char *path) {
   if (!fp) {
     perror("fopen");
     printf("Erreur de chargement du plateaux\n");
-    exit(EXIT_FAILURE);
+    res = NULL;
   }
 
   else {
     printf("Le fichier %s est ouvert avec succès\n", path);
 
-    fscanf(fp, "%s\n", game_check);
+    if(fscanf(fp, "%s\n", game_check) != 1){
+      perror("fscanf :");
+    }
 
     if (strcmp(game_check, "PL") == 0) {
       printf("Je suis rentré ici ?\n");
@@ -181,23 +187,13 @@ game_t *partie_charger(char *path) {
       res->file = file_creer_list();
       res->player = 0;
 
-      /* Initialisation des cases vides Valgrind bypass*/
-
-      /*for (x = 0; x < 11; x++) {
-
-        for (y = 0; y < 11; y++) {
-          res->board[y][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
-          res->board[y][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
-        }
-      }*/
-
       /* Chargement du fichier */
 
       for (x = 0; x < 11; x++) {
-        for (y = 0; y < 11; y++) {
+        for (y = 0; y < 12; y++) {
           game_piece_check = fgetc(fp);
           if (game_piece_check != '\n') {
-            res->board[x][y] = piece_identifier(game_piece_check);
+            res->board[x][y] = piece_identifier((char)game_piece_check);
           }
         }
       }
@@ -219,6 +215,5 @@ game_t *partie_charger(char *path) {
 
     fclose(fp);
   }
-
   return res;
 }

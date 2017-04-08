@@ -14,6 +14,10 @@
 
 int main(int argc, char *argv[]) {
 
+  /* Enlève le warning de variable pas utilisé*/
+  (void) argc;
+
+
   if (argv[1] != NULL) {
     printf("Fichier à charger : %s\n", argv[1]);
     game_t *load = partie_charger(argv[1]);

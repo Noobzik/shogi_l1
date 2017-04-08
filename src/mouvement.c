@@ -172,7 +172,7 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
 
         /* Sinon ...*/
 
-        if (deplacement_valide_tour(game_v, coordinate_input_v,
+        if (deplacement_valide_tour(coordinate_input_v,
                                     coordinate_output_v) &&
             restriction_detector(game_v, coordinate_output_v)) {
 
@@ -192,7 +192,7 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       {
       case TOUR_PROMU:
 
-        if (deplacement_valide_tour_promu(game_v, coordinate_input_v,
+        if (deplacement_valide_tour_promu(coordinate_input_v,
                                           coordinate_output_v) &&
             restriction_detector(game_v, coordinate_output_v)) {
 
@@ -269,7 +269,7 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
           movement_restriction_parachute(game_v);
         }
 
-        if (deplacement_valide_fou(game_v, coordinate_input_v,
+        if (deplacement_valide_fou(coordinate_input_v,
                                    coordinate_output_v) &&
             restriction_detector(game_v, coordinate_output_v)) {
 
@@ -289,7 +289,7 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       {
       case FOU_PROMU:
 
-        if (deplacement_valide_fou_promu(game_v, coordinate_input_v,
+        if (deplacement_valide_fou_promu(coordinate_input_v,
                                          coordinate_output_v) &&
             restriction_detector(game_v, coordinate_output_v)) {
 
@@ -381,7 +381,7 @@ void deplacement_valide(game_t *game_v, coordinate_t coordinate_input_v,
       {
       case ROI:
 
-        if (deplacement_valide_roi(game_v, coordinate_input_v,
+        if (deplacement_valide_roi(coordinate_input_v,
                                    coordinate_output_v) &&
             restriction_detector(game_v, coordinate_output_v)) {
 
@@ -530,7 +530,7 @@ int deplacement_valide_pion(game_t *game_v, coordinate_t coordinate_input_v,
  *        coordinate_t -   coordinate_output_v
  * @return int
  */
-int deplacement_valide_tour(game_t *game_v, coordinate_t coordinate_input_v,
+int deplacement_valide_tour(coordinate_t coordinate_input_v,
                             coordinate_t coordinate_output_v) {
   return (coordinate_input_v.x == coordinate_output_v.x ||
           coordinate_input_v.y == coordinate_output_v.y)
@@ -594,7 +594,7 @@ int deplacement_valide_cavalier(game_t *game_v, coordinate_t coordinate_input_v,
  *          coordinate_t -   coordinate_output_v
  * @return int
  */
-int deplacement_valide_fou(game_t *game_v, coordinate_t coordinate_input_v,
+int deplacement_valide_fou(coordinate_t coordinate_input_v,
                            coordinate_t coordinate_output_v) {
   int movement_1_tmp;
   int movement_2_tmp;
@@ -628,7 +628,7 @@ int deplacement_valide_fou(game_t *game_v, coordinate_t coordinate_input_v,
  *              coordinate_t - coordinate_output_v
  * @return      int
  */
-int deplacement_valide_roi(game_t *game_v, coordinate_t coordinate_input_v,
+int deplacement_valide_roi(coordinate_t coordinate_input_v,
                            coordinate_t coordinate_output_v) {
 
   /* vertical checking */
@@ -817,13 +817,12 @@ int deplacement_valide_pion_promu(game_t *game_v,
  *                  coordinate_t    -       coordinate_output_v
  *  @return:        int
  */
-int deplacement_valide_tour_promu(game_t *game_v,
-                                  coordinate_t coordinate_input_v,
+int deplacement_valide_tour_promu(coordinate_t coordinate_input_v,
                                   coordinate_t coordinate_output_v) {
   return (
-      deplacement_valide_tour(game_v, coordinate_input_v,
+      deplacement_valide_tour(coordinate_input_v,
                               coordinate_output_v) ||
-      deplacement_valide_roi(game_v, coordinate_input_v, coordinate_output_v));
+      deplacement_valide_roi(coordinate_input_v, coordinate_output_v));
 }
 
 /** deplacement_valide_cavalier_promu
@@ -847,12 +846,11 @@ int deplacement_valide_cavalier_promu(game_t *game_v,
  *                  coordinate_t    -       coordinate_output_v
  *  @return:        int
  */
-int deplacement_valide_fou_promu(game_t *game_v,
-                                 coordinate_t coordinate_input_v,
+int deplacement_valide_fou_promu(coordinate_t coordinate_input_v,
                                  coordinate_t coordinate_output_v) {
   return (
-      deplacement_valide_fou(game_v, coordinate_input_v, coordinate_output_v) ||
-      deplacement_valide_roi(game_v, coordinate_input_v, coordinate_output_v));
+      deplacement_valide_fou(coordinate_input_v, coordinate_output_v) ||
+      deplacement_valide_roi(coordinate_input_v, coordinate_output_v));
 }
 
 /** deplacement_valide_silver_promu
@@ -918,7 +916,7 @@ int movement_valid_helper(game_t *game_v, coordinate_t coordinate_input_v,
     }
     {
     case TOUR:
-      return (deplacement_valide_tour(game_v, coordinate_input_v,
+      return (deplacement_valide_tour(coordinate_input_v,
                                       coordinate_output_v))
                  ? 1
                  : 0;
@@ -926,7 +924,7 @@ int movement_valid_helper(game_t *game_v, coordinate_t coordinate_input_v,
     }
     {
     case TOUR_PROMU:
-      return (deplacement_valide_tour_promu(game_v, coordinate_input_v,
+      return (deplacement_valide_tour_promu(coordinate_input_v,
                                             coordinate_output_v))
                  ? 1
                  : 0;
@@ -953,7 +951,7 @@ int movement_valid_helper(game_t *game_v, coordinate_t coordinate_input_v,
     {
     case FOU:
 
-      return (deplacement_valide_fou(game_v, coordinate_input_v,
+      return (deplacement_valide_fou(coordinate_input_v,
                                      coordinate_output_v))
                  ? 1
                  : 0;
@@ -961,7 +959,7 @@ int movement_valid_helper(game_t *game_v, coordinate_t coordinate_input_v,
     }
     {
     case FOU_PROMU:
-      return (deplacement_valide_fou_promu(game_v, coordinate_input_v,
+      return (deplacement_valide_fou_promu(coordinate_input_v,
                                            coordinate_output_v))
                  ? 1
                  : 0;
@@ -979,7 +977,7 @@ int movement_valid_helper(game_t *game_v, coordinate_t coordinate_input_v,
     {
     case ROI:
 
-      return (deplacement_valide_roi(game_v, coordinate_input_v,
+      return (deplacement_valide_roi(coordinate_input_v,
                                      coordinate_output_v))
                  ? 1
                  : 0;

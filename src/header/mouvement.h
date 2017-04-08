@@ -14,14 +14,14 @@ int movement_valid_win(game_t *game_v, coordinate_t coordinate_v);
 
 int deplacement_valide_pion(game_t *game_v, coordinate_t coordinate_input_v,
                             coordinate_t coordinate_output_v);
-int deplacement_valide_tour(game_t *game_v, coordinate_t coordinate_input_v,
+int deplacement_valide_tour(coordinate_t coordinate_input_v,
                             coordinate_t coordinate_output_v);
 int deplacement_valide_cavalier(game_t *game_v, coordinate_t coordinate_input_v,
                                 coordinate_t coordinate_output_v);
-int deplacement_valide_fou(game_t *game_v, coordinate_t coordinate_input_v,
+int deplacement_valide_fou(coordinate_t coordinate_input_v,
                            coordinate_t coordinate_output_v);
 
-int deplacement_valide_roi(game_t *game_v, coordinate_t coordinate_input_v,
+int deplacement_valide_roi(coordinate_t coordinate_input_v,
                            coordinate_t coordinate_output_v);
 int deplacement_valide_gold(game_t *game_v, coordinate_t coordinate_input_v,
                             coordinate_t coordinate_output_v);
@@ -37,13 +37,12 @@ int deplacement_valide_parachutage(game_t *game_v,
 int deplacement_valide_pion_promu(game_t *game_v,
                                   coordinate_t coordinate_input_v,
                                   coordinate_t coordinate_output_v);
-int deplacement_valide_tour_promu(game_t *game_v,
-                                  coordinate_t coordinate_input_v,
+int deplacement_valide_tour_promu(coordinate_t coordinate_input_v,
                                   coordinate_t coordinate_output_v);
 int deplacement_valide_cavalier_promu(game_t *game_v,
                                       coordinate_t coordinate_input_v,
                                       coordinate_t coordinate_output_v);
-int deplacement_valide_fou_promu(game_t *game_v,
+int deplacement_valide_fou_promu(
                                  coordinate_t coordinate_input_v,
                                  coordinate_t coordinate_output_v);
 int deplacement_valide_silver_promu(game_t *game_v,
