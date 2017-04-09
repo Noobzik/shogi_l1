@@ -24,17 +24,17 @@ typedef struct pile_list_s {
  *    1.1 pile_list.h
  */
 
-pile_element_t *pile_creer_element(piece_t piece_v);
-void pile_detruire_element(pile_element_t *pile_element_v);
+pile_element_t *pile_creer_element(piece_t p);
+void pile_detruire_element(pile_element_t *e);
 
-void pile_list_add(pile_list_t *pile_list_v, piece_t piece_v);
-pile_element_t *pile_list_extract(pile_list_t *pile_list_v);
+void pile_list_add(pile_list_t *l, piece_t p);
+pile_element_t *pile_list_extract(pile_list_t *l);
 
 pile_list_t *pile_create(void);
-void pile_detruire(pile_list_t *pile_list_v);
-int pile_vide(pile_list_t *pile_list_v);
-int pile_taille(pile_list_t *pile_list_v);
-void pile_stacking(pile_list_t *pile_list_v, piece_t piece);
-piece_t pile_unstacking(pile_list_t *pile_list_v);
+void pile_detruire(pile_list_t *l);
+int pile_vide(pile_list_t *l);
+int pile_taille(pile_list_t *l);
+void pile_stacking(pile_list_t *l, piece_t p);
+piece_t pile_unstacking(pile_list_t *l);
 
 #endif

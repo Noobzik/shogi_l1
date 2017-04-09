@@ -7,7 +7,7 @@
  * @param piece_t - piece_v
  * @return struct file_link_s
  */
-pile_element_t *pile_creer_element(piece_t piece_v) {
+pile_element_t *pile_creer_element(piece_t p) {
 
   /* Variables */
 
@@ -16,7 +16,7 @@ pile_element_t *pile_creer_element(piece_t piece_v) {
   /* Initialize */
 
   res = malloc(sizeof(pile_element_t));
-  res->piece = piece_v;
+  res->piece = p;
   res->suivant = NULL;
 
   return res;
@@ -25,48 +25,48 @@ pile_element_t *pile_creer_element(piece_t piece_v) {
 /** pile_detruire_element
  * pile_detruire_element
  * Permet de détruire l'element
- * @param pile_element_t - pile_element_v
+ * @param pile_element_t - e
  */
-void pile_detruire_element(pile_element_t *pile_element_v) {
+void pile_detruire_element(pile_element_t *e) {
 
   /* Main */
 
-  free(pile_element_v);
+  free(e);
 }
 
 /** pile_list_add
  * Peremt d'ajouter un element au début de la liste
- * @param pile_list_t - pile_list_v
+ * @param pile_list_t - l
  *        piece_t     - piece_v
  */
-void pile_list_add(pile_list_t *pile_list_v, piece_t piece_v) {
+void pile_list_add(pile_list_t *l, piece_t p) {
 
   /* Variables */
 
-  pile_element_t *pile_element_tmp;
+  pile_element_t *e;
 
   /* Initialize */
 
-  pile_element_tmp = pile_creer_element(piece_v);
+  e = pile_creer_element(p);
 
   /* Main */
 
-  if (pile_vide(pile_list_v)) {
-    pile_list_v->last = pile_element_tmp;
+  if (pile_vide(l)) {
+    l->last = e;
   } else {
-    pile_element_tmp->suivant = pile_list_v->suivant;
+    e->suivant = l->suivant;
   }
 
-  pile_list_v->suivant = pile_element_tmp;
-  pile_list_v->taille++;
+  l->suivant = e;
+  l->taille++;
 }
 
 /** pile_list_extract
  * Extrait un element de la pile par le bas de la liste
- * @param pile_list_t - pile_list_v
+ * @param pile_list_t - l
  * @return pile_element_t
  */
-pile_element_t *pile_list_extract(pile_list_t *pile_list_v) {
+pile_element_t *pile_list_extract(pile_list_t *l) {
 
   /* Variables */
 
@@ -78,13 +78,13 @@ pile_element_t *pile_list_extract(pile_list_t *pile_list_v) {
 
   /* Main */
 
-  if (!pile_vide(pile_list_v)) {
-    res = pile_list_v->suivant;
-    pile_list_v->suivant = res->suivant;
+  if (!pile_vide(l)) {
+    res = l->suivant;
+    l->suivant = res->suivant;
     res->suivant = NULL;
-    pile_list_v->taille--;
-    if (pile_vide(pile_list_v)) {
-      pile_list_v->last = NULL;
+    l->taille--;
+    if (pile_vide(l)) {
+      l->last = NULL;
     }
   }
 
@@ -115,67 +115,65 @@ pile_list_t *pile_create() {
 
 /** pile_detruire
  * Vide la pile puis la détruit
- * @param pile_list_t - pile_list_v
+ * @param pile_list_t - l
  */
-void pile_detruire(pile_list_t *pile_list_v) {
+void pile_detruire(pile_list_t *l) {
 
   /* Main */
 
-  while (!pile_vide(pile_list_v)) {
-    pile_detruire_element(pile_list_extract(pile_list_v));
+  while (!pile_vide(l)) {
+    pile_detruire_element(pile_list_extract(l));
   }
 
-  free(pile_list_v);
+  free(l);
 }
 
 /** pile_vide
  * Teste si la pile est vide ou pas *
  * @return int
  */
-int pile_vide(pile_list_t *pile_list_v) {
-  return (pile_list_v->taille == 0) ? 1 : 0;
-}
+int pile_vide(pile_list_t *l) { return (l->taille == 0) ? 1 : 0; }
 
 /** pile_taille
  * Retourn la taille de la pile
- * @param pile_list_t pile_list_v
+ * @param pile_list_t l
  * @return int
  */
-int pile_taille(pile_list_t *pile_list_v) {
+int pile_taille(pile_list_t *l) {
 
   /* Main */
 
-  return pile_list_v->taille;
+  return l->taille;
 }
 
 /** pile_stacking
  * Ajoute une piece capturé dans la pile
- * @param pile_list_t - pile_list_v
+ * @param pile_list_t - l
  *        piece_t     - piece_v
  */
-void pile_stacking(pile_list_t *pile_list_v, piece_t piece) {
+void pile_stacking(pile_list_t *l, piece_t p) {
 
   /* Main */
 
-  pile_list_add(pile_list_v, piece);
+  pile_list_add(l, p);
 }
 
 /** pile_unstacking
  * Permet de retirer une piece capturé
- * @param pile_list_t - pile_list_v
+ * @param pile_list_t - l
  */
-piece_t pile_unstacking(pile_list_t *pile_list_v) {
+piece_t pile_unstacking(pile_list_t *l) {
 
   /* Variables */
 
-  pile_element_t *pile_element_tmp;
+  pile_element_t *e;
 
   /* Initialize */
 
-  pile_element_tmp = pile_list_extract(pile_list_v);
-  piece_t res = pile_element_tmp->piece;
+  e = pile_list_extract(l);
+  piece_t res = e->piece;
 
   /* Main */
-  pile_detruire_element(pile_element_tmp);
+  pile_detruire_element(e);
   return res;
 }

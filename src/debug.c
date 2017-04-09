@@ -8,33 +8,31 @@
  *  NOIR  = 1
  */
 
-void debug_pile(game_t *game_v) {
+void debug_pile(game_t *g) {
   //======================================================================
   // Variables
   //======================================================================
   int i;
-  pile_list_t *pile_list_tmp;
-  pile_element_t *pile_element_tmp;
+  pile_list_t *l;
+  pile_element_t *e;
 
   /* Initialize */
-  pile_list_tmp = game_v->capture;
+  l = g->capture;
 
   //======================================================================
   // Main
   //======================================================================
   printf("DEBUG | Pile\n");
-  printf("Taille: %d\n", pile_list_tmp->taille);
+  printf("Taille: %d\n", l->taille);
 
-  if (!pile_vide(pile_list_tmp)) {
+  if (!pile_vide(l)) {
 
-    for (pile_element_tmp = pile_list_tmp->suivant, i = 0;
-         pile_element_tmp != NULL;
-         i++, pile_element_tmp = pile_element_tmp->suivant) {
+    for (e = l->suivant, i = 0; e != NULL; i++, e = e->suivant) {
 
       printf("Maillon %d | '", i);
-      piece_afficher(pile_element_tmp->piece);
-      printf("' (Type: %d; Joueur: %d) Piece : \n",
-             pile_element_tmp->piece.type, pile_element_tmp->piece.color);
+      piece_afficher(e->piece);
+      printf("' (Type: %d; Joueur: %d) Piece : \n", e->piece.type,
+             e->piece.color);
     }
 
   } else {
@@ -42,28 +40,24 @@ void debug_pile(game_t *game_v) {
   }
 }
 
-void debug_file(game_t *game_v) {
+void debug_file(game_t *g) {
 
   /* Variables */
-  file_list_t *file_list_tmp;
-  file_element_t *file_element_tmp;
+  file_list_t *l;
+  file_element_t *e;
   int i;
   /* Initialize */
-  file_list_tmp = game_v->file;
+  l = g->file;
 
   /* Main */
   printf("DEBUG | File\n");
-  printf("Taille: %d\n", file_list_tmp->taille);
+  printf("Taille: %d\n", l->taille);
 
-  if (!file_list_vide(file_list_tmp)) {
-    for (file_element_tmp = file_list_tmp->debut, i = 0;
-         file_element_tmp != NULL;
-         i++, file_element_tmp = file_element_tmp->suivant) {
+  if (!file_list_vide(l)) {
+    for (e = l->debut, i = 0; e != NULL; i++, e = e->suivant) {
       printf("Maillon %d | ", i);
-      printf("(%d;%d) ", file_element_tmp->movement.input.x,
-             file_element_tmp->movement.input.y);
-      printf("(%d;%d)\n", file_element_tmp->movement.output.x,
-             file_element_tmp->movement.output.y);
+      printf("(%d;%d) ", e->movement.input.x, e->movement.input.y);
+      printf("(%d;%d)\n", e->movement.output.x, e->movement.output.y);
     }
   } else {
     printf("La file ne contient rien.");
@@ -75,19 +69,19 @@ void debug_file(game_t *game_v) {
  * debug game
  *
  * Parameters:
- *     game_t - game_v
+ *     game_t - g
  */
-void debug_cell(game_t *game_v, coordinate_t coordinate_v) {
+void debug_cell(game_t *g, coordinate_t c) {
   //======================================================================
   // Main
   //======================================================================
   printf("DEBUG | Cellule\n");
 
-  if (coordinate_v.x < 11 && coordinate_v.y < 11) {
+  if (c.x < 11 && c.y < 11) {
     printf("Piece: ");
-    piece_afficher(game_v->board[coordinate_v.x][coordinate_v.y]);
-    printf(" (%d; %d)", coordinate_v.x, coordinate_v.y);
-    printf("\nJoueur: %d", game_v->board[coordinate_v.x][coordinate_v.y].color);
+    piece_afficher(g->board[c.x][c.y]);
+    printf(" (%d; %d)", c.x, c.y);
+    printf("\nJoueur: %d", g->board[c.x][c.y].color);
   } else {
     printf("Cette cellule est invalide.\n");
   }

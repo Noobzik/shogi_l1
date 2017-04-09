@@ -4,9 +4,9 @@
 #include "game.h"
 #include "pile.h"
 
-void debug_pile(game_t *game_v);
-void debug_file(game_t *game_v);
-void debug_cell(game_t *game_v, coordinate_t coordinate_v);
+void debug_pile(game_t *g);
+void debug_file(game_t *g);
+void debug_cell(game_t *g, coordinate_t coordinate_v);
 game_t *debug_partie_nouvelle(void);
 
 #endif

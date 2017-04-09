@@ -54,20 +54,17 @@ typedef struct file_list_s {
 //======================================================================
 // Prototype
 //======================================================================
-file_element_t *file_creer_element(movement_t movement_v,
-                                   piece_statut_e promotion_v, int capture_v);
-void file_detruire_element(file_element_t *file_element_v);
+file_element_t *file_creer_element(movement_t m, piece_statut_e p, int c);
+void file_detruire_element(file_element_t *e);
 
-void file_list_add(file_list_t *file_list_v, movement_t movement_v,
-                   piece_statut_e promotion_v, int capture_v);
-file_element_t *file_list_extract(file_list_t *file_list_v);
+void file_list_add(file_list_t *l, movement_t m, piece_statut_e p, int c);
+file_element_t *file_list_extract(file_list_t *l);
 
 file_list_t *file_creer_list(void);
-void file_detruire_list(file_list_t *file_list_v);
-int file_list_vide(file_list_t *file_list_v);
-int file_taille(file_list_t *file_list_v);
+void file_detruire_list(file_list_t *l);
+int file_list_vide(file_list_t *l);
+int file_taille(file_list_t *l);
 
-void file_thread(file_list_t *file_list_v, movement_t movement_v,
-                 piece_statut_e promotion_v, int capture_v);
-file_element_t *file_unthread(file_list_t *file_list_v);
+void file_thread(file_list_t *l, movement_t m, piece_statut_e p, int c);
+file_element_t *file_unthread(file_list_t *l);
 #endif
