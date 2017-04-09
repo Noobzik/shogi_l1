@@ -1,13 +1,13 @@
 # Indication du compilateur
 CC=gcc
 
-#Objectif 0 WARNING, donc inclusion de tout les warnings possibles
+#Objectif 0 WARNING, donc inclusion de tout les warnings possibles, Wall est trop gentil...
 WARNING :=  -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 		-Wwrite-strings -Wmissing-prototypes -Wmissing-declarations \
 		-Wredundant-decls -Wnested-externs -Winline -Wno-long-long \
 		-Wuninitialized -Wconversion -Wstrict-prototypes
 # Flags du compilateur
-CFLAGS = -g -Wall -pedantic -O3 -fpic $(WARNING) -std=c11
+CFLAGS = -g -O3 -fpic $(WARNING) -std=c11
 
 # On force la derniere norme de compilation qui est C11
 
