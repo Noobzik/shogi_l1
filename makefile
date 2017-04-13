@@ -1,3 +1,4 @@
+# Projet imcopilable avec C90, n'essayez pas de compiler sur windows... J'en ai fais les frais
 # Indication du compilateur
 CC=gcc
 
@@ -21,7 +22,7 @@ OUT = shogi
 CCSEP = $(CC) -c $(CFLAGS)
 
 all:$(FICHIER)
-	$(CC) $(FICHIER) $(CFLAGS) -lm -o $(OUT)
+	$(CC) $(FICHIER) $(CFLAGS) -o $(OUT)
 
 # Ici les dépendances de compilation de chaque ficher
 # La commande à utiliser est $(CCSEP) ficher.c
@@ -88,5 +89,5 @@ rebuild-run: rebuild
 
 # Compile le programme et execute directement, pour les flemmard du fleche haut
 build-run:$(FICHIER)
-	$(CC) $(FICHIER) $(CFLAGS) -lm -o $(OUT)
+	$(CC) $(FICHIER) $(CFLAGS) -o $(OUT)
 	./$(OUT)

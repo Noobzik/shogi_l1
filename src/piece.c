@@ -83,27 +83,27 @@ piece_t piece_identifier(char caracter_v) {
       // Promu Joueur 2
       {
       case 'd':
-        return piece_creer(BLANC, PION, PROMU);
+        return piece_creer(BLANC, PION_PROMU, PROMU);
       }
       {
       case 'j':
-        return piece_creer(BLANC, LANCIER, PROMU);
+        return piece_creer(BLANC, LANCIER_PROMU, PROMU);
       }
       {
       case 'c':
-        return piece_creer(BLANC, CAVALIER, PROMU);
+        return piece_creer(BLANC, CAVALIER_PROMU, PROMU);
       }
       {
       case 'f':
-        return piece_creer(BLANC, FOU, PROMU);
+        return piece_creer(BLANC, FOU_PROMU, PROMU);
       }
       {
       case 't':
-        return piece_creer(BLANC, TOUR, PROMU);
+        return piece_creer(BLANC, TOUR_PROMU, PROMU);
       }
       {
       case 'a':
-        return piece_creer(BLANC, SILVER, PROMU);
+        return piece_creer(BLANC, SILVER_PROMU, PROMU);
       }
     }
   } else {
@@ -144,23 +144,23 @@ piece_t piece_identifier(char caracter_v) {
       // Promu Joueur 1
       {
       case 'D':
-        return piece_creer(NOIR, PION, PROMU);
+        return piece_creer(NOIR, PION_PROMU, PROMU);
       }
       {
       case 'J':
-        return piece_creer(NOIR, LANCIER, PROMU);
+        return piece_creer(NOIR, LANCIER_PROMU, PROMU);
       }
       {
       case 'C':
-        return piece_creer(NOIR, CAVALIER, PROMU);
+        return piece_creer(NOIR, CAVALIER_PROMU, PROMU);
       }
       {
       case 'F':
-        return piece_creer(NOIR, FOU, PROMU);
+        return piece_creer(NOIR, FOU_PROMU, PROMU);
       }
       {
       case 'T':
-        piece_creer(NOIR, TOUR, PROMU);
+        piece_creer(NOIR, TOUR_PROMU, PROMU);
       }
       {
       case 'A':
@@ -328,3 +328,213 @@ char piece_caractere(piece_t piece_v) {
  * @return NADA
  */
 void piece_afficher(piece_t piece_v) { printf("%c", piece_caractere(piece_v)); }
+
+/** promote_grant
+ *  Permet de promovoir la piece
+ *  @params:    piece_t     -   piece
+ *  @return:    void
+ */
+void promote_grant(piece_t *p) {
+  switch (p->type) {
+    {
+    case PION:
+      p->type = PION_PROMU;
+      p->statut = PROMU;
+      break;
+    }
+    {
+    case LANCIER:
+      p->type = LANCIER_PROMU;
+      p->statut = PROMU;
+      break;
+    }
+    {
+    case CAVALIER:
+      p->type = CAVALIER_PROMU;
+      p->statut = PROMU;
+      break;
+    }
+    {
+    case FOU:
+      p->type = FOU_PROMU;
+      p->statut = PROMU;
+      break;
+    }
+    {
+    case TOUR:
+      p->type = TOUR_PROMU;
+      p->statut = PROMU;
+      break;
+    }
+    {
+    case SILVER:
+      p->type = SILVER_PROMU;
+      p->statut = PROMU;
+      break;
+    }
+  default:
+    break;
+  }
+}
+
+/** demote_grant
+ *  Permet de dé-promovoir la piece en changeant de couleur (Pour la reserve)
+ *  @params:    piece_t     -   piece
+ *  @return:    void
+ */
+piece_t demote_grant_reserve(piece_t p) {
+  if (p.color == BLANC) {
+    switch (p.type) {
+      {
+      case PION_PROMU:
+        p.color = NOIR;
+        p.type = PION;
+        p.statut = NON_PROMU;
+        break;
+      }
+      {
+      case LANCIER_PROMU:
+        p.color = NOIR;
+        p.type = LANCIER;
+        p.statut = NON_PROMU;
+        break;
+      }
+      {
+      case CAVALIER_PROMU:
+        p.color = NOIR;
+        p.type = CAVALIER;
+        p.statut = NON_PROMU;
+        break;
+      }
+      {
+      case FOU_PROMU:
+        p.color = NOIR;
+        p.type = FOU;
+        p.statut = NON_PROMU;
+        break;
+      }
+      {
+      case TOUR_PROMU:
+        p.color = NOIR;
+        p.type = TOUR;
+        p.statut = NON_PROMU;
+        break;
+      }
+      {
+      case SILVER_PROMU:
+        p.color = NOIR;
+        p.type = SILVER;
+        p.statut = NON_PROMU;
+        break;
+      }
+    default:
+      break;
+    }
+  } else if (p.color == NOIR) {
+    switch (p.type) {
+      {
+      case PION_PROMU:
+        p.color = BLANC;
+        p.type = PION;
+        p.statut = NON_PROMU;
+        break;
+      }
+      {
+      case LANCIER_PROMU:
+        p.color = BLANC;
+        p.type = LANCIER;
+        p.statut = NON_PROMU;
+        break;
+      }
+      {
+      case CAVALIER_PROMU:
+        p.color = BLANC;
+        p.type = CAVALIER;
+        p.statut = NON_PROMU;
+        break;
+      }
+      {
+      case FOU_PROMU:
+        p.color = BLANC;
+        p.type = FOU;
+        p.statut = NON_PROMU;
+        break;
+      }
+      {
+      case TOUR_PROMU:
+        p.color = BLANC;
+        p.type = TOUR;
+        p.statut = NON_PROMU;
+        break;
+      }
+      {
+      case SILVER_PROMU:
+        p.color = BLANC;
+        p.type = SILVER;
+        p.statut = NON_PROMU;
+        break;
+      }
+    default:
+      break;
+    }
+  }
+  return p;
+}
+
+/** Démote la piece sans changer de couleur pour annuler_deplacement*/
+piece_t demote_grant(piece_t p) {
+  switch (p.type) {
+    {
+    case PION_PROMU:
+      p.type = PION;
+      p.statut = NON_PROMU;
+      break;
+    }
+    {
+    case LANCIER_PROMU:
+      p.type = LANCIER;
+      p.statut = NON_PROMU;
+      break;
+    }
+    {
+    case CAVALIER_PROMU:
+      p.type = CAVALIER;
+      p.statut = NON_PROMU;
+      break;
+    }
+    {
+    case FOU_PROMU:
+      p.type = FOU;
+      p.statut = NON_PROMU;
+      break;
+    }
+    {
+    case TOUR_PROMU:
+      p.type = TOUR;
+      p.statut = NON_PROMU;
+      break;
+    }
+    {
+    case SILVER_PROMU:
+      p.type = SILVER;
+      p.statut = NON_PROMU;
+      break;
+    }
+  default:
+    break;
+  }
+  return p;
+}
+
+/** switch_color
+ * permet de changer de couleur avant de le mettre dans la reserve
+ * @params:  piece_t   -   p
+ * @return:  piece_t
+ */
+piece_t switch_color(piece_t p) {
+  if (p.color == BLANC)
+    p.color = NOIR;
+  else if (p.color == NOIR)
+    p.color = BLANC;
+  return p;
+}

@@ -50,10 +50,12 @@ int movement_valid_input(game_t *g, coordinate_t coordinate_v) {
  */
 
 int movement_valid_output(coordinate_t coordinate_v) {
-  return (coordinate_v.x > 0 && coordinate_v.y < 10 && coordinate_v.x < 10 &&
-          coordinate_v.y > 0)
-             ? 1
-             : 0;
+  if (coordinate_v.x == 42 && coordinate_v.y == 42)
+    return 1;
+  else if (coordinate_v.x > 0 && coordinate_v.y < 10 && coordinate_v.x < 10 &&
+           coordinate_v.y > 0)
+    return 1;
+  return 0;
 }
 
 /** deplacement_valide
@@ -70,53 +72,20 @@ void deplacement_valide(game_t *g, coordinate_t ci, coordinate_t co) {
   //======================================================================
   // Main
   //======================================================================
-  int test = 0, y;
-  piece_color_e color_tmp = g->board[ci.x][ci.y].color;
 
   /* Si cette condition n'est pas vérifié, alors sa déselectionne la piece
    * selectionné*/
 
-  if ((ci.x != co.x || ci.y != co.y) &&
-      (g->board[ci.x][ci.y].color != g->board[co.x][co.y].color)) {
+  if (((ci.x != co.x || ci.y != co.y) &&
+       (g->board[ci.x][ci.y].color != g->board[co.x][co.y].color)) ||
+      /* En cas de parachutage impossible */
+      (co.x != 42 && co.y != 42)) {
 
     switch (g->board[ci.x][ci.y].type) {
       {
       case PION:
 
-        /* Develement des Parachutage du PION
-         * Algo => Pas deuxieme pion sur la meme colonne
-         */
-
-        /* Ce gros if doit vérifier si les coordonnées d'entré sont dans la
-         * reserve ou pas */
-        if ((ci.x == 0 && (ci.y < 11 && ci.y > -1)) ||
-            (ci.y == 0 && (ci.x < 11 && ci.x > -1))) {
-
-          movement_restriction_parachute(g);
-          /* Boucle for pour tester si il y a un pion dans la colonne darrivé*/
-          for (y = 1; y < 10; y++) {
-
-            if (g->board[co.y][y].type == PION &&
-                g->board[co.y][y].color == color_tmp) {
-              test = 1;
-              printf("Erreur, Il y a déjà un pion dans la colonne d'arrivée\n");
-              y = 42;
-            } else {
-              piece_creer(VIDE_PIECE, SELECT, NON_PROMU);
-            }
-          }
-          //        if (test == 0)
-
-          /* Applications des restriction de selections */
-          //        movement_restriction_parachute(g);
-
-          /* Si c'est pas le cas , on applique les déplacement */
-          if (test == 0 && restriction_detector(g, co)) {
-            deplacement_apply(g, ci, co);
-          }
-          /* Fin du Develement pour l'algo de Parachutage pion */
-        } else if (deplacement_valide_pion(g, ci, co) &&
-                   restriction_detector(g, co)) {
+        if (deplacement_valide_pion(g, ci, co) && restriction_detector(g, co)) {
 
           deplacement_apply(g, ci, co);
           printf("Le PION à été deplacé de (%d;%d) à (%d;%d) avec succès.\n",
@@ -150,12 +119,6 @@ void deplacement_valide(game_t *g, coordinate_t ci, coordinate_t co) {
 
       {
       case TOUR:
-        /* La Coordonée entré reserve... */
-        if ((ci.x == 0 && (ci.y < 11 && ci.y > -1)) ||
-            (ci.y == 0 && (ci.x < 11 && ci.x > -1))) {
-
-          movement_restriction_parachute(g);
-        }
 
         /* Sinon ...*/
 
@@ -194,12 +157,6 @@ void deplacement_valide(game_t *g, coordinate_t ci, coordinate_t co) {
       }
       {
       case CAVALIER:
-        /* Ca na pas besoin d'être commenté si vous n'etes pas amnésique */
-        if ((ci.x == 0 && (ci.y < 11 && ci.y > -1)) ||
-            (ci.y == 0 && (ci.x < 11 && ci.x > -1))) {
-
-          movement_restriction_parachute(g);
-        }
 
         if (deplacement_valide_cavalier(g, ci, co) &&
             restriction_detector(g, co)) {
@@ -237,12 +194,6 @@ void deplacement_valide(game_t *g, coordinate_t ci, coordinate_t co) {
       {
       case FOU:
 
-        if ((ci.x == 0 && (ci.y < 11 && ci.y > -1)) ||
-            (ci.y == 0 && (ci.x < 11 && ci.x > -1))) {
-
-          movement_restriction_parachute(g);
-        }
-
         if (deplacement_valide_fou(ci, co) && restriction_detector(g, co)) {
 
           deplacement_apply(g, ci, co);
@@ -279,11 +230,6 @@ void deplacement_valide(game_t *g, coordinate_t ci, coordinate_t co) {
       {
       case GOLD:
 
-        if ((ci.x == 0 && (ci.y < 11 && ci.y > -1)) ||
-            (ci.y == 0 && (ci.x < 11 && ci.x > -1))) {
-          movement_restriction_parachute(g);
-        }
-
         if (deplacement_valide_gold(g, ci, co) && restriction_detector(g, co)) {
 
           deplacement_apply(g, ci, co);
@@ -298,12 +244,6 @@ void deplacement_valide(game_t *g, coordinate_t ci, coordinate_t co) {
       }
       {
       case SILVER:
-
-        if ((ci.x == 0 && (ci.y < 11 && ci.y > -1)) ||
-            (ci.y == 0 && (ci.x < 11 && ci.x > -1))) {
-
-          movement_restriction_parachute(g);
-        }
 
         if (deplacement_valide_silver(g, ci, co) &&
             restriction_detector(g, co)) {
@@ -354,12 +294,6 @@ void deplacement_valide(game_t *g, coordinate_t ci, coordinate_t co) {
       }
       {
       case LANCIER:
-
-        if ((ci.x == 0 && (ci.y < 11 && ci.y > -1)) ||
-            (ci.y == 0 && (ci.x < 11 && ci.x > -1))) {
-
-          movement_restriction_parachute(g);
-        }
 
         if (deplacement_valide_lancier(g, ci, co) &&
             restriction_detector(g, co)) {
@@ -1002,154 +936,308 @@ int is_promoted(game_t *g, coordinate_t ci, coordinate_t co) {
   return 0;
 }
 
-/** promote_grant
- *  Permet de promovoir la piece
- *  @params:    piece_t     -   piece
- *  @return:    void
- */
-void promote_grant(piece_t *piece) {
-  switch (piece->type) {
-    {
-    case PION:
-      piece->type = PION_PROMU;
-      piece->statut = PROMU;
-      break;
+void deplacement_apply(game_t *g, coordinate_t ci, coordinate_t co) {
+
+  movement_t gm_tmp;
+  piece_t p_tmp;
+
+  gm_tmp.input = ci;
+  gm_tmp.output = co;
+
+  /* test et test_bis sont des variable servant pour les boucles while un peu
+   * plus tard */
+
+  int x, y, test = 1, test_bis = 0;
+
+  /* On regarde si la piece qui doit être jouer peut/doit être promu ou pas*/
+
+  int promotion_v = is_promoted(g, ci, co);
+
+  /*------ Checking présence de piece (Si c'est le cas -> capture) -----------*/
+
+  if (!case_vide(g->board[ci.x][ci.y])) {
+
+    /*------------------------------------------------------------------------*/
+    /* -------------------------------- Debut gestion de Reserve--------------*/
+    /*------------------------------------------------------------------------*/
+
+    if (!case_vide(g->board[co.x][co.y]) &&
+        piece_couleur(g->board[co.x][co.y]) !=
+            piece_couleur(g->board[ci.x][ci.y])) {
+
+      /* TOUJOURS DANS LE IF !CASE VIDE*/
+
+      /* On met la piece dans la liste des captures*/
+      pile_stacking(g->capture, g->board[co.x][co.y]);
+
+      /** Ici un bloc d'instruction qui met la piece capturé dans la reserve
+       *  On vérifie que la case est vide pour placer la piece, sinon on passe
+       *  au suivant. Si il n'y a plus de place dans l'axe des x, on passe a la
+       *  deuxieme boucle le l'axe des y
+       */
+      p_tmp = g->board[co.x][co.y];
+      printf("Avant éventuel demotion : ");
+      piece_afficher(p_tmp);
+      printf("\n");
+      if (p_tmp.statut == PROMU)
+        p_tmp = demote_grant_reserve(p_tmp);
+      else
+        p_tmp = switch_color(p_tmp);
+      /** ---------------- Noir ---------------------**/
+
+      if (g->player == 1) {
+
+        x = 10;
+
+        /** Vertical checking, de la droite -> gauche **/
+
+        while (test == 1) {
+          if (case_vide(g->board[0][x]) == 1) {
+            test = 0;
+            g->board[0][x] = p_tmp;
+          }
+          if (x > 0 && test != 0) {
+            x--;
+          } else if (x == 0) {
+            test_bis = 1;
+          }
+        }
+
+        y = 1;
+
+        /** horizontal checking, de la Haut -> Bas **/
+
+        while (test_bis == 1) {
+          if (case_vide(g->board[y][0]) == 1) {
+            test_bis = 0;
+            g->board[y][0] = p_tmp;
+          }
+          if (y < 10 && test != 0) {
+            y++;
+          }
+        }
+      }
+
+      /** ---------------- Noir ---------------------**/
+
+      /** Blanc **/
+
+      if (g->player == 0) {
+
+        x = 0;
+
+        /** vertiale checking, de la gauche -> droite **/
+
+        while (test == 1) {
+          if (case_vide(g->board[10][x]) == 1) {
+            test = 0;
+            g->board[10][x] = p_tmp;
+          }
+          if (x < 11 && test != 0) {
+            x++;
+          } else if (x == 10) {
+            test_bis = 1;
+          }
+        }
+        y = 10;
+
+        while (test_bis == 1) {
+
+          /** horizontal checking, de la Bas -> Haut **/
+
+          if (case_vide(g->board[y][10]) == 1) {
+            test_bis = 0;
+            g->board[y][0] = p_tmp;
+          }
+          if (y > 0 && test_bis != 0) {
+            y--;
+          }
+        }
+      }
+      /* ----------------------------------------------------------------- */
+      /* ------------------------ FIN GESTION DE RESERVE ----------------- */
+      /* ----------------------------------------------------------------- */
+
+      /* Initialisateur du compteur de coups */
+
+      if (file_list_vide(g->file))
+        gm_tmp.valeur = 1;
+      else
+        gm_tmp.valeur = g->file->taille + 1;
+
+      /* Apply movement */
+
+      g->board[co.x][co.y] = g->board[ci.x][ci.y];
+
+      /* Changement en piece vide de la position de départ */
+      g->board[ci.x][ci.y] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+
+      /* Piece switch et ajout dans la file*/
+
+      file_thread(g->file, gm_tmp, promotion_v, 1);
+      changer_joueur(g);
     }
-    {
-    case LANCIER:
-      piece->type = LANCIER_PROMU;
-      piece->statut = PROMU;
-      break;
+
+    /* ------------ Si il n'y a pas de présence de piece ---------------------*/
+    else {
+
+      /* Apply movement */
+      g->board[co.x][co.y] = g->board[ci.x][ci.y];
+
+      /* Changement en piece vide de la position de départ */
+      g->board[ci.x][ci.y] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+
+      /* Initialisateur du compteur de coups */
+
+      if (file_list_vide(g->file))
+        gm_tmp.valeur = 1;
+      else
+        gm_tmp.valeur = g->file->taille + 1;
+
+      /* Piece switch et ajout dans la file*/
+
+      file_thread(g->file, gm_tmp, promotion_v, 0);
+      changer_joueur(g);
     }
-    {
-    case CAVALIER:
-      piece->type = CAVALIER_PROMU;
-      piece->statut = PROMU;
-      break;
-    }
-    {
-    case FOU:
-      piece->type = FOU_PROMU;
-      piece->statut = PROMU;
-      break;
-    }
-    {
-    case TOUR:
-      piece->type = TOUR_PROMU;
-      piece->statut = PROMU;
-      break;
-    }
-    {
-    case SILVER:
-      piece->type = SILVER_PROMU;
-      piece->statut = PROMU;
-      break;
-    }
-  default:
-    break;
   }
 }
+/*----------------------------------------------------------------------------*/
+/*-------------------- FIN deplacement()  ------------------------------------*/
+/*----------------------------------------------------------------------------*/
+/*-------------------- annuler_deplacement  ----------------------------------*/
+/*----------------------------------------------------------------------------*/
 
-/** demote_grant
- *  Permet de dé-promovoir la piece en changeant de couleur (Pour la reserve)
- *  @params:    piece_t     -   piece
- *  @return:    void
+/** annuler_deplacement
+ *  Permet d'annuler un deplacement
+ *  @param:     game_t    -   g
+ *  @return:    VOID
  */
-piece_t demote_grant(piece_t piece) {
-  if (piece.color == BLANC) {
-    switch (piece.type) {
-      {
-      case PION_PROMU:
-        piece.color = NOIR;
-        piece.type = PION;
-        piece.statut = NON_PROMU;
-        break;
+
+void annuler_deplacement(game_t *g) {
+
+  /* Variables */
+  coordinate_t mo_tmp;
+  coordinate_t mi_tmp;
+
+  file_element_t *be_tmp;
+
+  /* Comme pour la reserve, ces deux Variables vont servir de sortir ou entrer
+   * dans la boucle */
+  int x, y, test = 1, test_bis = 0;
+
+  /* Extraction du dernier coup joué de la file et initialisation */
+
+  be_tmp = file_unthread(g->file);
+  mo_tmp = be_tmp->movement.output;
+  mi_tmp = be_tmp->movement.input;
+
+  /* Verfication si le mouvement precedent à une promotion */
+
+  if (be_tmp->promotion) {
+    g->board[mo_tmp.x][mo_tmp.y] = demote_grant(g->board[mo_tmp.x][mo_tmp.y]);
+  }
+
+  /* Vérification s'il le mouvement precedent est un mouvement de capture*/
+
+  /* Remise en place de la piece en position de départ */
+  g->board[mi_tmp.x][mi_tmp.y] = g->board[mo_tmp.x][mo_tmp.y];
+
+  /*--------------------- Verification capture -------------------------------*/
+  if (be_tmp->capture == 1) {
+
+    /* Remise en place de la piece capturé sur l'echiquier et suppression de la
+     * piece capturé de la pile*/
+    g->board[mo_tmp.x][mo_tmp.y] = pile_unstacking(g->capture);
+
+    /* --------------------Enlevement de la piece de la reserve ------------- */
+
+    /* Si le tour actuelle est 0 (Blanc), on regarde la reserve de
+     * l'adversaire*/
+
+    if (g->player == 0) {
+      y = 9;
+
+      /** horizontal checking, de la Bas -> Haut **/
+
+      while (test == 1) {
+
+        if (case_vide(g->board[y][0]) == 0) {
+          test = 0;
+          g->board[y][0] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+        }
+
+        if (y > 0 && test != 0) {
+          y--;
+        } else if (y == 0) {
+          test_bis = 1;
+          test = 0;
+        }
       }
-      {
-      case LANCIER_PROMU:
-        piece.color = NOIR;
-        piece.type = LANCIER;
-        piece.statut = NON_PROMU;
-        break;
+
+      /** vertiale checking, de la gauche -> droite **/
+
+      x = 0;
+      while (test_bis == 1) {
+
+        if (case_vide(g->board[0][x]) == 0) {
+          test_bis = 0;
+          g->board[0][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+        }
+        if (x < 11 && test_bis != 0)
+          x++;
+        else {
+          test_bis = 0;
+        }
       }
-      {
-      case CAVALIER_PROMU:
-        piece.color = NOIR;
-        piece.type = CAVALIER;
-        piece.statut = NON_PROMU;
-        break;
-      }
-      {
-      case FOU_PROMU:
-        piece.color = NOIR;
-        piece.type = FOU;
-        piece.statut = NON_PROMU;
-        break;
-      }
-      {
-      case TOUR_PROMU:
-        piece.color = NOIR;
-        piece.type = TOUR;
-        piece.statut = NON_PROMU;
-        break;
-      }
-      {
-      case SILVER_PROMU:
-        piece.color = NOIR;
-        piece.type = SILVER;
-        piece.statut = NON_PROMU;
-        break;
-      }
-    default:
-      break;
     }
-  } else {
-    switch (piece.type) {
-      {
-      case PION_PROMU:
-        piece.color = BLANC;
-        piece.type = PION;
-        piece.statut = NON_PROMU;
-        break;
+
+    /* Si le tour actuelle est 1 (noir), on regarde la reserve de l'adversaire*/
+
+    if (g->player == 1) {
+
+      /** horizontal checking, de la Haut -> Bas **/
+
+      y = 1;
+
+      while (test == 1) {
+        if (case_vide(g->board[y][10]) == 0) {
+          test = 0;
+          g->board[y][10] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+        }
+        if (y < 10 && test != 0)
+          y++;
+        else if (y == 10) {
+          test_bis = 1;
+          test = 0;
+        }
       }
-      {
-      case LANCIER_PROMU:
-        piece.color = BLANC;
-        piece.type = LANCIER;
-        piece.statut = NON_PROMU;
-        break;
+
+      /** Vertical checking, de la droite -> gauche **/
+
+      x = 10;
+
+      while (test_bis == 1) {
+        if (case_vide(g->board[10][x]) == 0) {
+          test_bis = 0;
+          g->board[10][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+        }
+        if (x > 0 && test_bis != 0) {
+          x--;
+        } else {
+          test_bis = 0;
+        }
       }
-      {
-      case CAVALIER_PROMU:
-        piece.color = BLANC;
-        piece.type = CAVALIER;
-        piece.statut = NON_PROMU;
-        break;
-      }
-      {
-      case FOU_PROMU:
-        piece.color = BLANC;
-        piece.type = FOU;
-        piece.statut = NON_PROMU;
-        break;
-      }
-      {
-      case TOUR_PROMU:
-        piece.color = BLANC;
-        piece.type = TOUR;
-        piece.statut = NON_PROMU;
-        break;
-      }
-      {
-      case SILVER_PROMU:
-        piece.color = BLANC;
-        piece.type = SILVER;
-        piece.statut = NON_PROMU;
-        break;
-      }
-    default:
-      break;
     }
   }
-  return piece;
+
+  /* Si il n'y pas eu de capture de piece au tour precedent ------------------*/
+  else {
+    g->board[mo_tmp.x][mo_tmp.y] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+  }
+
+  /* Destruction du maillon et changement de joueur*/
+
+  file_detruire_element(be_tmp);
+
+  changer_joueur(g);
 }

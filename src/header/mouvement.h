@@ -36,6 +36,8 @@ int deplacement_valide_lancier_promu(game_t *g, coordinate_t ci,
 
 int movement_valid_helper(game_t *g, coordinate_t ci, coordinate_t co);
 int is_promoted(game_t *g, coordinate_t ci, coordinate_t co);
-void promote_grant(piece_t *piece);
-piece_t demote_grant(piece_t piece);
+
+void annuler_deplacement(game_t *g);
+void deplacement_apply(game_t *g, coordinate_t ci, coordinate_t co);
+
 #endif

@@ -22,12 +22,16 @@ void movement_restriction(game_t *g, coordinate_t ci) {
   /* Au cas ou vous avez oublié, jsuis gentil jfais un rappel :
    * Cette condition vérifie si les coordonées d'entré font partie de la reserve
    */
-  if ((ci.x == 0 && (ci.y < 11 && ci.y > -1)) ||
-      (ci.y == 0 && (ci.x < 11 && ci.y >= 0))) {
-    movement_restriction_parachute(g);
+  // printf("%d,%d\n", ci.x, ci.y);
+  if ((ci.x == 10 && (ci.y < 11 && ci.y >= 0)) ||
+      (ci.y == 10 && (ci.x < 11 && ci.x >= 0))) {
+    if (g->board[ci.x][ci.y].type == PION) {
+      movement_restriction_pion_parachute(g);
+    } else {
+      movement_restriction_parachute(g);
+    }
   }
   /* Fin restriction Parachutage*/
-
   else {
     switch (g->board[ci.x][ci.y].type) {
       {
@@ -290,6 +294,36 @@ void movement_restriction_parachute(game_t *g) {
   }
 }
 
+void movement_restriction_pion_parachute(game_t *g) {
+
+  int x, y;
+
+  /* Booléen conditionnel pour entrer dans la troisieme boucle for*/
+  int test = 1;
+
+  /* Check les colonnes */
+  for (x = 1; x < 10; x++) {
+    test = 1;
+    /* On parcours la colonne pour présence de pion*/
+
+    for (y = 1; y < 10; y++) {
+      if (((g->board[y][x].type == PION || g->board[y][x].type == PION_PROMU) &&
+           g->player == g->board[y][x].color))
+        test = 0;
+    }
+
+    /* Si on ne detecte pas de pion dans la colonne*/
+    if (test == 1) {
+      for (y = 1; y < 10; y++) {
+        if (g->board[y][x].type == VIDE)
+          g->board[y][x].type = SELECT;
+      }
+    }
+  }
+  /*  if (test == 0)
+      printf("Parachutage impossible du pion. Saissez 42,42 pour annuler\n");/
+  */
+}
 /** restriction_detector
  * Permet de detecter si la case selectionnée est vide ou bien d'une couleur
  * différente du joueur actuelle pour capture
@@ -299,7 +333,8 @@ void movement_restriction_parachute(game_t *g) {
  */
 int restriction_detector(game_t *g, coordinate_t ci) {
   if (g->board[ci.x][ci.y].type == SELECT ||
-      g->board[ci.x][ci.y].color != g->player)
+      (g->board[ci.x][ci.y].color != g->player &&
+       g->board[ci.x][ci.y].color != VIDE_PIECE))
     return 1;
   return 0;
 }

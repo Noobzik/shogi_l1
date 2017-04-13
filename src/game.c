@@ -240,298 +240,7 @@ void changer_joueur(game_t *g) {
 /*----------------------------------------------------------------------------*/
 /*-----------------------  deplacement()  ------------------------------------*/
 /*----------------------------------------------------------------------------*/
-void deplacement_apply(game_t *g, coordinate_t ci, coordinate_t co) {
 
-  movement_t gm_tmp;
-
-  gm_tmp.input = ci;
-  gm_tmp.output = co;
-
-  /* test et test_bis sont des variable servant pour les boucles while un peu
-   * plus tard */
-
-  int x, y, test = 1, test_bis = 0;
-
-  /* On regarde si la piece qui doit être jouer peut/doit être promu ou pas*/
-
-  int promotion_v = is_promoted(g, ci, co);
-
-  /*------ Checking présence de piece (Si c'est le cas -> capture) -----------*/
-
-  if (!case_vide(g->board[ci.x][ci.y])) {
-
-    /*------------------------------------------------------------------------*/
-    /* -------------------------------- Debut gestion de Reserve--------------*/
-    /*------------------------------------------------------------------------*/
-
-    if (!case_vide(g->board[co.x][co.y]) &&
-        piece_couleur(g->board[co.x][co.y]) !=
-            piece_couleur(g->board[ci.x][ci.y])) {
-
-      /* TOUJOURS DANS LE IF !CASE VIDE*/
-
-      /* On met la piece dans la liste des captures*/
-      pile_stacking(g->capture, g->board[co.x][co.y]);
-
-      /** Ici un bloc d'instruction qui met la piece capturé dans la reserve
-       *  On vérifie que la case est vide pour placer la piece, sinon on passe
-       *  au suivant. Si il n'y a plus de place dans l'axe des x, on passe a la
-       *  deuxieme boucle le l'axe des y
-       */
-
-      /** ---------------- Noir ---------------------**/
-
-      if (g->player == 1) {
-
-        x = 10;
-
-        /** Vertical checking, de la droite -> gauche **/
-
-        while (test == 1) {
-          if (case_vide(g->board[0][x]) == 1) {
-            test = 0;
-            g->board[0][x] = demote_grant(g->board[co.x][co.y]);
-          }
-          if (x > 0 && test != 0) {
-            x--;
-          } else if (x == 0) {
-            test_bis = 1;
-          }
-        }
-
-        y = 1;
-
-        /** horizontal checking, de la Haut -> Bas **/
-
-        while (test_bis == 1) {
-          if (case_vide(g->board[y][0]) == 1) {
-            test_bis = 0;
-            g->board[y][0] = demote_grant(g->board[co.x][co.y]);
-          }
-          if (y < 10 && test != 0) {
-            y++;
-          }
-        }
-      }
-
-      /** ---------------- Noir ---------------------**/
-
-      /** Blanc **/
-
-      if (g->player == 0) {
-
-        x = 0;
-
-        /** vertiale checking, de la gauche -> droite **/
-
-        while (test == 1) {
-          if (case_vide(g->board[10][x]) == 1) {
-            test = 0;
-            g->board[10][x] = demote_grant(g->board[co.x][co.y]);
-          }
-          if (x < 11 && test != 0) {
-            x++;
-          } else if (x == 10) {
-            test_bis = 1;
-          }
-        }
-        y = 10;
-
-        while (test_bis == 1) {
-
-          /** horizontal checking, de la Bas -> Haut **/
-
-          if (case_vide(g->board[y][10]) == 1) {
-            test_bis = 0;
-
-            g->board[y][0] = demote_grant(g->board[co.x][co.y]);
-          }
-          if (y > 0 && test_bis != 0) {
-            y--;
-          }
-        }
-      }
-      /* ----------------------------------------------------------------- */
-      /* ------------------------ FIN GESTION DE RESERVE ----------------- */
-      /* ----------------------------------------------------------------- */
-
-      /* Initialisateur du compteur de coups */
-
-      if (file_list_vide(g->file))
-        gm_tmp.valeur = 1;
-      else
-        gm_tmp.valeur = g->file->taille + 1;
-
-      /* Apply movement */
-
-      g->board[co.x][co.y] = g->board[ci.x][ci.y];
-
-      /* Changement en piece vide de la position de départ */
-      g->board[ci.x][ci.y] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
-
-      /* Piece switch et ajout dans la file*/
-
-      file_thread(g->file, gm_tmp, promotion_v, 1);
-      changer_joueur(g);
-    }
-
-    /* ------------ Si il n'y a pas de présence de piece ---------------------*/
-    else {
-
-      /* Apply movement */
-      g->board[co.x][co.y] = g->board[ci.x][ci.y];
-
-      /* Changement en piece vide de la position de départ */
-      g->board[ci.x][ci.y] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
-
-      /* Initialisateur du compteur de coups */
-
-      if (file_list_vide(g->file))
-        gm_tmp.valeur = 1;
-      else
-        gm_tmp.valeur = g->file->taille + 1;
-
-      /* Piece switch et ajout dans la file*/
-
-      file_thread(g->file, gm_tmp, promotion_v, 0);
-      changer_joueur(g);
-    }
-  }
-}
-/*----------------------------------------------------------------------------*/
-/*-------------------- FIN deplacement()  ------------------------------------*/
-/*----------------------------------------------------------------------------*/
-/*-------------------- annuler_deplacement  ----------------------------------*/
-/*----------------------------------------------------------------------------*/
-
-/** annuler_deplacement
- *  Permet d'annuler un deplacement
- *  @param:     game_t    -   g
- *  @return:    VOID
- */
-
-void annuler_deplacement(game_t *g) {
-
-  /* Variables */
-  coordinate_t mo_tmp;
-  coordinate_t mi_tmp;
-
-  file_element_t *be_tmp;
-
-  /* Comme pour la reserve, ces deux Variables vont servir de sortir ou entrer
-   * dans la boucle */
-  int x, y, test = 1, test_bis = 0;
-
-  /* Extraction du dernier coup joué de la file et initialisation */
-
-  be_tmp = file_unthread(g->file);
-  mo_tmp = be_tmp->movement.output;
-  mi_tmp = be_tmp->movement.input;
-
-  /* Vérification s'il le mouvement precedent est un mouvement de capture*/
-
-  /* Remise en place de la piece en position de départ */
-  g->board[mi_tmp.x][mi_tmp.y] = g->board[mo_tmp.x][mo_tmp.y];
-
-  /*--------------------- Verification capture -------------------------------*/
-  if (be_tmp->capture == 1) {
-
-    /* Remise en place de la piece capturé sur l'echiquier et suppression de la
-     * piece capturé de la pile*/
-    g->board[mo_tmp.x][mo_tmp.y] = pile_unstacking(g->capture);
-
-    /* --------------------Enlevement de la piece de la reserve ------------- */
-
-    /* Si le tour actuelle est 0 (Blanc), on regarde la reserve de
-     * l'adversaire*/
-
-    if (g->player == 0) {
-      y = 9;
-
-      /** horizontal checking, de la Bas -> Haut **/
-
-      while (test == 1) {
-
-        if (case_vide(g->board[y][0]) == 0) {
-          test = 0;
-          g->board[y][0] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
-        }
-
-        if (y > 0 && test != 0) {
-          y--;
-        } else if (y == 0) {
-          test_bis = 1;
-          test = 0;
-        }
-      }
-
-      /** vertiale checking, de la gauche -> droite **/
-
-      x = 0;
-      while (test_bis == 1) {
-
-        if (case_vide(g->board[0][x]) == 0) {
-          test_bis = 0;
-          g->board[0][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
-        }
-        if (x < 11 && test_bis != 0)
-          x++;
-        else {
-          test_bis = 0;
-        }
-      }
-    }
-
-    /* Si le tour actuelle est 1 (noir), on regarde la reserve de l'adversaire*/
-
-    if (g->player == 1) {
-
-      /** horizontal checking, de la Haut -> Bas **/
-
-      y = 1;
-
-      while (test == 1) {
-        if (case_vide(g->board[y][10]) == 0) {
-          test = 0;
-          g->board[y][10] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
-        }
-        if (y < 10 && test != 0)
-          y++;
-        else if (y == 10) {
-          test_bis = 1;
-          test = 0;
-        }
-      }
-
-      /** Vertical checking, de la droite -> gauche **/
-
-      x = 10;
-
-      while (test_bis == 1) {
-        if (case_vide(g->board[10][x]) == 0) {
-          test_bis = 0;
-          g->board[10][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
-        }
-        if (x > 0 && test_bis != 0) {
-          x--;
-        } else {
-          test_bis = 0;
-        }
-      }
-    }
-  }
-
-  /* Si il n'y pas eu de capture de piece au tour precedent ------------------*/
-  else {
-    g->board[mo_tmp.x][mo_tmp.y] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
-  }
-
-  /* Destruction du maillon et changement de joueur*/
-
-  file_detruire_element(be_tmp);
-
-  changer_joueur(g);
-}
 /** saisie_case
  *  Permet de saisir les coordonnées d'une case
  *  Cette fonction est un substitut du scanf
@@ -699,7 +408,7 @@ void partie_jouer(game_t *g) {
       printf("BACK                  Restaurer le deplacement precedent.\n");
       printf("SAVE                  Sauvegarder la partie.\n");
       printf("EXIT                  Quitter le jeu.\n");
-
+      printf("42,42                 Pour désélectionner une pièce\n");
       /* Enter loop */
       afficher_echiquier(g, COORDINATE_NULL);
       printf("\n\n\n");
@@ -830,6 +539,9 @@ void partie_jouer(game_t *g) {
         piece_afficher(g->board[g_i.x][g_i.y]);
         printf("' de coordonnees (%d;%d) du joueur ", g_i.x, g_i.y);
         printf("%d.", g->board[g_i.x][g_i.y].color);
+        printf("\n\nSi vous voulez parachuter un pion et qu'il n'y a pas "
+               "d'étoile, "
+               "saisissez 42, 42\n");
         printf("\nSaisir les coordonnees du movement:\n");
 
         /* Enter loop */
@@ -842,11 +554,67 @@ void partie_jouer(game_t *g) {
 
       game_seperator();
 
+      game_play = movement_valid_win(g, g_o);
+
       /* On fait ou ne fait pas les deplacements...*/
       deplacement_valide(g, g_i, g_o);
 
+      if (game_play == 0) {
+
+        afficher_echiquier(g, COORDINATE_NULL);
+        printf("\n\n\n");
+        printf(
+            "Fin de partie.\nVoulez-vous sauvegarder la partie? (oui/non)\n");
+
+        if (scanf("%19s", game_exit_confirmation) != 1) {
+          /* Separator */
+          game_seperator();
+
+          printf("Entrer au moins un caractere.\n");
+
+          /* Enter loop */
+          afficher_echiquier(g, COORDINATE_NULL);
+          printf("\n\n\n");
+        }
+
+        if (strcmp(game_exit_confirmation, "non") == 0) {
+
+          /* Separator */
+          game_seperator();
+          printf("Merci d'avoir jouer a ce jeu.\n");
+        } else {
+          printf("Entrer le nom de la partie: ");
+
+          //  scanf("%s", game_save_name);
+          // Hack pour warning: ignoring return value of 'scanf'
+
+          // fgets(game_save_name, MAX_CHAR, stdin);
+
+          if (scanf("%s", game_save_name) != 1) {
+
+            /* Separator */
+            game_seperator();
+
+            printf("Entrer au moins un caractere.\n");
+
+            /* Enter loop */
+            afficher_echiquier(g, COORDINATE_NULL);
+            printf("\n\n\n");
+          }
+
+          strtok(game_save_name, "\n");
+
+          /* Separator */
+          game_seperator();
+
+          partie_sauvegarder(g, game_save_name);
+
+          printf("La partie a ete sauvergarder.\n");
+          printf("Merci d'avoir joué à ce jeu\n\n\n");
+        }
+      }
+
       /* On regarde si il y a un roi qui s'est fait victimisé */
-      game_play = movement_valid_win(g, g_o);
 
       /* Enter loop */
       afficher_echiquier(g, COORDINATE_NULL);

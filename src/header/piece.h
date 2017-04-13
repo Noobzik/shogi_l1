@@ -40,9 +40,12 @@ typedef struct piece_s {
 /* Prototype des fonctions */
 piece_t piece_creer(piece_color_e piece_color_v, piece_type_e piece_type_v,
                     piece_statut_e piece_statut_v);
-int piece_couleur(piece_t piece_v);
+int piece_couleur(piece_t p);
 piece_t piece_identifier(char caracter_v);
-char piece_caractere(piece_t piece_v);
-void piece_afficher(piece_t piece_v);
-
+char piece_caractere(piece_t p);
+void piece_afficher(piece_t p);
+void promote_grant(piece_t *p);
+piece_t demote_grant_reserve(piece_t p);
+piece_t demote_grant(piece_t p);
+piece_t switch_color(piece_t p);
 #endif

@@ -199,7 +199,7 @@ game_t *partie_charger(char *path) {
       }
 
       for (x = 0; x < 11; x++) {
-        for (y = 0; y < 11; y++) {
+        for (y = 0; y < 12; y++) {
           game_piece_check = fgetc(fp);
           if (game_piece_check != '\n') {
             piece_afficher(res->board[x][y]);
