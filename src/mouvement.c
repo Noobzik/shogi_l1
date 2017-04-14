@@ -344,6 +344,11 @@ void deplacement_valide(game_t *g, coordinate_t ci, coordinate_t co) {
  * @return     int
  */
 int movement_valid_win(game_t *g, coordinate_t coordinate_v) {
+
+  /* Obliger de tester cette condtion pour eviter les erreurs de mémoires*/
+
+  if (coordinate_v.x == 42 && coordinate_v.y == 42)
+    return 1;
   if (g->player == 0) {
 
     if (g->board[coordinate_v.x][coordinate_v.y].type == ROI) {
@@ -728,6 +733,7 @@ int movement_valid_helper(game_t *g, coordinate_t ci, coordinate_t co) {
       return (deplacement_valide_pion_promu(g, ci, co)) ? 1 : 0;
       break;
     }
+    /* Je ne pense pas que ce cas est nécessaire */
     {
     case TOUR:
       return (deplacement_valide_tour(ci, co)) ? 1 : 0;
@@ -735,7 +741,7 @@ int movement_valid_helper(game_t *g, coordinate_t ci, coordinate_t co) {
     }
     {
     case TOUR_PROMU:
-      return (deplacement_valide_tour_promu(ci, co)) ? 1 : 0;
+      return (deplacement_valide_roi(ci, co)) ? 1 : 0;
       break;
     }
     {
@@ -750,6 +756,7 @@ int movement_valid_helper(game_t *g, coordinate_t ci, coordinate_t co) {
       return (deplacement_valide_cavalier_promu(g, ci, co)) ? 1 : 0;
       break;
     }
+    /* Je ne pense pas que ce cas est nécessaire */
     {
     case FOU:
 
@@ -758,7 +765,7 @@ int movement_valid_helper(game_t *g, coordinate_t ci, coordinate_t co) {
     }
     {
     case FOU_PROMU:
-      return (deplacement_valide_fou_promu(ci, co)) ? 1 : 0;
+      return (deplacement_valide_roi(ci, co)) ? 1 : 0;
       break;
     }
     {

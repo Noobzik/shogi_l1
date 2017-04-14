@@ -160,7 +160,7 @@ piece_t piece_identifier(char caracter_v) {
       }
       {
       case 'T':
-        piece_creer(NOIR, TOUR_PROMU, PROMU);
+        return piece_creer(NOIR, TOUR_PROMU, PROMU);
       }
       {
       case 'A':

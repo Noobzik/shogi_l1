@@ -189,6 +189,8 @@ game_t *partie_charger(char *path) {
 
       /* Chargement du fichier */
 
+      fseek(fp, 3, SEEK_SET);
+
       for (x = 0; x < 11; x++) {
         for (y = 0; y < 12; y++) {
           game_piece_check = fgetc(fp);
@@ -197,6 +199,8 @@ game_t *partie_charger(char *path) {
           }
         }
       }
+
+      fseek(fp, 3, SEEK_SET);
 
       for (x = 0; x < 11; x++) {
         for (y = 0; y < 12; y++) {

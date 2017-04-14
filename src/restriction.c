@@ -81,8 +81,9 @@ void movement_restriction(game_t *g, coordinate_t ci) {
       }
       {
       case TOUR_PROMU:
-        movement_restriction_general(g, ci);
         movement_restriction_tour(g, ci);
+        movement_restriction_general(g, ci);
+
         break;
       }
       {
@@ -92,8 +93,8 @@ void movement_restriction(game_t *g, coordinate_t ci) {
       }
       {
       case FOU_PROMU:
-        movement_restriction_general(g, ci);
         movement_restriction_fou(g, ci);
+        movement_restriction_general(g, ci);
         break;
       }
       {
