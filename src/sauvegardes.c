@@ -7,8 +7,16 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+/* Pour l'existence des dossiers de sauvegardes */
+
 struct stat st = {0};
 
+/** partie_sauvegarder()
+ *  Permet de sauvegarder la partie en cours, découpé en deux fonctions
+ *  @params:  game_t    -   g
+ *            char      -   *game_save_name
+ *  @return:  VOID
+ */
 void partie_sauvegarder(game_t *g, char *game_save_name) {
   char cwd[10000];
 
@@ -24,11 +32,12 @@ void partie_sauvegarder(game_t *g, char *game_save_name) {
   game_save_meta(g, game_save_name, cwd);
   printf("Les donénes de la pile et de la file ont été enrengistré\n");
 }
+
 /** game_save_board
  *  Sauvegarde le positionnement des pieces de l'echiquier dans un fichier
  *  @params   :   game_t    -   g
  *                char*     -   save_name
- *                char      -   cwd
+ *                char*     -   cwd
  *  @return   :   VOID
  */
 void game_save_board(game_t *g, char *save_name, char *cwd) {
@@ -41,6 +50,7 @@ void game_save_board(game_t *g, char *save_name, char *cwd) {
   char game_plt_tmp[500] = "";
 
   printf("Sauvegarde de l'échiquier en cours ...\n");
+
   /* Concatenation du chemin absolue et du dossier partie */
   strcpy(game_plt_tmp, cwd);
   strcat(game_plt_tmp, "/plateaux");
@@ -82,6 +92,14 @@ void game_save_board(game_t *g, char *save_name, char *cwd) {
   }
 }
 
+/** game_save_meta
+ *  Sauvegarde les éléments de la file et de la pile
+ *  @params   :   game_t    -   g
+ *                char*     -   save_name
+ *                char*     -   cwd
+ *  @return   :   VOID
+ */
+
 void game_save_meta(game_t *g, char *game_save_name, char *cwd) {
 
   file_element_t *file_tmp;
@@ -97,18 +115,22 @@ void game_save_meta(game_t *g, char *game_save_name, char *cwd) {
   strcat(game_part_tmp, "/partie");
   printf("Current Working Directory : %s\n", game_part_tmp);
 
+  /* Création ou non du dossier absent*/
   if (stat(game_part_tmp, &st) == -1) {
     printf("Dossier absent\nmkdir : %s\n", game_part_tmp);
     mkdir(game_part_tmp, 0777);
   }
 
+  /* Encore une partie de concatenation */
   strcat(game_part_tmp, "/");
   strcat(game_part_tmp, game_save_name);
   strcat(game_part_tmp, ".part");
 
   fp = fopen(game_part_tmp, "w+");
+  
   if (!fp)
     perror("fopen");
+
   else {
     fputs("PR\n", fp);
     while (!file_list_vide(g->file)) {
@@ -146,6 +168,11 @@ void game_save_meta(game_t *g, char *game_save_name, char *cwd) {
   }
 }
 
+/** partie_charger()
+ *  Sauvegarde le positionnement des pieces de l'echiquier dans un fichier
+ *  @params   :   char*     -   path
+ *  @return   :   game_t    -   path
+ */
 game_t *partie_charger(char *path) {
 
   game_t *res = NULL;
@@ -189,12 +216,17 @@ game_t *partie_charger(char *path) {
 
       /* Chargement du fichier */
 
+      /* Positionnement du curseur pour éviter les problèmes d'accès de mémoire */
       fseek(fp, 3, SEEK_SET);
 
       for (x = 0; x < 11; x++) {
         for (y = 0; y < 12; y++) {
+
+          /* Affectations des pièces dans l'échiquier */
           game_piece_check = fgetc(fp);
           if (game_piece_check != '\n') {
+
+            /* Ne soyez pas choqué de cette notation, c'est le warning qui me l'as imposé */
             res->board[x][y] = piece_identifier((char)game_piece_check);
           }
         }
@@ -202,6 +234,7 @@ game_t *partie_charger(char *path) {
 
       fseek(fp, 3, SEEK_SET);
 
+      /* Débug pour connaitre la reconnaissance des pièces après lecture du fichiers*/
       for (x = 0; x < 11; x++) {
         for (y = 0; y < 12; y++) {
           game_piece_check = fgetc(fp);

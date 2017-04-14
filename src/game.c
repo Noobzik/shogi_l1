@@ -85,7 +85,7 @@ void afficher_echiquier(game_t *g, coordinate_t g_i) {
       movement_restriction(g, g_i);
     }
 
-    /* Chess board */
+    /* Echiquier */
     for (y = 0; y < 11; y++) {
       piece_afficher(g->board[x][y]);
       printf("  ");
@@ -95,30 +95,33 @@ void afficher_echiquier(game_t *g, coordinate_t g_i) {
   }
 }
 
-/** partie_creer
+/** partie_creer()
  * Description :
  * Permet de retourner un echiquier initialisé
+ * @params: VOID
+ * @return: VOID
  */
 game_t *partie_creer() {
   game_t *res;
   return res = malloc(sizeof(game_t));
 }
 
-/** partie_detruire
+/** partie_detruire()
  * Détruit tout simplement l'echiquier
+ * @params: VOID
+ * @return: game_t
  */
 void partie_detruire(game_t *g) { free(g); }
 
 /** partie_nouvelle
  * Description: Initialize tout les case en piece VIDE
  * Puis Place tout les pieces de debut de partie
- * Parameters :
- * @return Retourne un echiquier pret à etre jouer
+ * @params: VOID
+ * @return: game_t
  */
 game_t *partie_nouvelle() {
-  //======================================================================
-  // Variables
-  //======================================================================
+  
+
   int x, y;
   game_t *res;
 
@@ -200,9 +203,9 @@ game_t *partie_nouvelle() {
 /*---------------------------BLOC DE GESTION DE CASE--------------------------*/
 /*----------------------------------------------------------------------------*/
 /** Case vide
- * Permet de savoir si la case est vide ou pas
- * @param piece_t p
- * @return int
+ * Permet de savoir si la case est vide ou pas, Une case vide est caractisé par VIDE et SELECT
+ * @params: piece_t   -    p
+ * @return: int
  */
 int case_vide(piece_t p) {
   if (p.type == VIDE) {
@@ -243,7 +246,7 @@ void changer_joueur(game_t *g) {
 
 /** saisie_case
  *  Permet de saisir les coordonnées d'une case
- *  Cette fonction est un substitut du scanf
+ *  Cette fonction est un substitut du scanf, la façon dont elle est écrite n'accepte que les chiffres.
  *  Complexite : Temps O(p) Espace  O(1)
  *  Parameters :
  *  @param VIDE
@@ -300,7 +303,8 @@ void game_seperator() {
 
 /** game_exit
  * game exit
- * Il a vraiment besoin de commentaire lui ?
+ * Il a vraiment besoin d'être commenté lui ?
+ * Faut vraiment le faire pour ne pas comprendre
  * @param:    game_t    -   g
  * @return:   int
  */
@@ -314,7 +318,8 @@ int game_exit(game_t *g) {
 }
 
 /** game_selector
- * Cette fonction compare la commande entré à la commande assosicé *
+ * Cette fonction compare la commande entré à la commande assosicé
+ * (Comparaison de deux chaine de caractères)
  * @params:   char - game_command
  *            char - select_v
  * @return int
@@ -348,9 +353,9 @@ void partie_jouer(game_t *g) {
   int game_command_dev = 0;
   int game_play = 1;
 
-  /* First chess board display*/
+  /* Premier affichage de l'échiquier*/
 
-  printf("IM A GENIUUUUUUUUUUUUUUUUUUUUUUUUUS (Luis Suarez)");
+  printf("IM A GENIUUUUUUUUUUUUUUUUUUUUUUUUUS");
   game_seperator();
   printf("Nouvelle partie.\n");
 
@@ -408,7 +413,8 @@ void partie_jouer(game_t *g) {
       printf("BACK                  Restaurer le deplacement precedent.\n");
       printf("SAVE                  Sauvegarder la partie.\n");
       printf("EXIT                  Quitter le jeu.\n");
-      printf("42,42                 Pour désélectionner une pièce\n");
+      printf("42,42                 Pour désélectionner une pièce,(Seulement quand on demande des coordonées)\n");
+      
       /* Enter loop */
       afficher_echiquier(g, COORDINATE_NULL);
       printf("\n\n\n");
@@ -446,7 +452,7 @@ void partie_jouer(game_t *g) {
       afficher_echiquier(g, COORDINATE_NULL);
       printf("\n\n\n");
 
-      /* Developper command file */
+      /* Developper command file, affiche le contenu de la file */
     } else if (game_selector(game_command, "file") && game_command_dev) {
 
       /* Separator */
@@ -458,7 +464,7 @@ void partie_jouer(game_t *g) {
       afficher_echiquier(g, COORDINATE_NULL);
       printf("\n\n\n");
 
-      /* Developper command pile */
+      /* Developper command pile, affiche le contenu de la pile */
     } else if (game_selector(game_command, "pile") && game_command_dev) {
 
       /* Separator */
@@ -470,7 +476,7 @@ void partie_jouer(game_t *g) {
       afficher_echiquier(g, COORDINATE_NULL);
       printf("\n\n\n");
 
-      /* Developper command clear */
+      /* Developper command cell, permet d'inspecter les données de la case */
     } else if (game_selector(game_command, "cell") && game_command_dev) {
 
       /* Input */

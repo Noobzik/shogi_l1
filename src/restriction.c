@@ -147,6 +147,7 @@ void movement_restriction_general(game_t *g, coordinate_t ci) {
 
 /** movement_restriction_tour
  * Bah, si la case du restriction est valide, on affiche l'aide visuel SELECT
+ * La tour peut se déplacer sur sa ligne droite, gauche, haut, bas, jusqu'à qu'il y a un obstacle.
  * @params:     game_t       - *g
  *              coordinate_t - ci
  */
@@ -189,18 +190,25 @@ void movement_restriction_tour(game_t *g, coordinate_t ci) {
 
 /** movement_restriction_lancier
  * Bah, si la case du restriction est valide, on affiche l'aide visuel SELECT
+ * Les lanciers peuvent seulement se déplacer sur la ligne droite devant eux.
  * @params:     game_t       - *g
  *              coordinate_t - ci
  */
 void movement_restriction_lancier(game_t *g, coordinate_t ci) {
-  if (g->board[ci.x][ci.y].color == BLANC) {
+  
+  /* Vers le haut, donc pour les blancs*/
 
+  if (g->board[ci.x][ci.y].color == BLANC) {
     for (mc_tmp.x = ci.x - 1;
          mc_tmp.x > 0 && g->board[mc_tmp.x][ci.y].type == VIDE; mc_tmp.x--) {
 
       g->board[mc_tmp.x][ci.y].type = SELECT;
     }
-  } else {
+  } 
+
+  /* Vers le bas, donc pour les noirs */
+
+  else {
 
     for (mc_tmp.x = ci.x + 1;
          mc_tmp.x < 10 && g->board[mc_tmp.x][ci.y].type == VIDE; mc_tmp.x++) {
@@ -210,8 +218,9 @@ void movement_restriction_lancier(game_t *g, coordinate_t ci) {
   }
 }
 /**
- * movement bishop restriction
- *
+ * movement fou restriction
+ * Normalement on connait la chanson par déduction logique...
+ * Sinon, Le fou peut se déplacer sur toute sa diagonal jusqu'à qu'il y a un obstacle
  * @params:*     game_t       - g
  *               coordinate_t - ci
  */
@@ -295,6 +304,11 @@ void movement_restriction_parachute(game_t *g) {
   }
 }
 
+/** movement_restriction_pion_parachute()
+ *  Parcours chaque colonne pour voir la présence de pièce, plus de détail dans la doc
+ *  @params:  game_t  -   g
+ *  @return:  VOID
+ */
 void movement_restriction_pion_parachute(game_t *g) {
 
   int x, y;

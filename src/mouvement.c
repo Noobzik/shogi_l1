@@ -12,7 +12,7 @@
  *    2) Bloc de deplacement_valide et valide_win
  *    3) Bloc de deplacement_valide_($INSERT_TYPE_DE_PIECE)
  *    4) Bloc movement_valid_helper
- *    5) Bloc de is_promoted et promote_grant
+ *    5) Bloc de is_promoted
  */
 /************ Debut Bloc validation des entrés et sortie **********************/
 
@@ -943,6 +943,13 @@ int is_promoted(game_t *g, coordinate_t ci, coordinate_t co) {
   return 0;
 }
 
+/** deplacement_apply()
+ *  Permet d'appliquer les déplacements de pièces
+ *  @param:   game_t        -   g
+ *            coordinate_t  -   ci
+ *            coordinate_t  -   co
+ *  @return:  VOID
+ */
 void deplacement_apply(game_t *g, coordinate_t ci, coordinate_t co) {
 
   movement_t gm_tmp;
