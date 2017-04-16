@@ -22,9 +22,12 @@ void movement_restriction(game_t *g, coordinate_t ci) {
   /* Au cas ou vous avez oublié, jsuis gentil jfais un rappel :
    * Cette condition vérifie si les coordonées d'entré font partie de la reserve
    */
-  // printf("%d,%d\n", ci.x, ci.y);
+//   printf("%d,%d\n", ci.x, ci.y);
   if ((ci.x == 10 && (ci.y < 11 && ci.y >= 0)) ||
-      (ci.y == 10 && (ci.x < 11 && ci.x >= 0))) {
+      (ci.y == 10 && (ci.x < 11 && ci.x >= 0)) ||
+      (ci.x == 0  && (ci.y < 11 && ci.y >=0))  ||
+      (ci.y == 0  && (ci.x < 11 && ci.x >=0)))  {
+    //      printf("Je suis rentré ici ?\n");
     if (g->board[ci.x][ci.y].type == PION) {
       movement_restriction_pion_parachute(g);
     } else {
@@ -195,7 +198,7 @@ void movement_restriction_tour(game_t *g, coordinate_t ci) {
  *              coordinate_t - ci
  */
 void movement_restriction_lancier(game_t *g, coordinate_t ci) {
-  
+
   /* Vers le haut, donc pour les blancs*/
 
   if (g->board[ci.x][ci.y].color == BLANC) {
@@ -204,7 +207,7 @@ void movement_restriction_lancier(game_t *g, coordinate_t ci) {
 
       g->board[mc_tmp.x][ci.y].type = SELECT;
     }
-  } 
+  }
 
   /* Vers le bas, donc pour les noirs */
 

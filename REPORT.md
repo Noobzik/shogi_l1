@@ -29,6 +29,8 @@ Le projet est fait en sorte qu'il écrit sous forme de MVC (ou presque ...). Un 
 pas de mal : Modele, Vue, Controleur.
 La priorité absolue du projet est de modéliser la vue. Une fois que c'est fait, on peut commencer à coder en free-style.
 
+___
+
 ### Répartition des tâches ###
 C'est brouillon encore, donc c'est ma partie le temps qu'on fasse un truc plus pozey xD.
 
@@ -49,9 +51,7 @@ Les membres du groupe sont :
 *   Rakib Sheikh (NoobZik)
 
 Bon la faut qu'on se fasse une réunion car la sa fait pitié cette partie de répartition de tâches...
-___
-
-
+<div class="page-break"></div>
 
 ## Descriptions des fichiers ##
 
@@ -89,26 +89,28 @@ ___
 
 #### piece.c ####
 
-Dans ce fichier, contient tout les fonctions concernant à la gestion des pièces
+Dans ce fichier, contient tout les fonctions concernant à la gestion des pièces.
+
+**Note :** Afin d'éviter toute ambiguité, Joueur 0 et Joueur 1 ont été remplacé par NOIR et BLANC.
 
 Une structure pièce est caractérisé par trois champs :
-*   Un entier représentant la couleur, il y en a trois {Blanc, Noir et VIDE}.
+*   Un entier énuméré représentant la couleur, il y en a trois {Blanc, Noir et VIDE}.
 *   Un entier énuméré type représentant l'ensemble des pièces en plus de VIDE, SELECT* (Plus de détails plus bas).
 *   Un statut énuméré pour la représentation d'une piece pièce ou non promu.
 
 
+Il est jugé plus simple de travailler sur des types énuméré que sur des type classique tel que les type unsigned int.
+
+Les fonctions suivantes ont été rajouté ou modifié. Elles sont nécéssaire pour la suite du projet.
+
 ```c
 piece.c
-piece_couleur(); Initialement piece_joueur();
+piece_couleur(); Initialement piece_joueur(); Prend en argument une pièce piece_t et renvoie sa couleur associé.
 
-Prend en argument une pièce piece_t et renvoie sa couleur associé.
-
-promote_grant(); Permet de promouvoir la piece.
-demote_grant_reserve(); Permet de dépromouvoir la piece en changeant de couleur.
-demote_grant(); Exactement la même chose qu'au dessus mais sans changer de couleur.
-
-switch_color(); Elle permet de changer de couleur avant de placer la pièce dans la réserve.
-
+piece_t promote_grant(); // Permet de promouvoir la piece.
+piece_t demote_grant_reserve(); // Permet de dépromouvoir la piece en changeant de couleur.
+piece_t demote_grant(); // Exactement la même chose qu'au dessus mais sans changer de couleur.
+piece_t switch_color(); // Elle permet de changer de couleur avant de placer la pièce dans la réserve.
 ```
 ___
 
@@ -119,11 +121,11 @@ La *file* représente l'historique des coups jouée et ses événement associé 
 On a une structure pour pouvoir gérer efficacement les coordonnées :
 
 ```c
-typdef struct movement_s {
+typedef struct movement_s {
     int movement; /* Représente le numéro du mouvement */
-    coordinate_t input /* Représente les coordonnées d'entrée */
-    coordinate_t output /* Représente les coordonées de sortie */
-}movement_t,
+    coordinate_t input; /* Représente les coordonnées d'entrée */
+    coordinate_t output; /* Représente les coordonées de sortie */
+}movement_t;
 ```
 Une fois qu'on à ça en tête de manière temporaire, on peut s'attaquer à la file.
 
@@ -140,24 +142,25 @@ En gros, la pile contient seulement les pièces capturés.
 
 Pour la pile et la file, elle marche comme des liste qui sont doublement chaînée vu en TD. Cependant, deux fonctions on été introduite pour plus de clarté
 
+Les fontions suivantes on été rajouté pour plus de clarté dans le code:
 ```c
 file.c
 
 void file_thread();
-Permet d'ajouter un mouvement, un état de promotion et un état de capture dans l'historique.
+// Permet d'ajouter un mouvement, un état de promotion et un état de capture dans l'historique.
 void file_unthread();
-Fait le contraire, mais retire le dernier mouvement ajouté.
+// Fait le contraire de file_unthread, sans libérer la mémoire, car on a besoin les données de cette élément extrait.
 
 pile.c
-void pile_stacking(); Ajoute une pièce dans la pile.
-void pile_unstacking(); Retire la dernière pièce ajouté dans la pile.
+void pile_stacking(); // Ajoute une pièce dans la pile.
+void pile_unstacking(); // Retire la dernière pièce ajouté dans la pile.
 
 ```
 ___
 
 #### mouvement.c ####
 
-Les mouvement (autrement dit les déplacement dans le jargon du sujet) sont répertorié dans ce fichier.
+Les mouvement (autrement dit les déplacement dans le jargon du sujet) sont répertoriés dans ce fichier.
 
 Il s'agit de vérifier si les déplacements sont possible ou pas, de manière très naïve.
 
@@ -165,7 +168,7 @@ Ce fichier est décomposé en 5 blocs :
 
 1.  **Validation de coordonnées d'entré et de sortie :**
 *   Pour les coordonnées d'entrées, on vérifie qu'il sont bien dans l'échiquier 11x11
-*   En revanche pour les coordonnées d'arrivées, on doit vérifier qu'il sont bien dans l'échiquier 9x9 (c'est-à-dire sans la réserve visuel). Une valeur de coordonées est crée pour désélectionner la case, qui est (42,42), si aucun mouvement n'est possible (Notament lors des parachute de pions).
+*   En revanche pour les coordonnées d'arrivées, on doit vérifier qu'il sont bien dans l'échiquier 9x9 (c'est-à-dire sans la réserve visuel). Une valeur de coordonée est créée pour désélectionner la case, qui est (42,42), si aucun mouvement n'est possible (Notament lors des parachute de pions).
 
 2.  **déplacement_valide et valide_win**
 *   déplacement valide est composé de *switch case* pour appeler la fonction de déplacement valide adéquate. Ici il y a aussi un truc pour déselectionner la pièce, il suffit de mettre les mêmes coordonées de départ et d'arrivée.
@@ -212,16 +215,16 @@ Les modifications liée à cette pièce est stocké dans une variable temporaire
 
 Cette condition est vérifé par la fonction :
 ```c
-demote_grant_reserve();
-Sinon
-color_switch();
+piece_t demote_grant_reserve();
+// Sinon
+piece_t color_switch();
 ```
 
 Comme il y a deux bloc de réserve pour chaque joueur, il y aura donc au totale 4 boucles while.
 
 **Cas universel:** (Noir et vous devinerez pour les blanc qui est presque la même chose).
 
-Insertion d'image pour capter.
+![Imgur](http://i.imgur.com/Lskxqpx.png)
 
 La première boucle va parcourir la réserve du haut, de la droite vers la gauche.
 Pendant ce temps, on teste si la case est vide :
@@ -277,7 +280,8 @@ est modifié pour que les pièces peuvent se déplacer exclusivement sur des cas
 
 
 C'est ici que se fait le prototype de l'aide visuel, avec les cases '\*' (SELECT)
-L'aide visuel permet d'afficher les déplacement possible sur l'échiquier.
+
+***L'aide visuel*** *permet d'afficher les déplacement possible sur l'échiquier.*
 
 ##### Détails du fonctionnement des restrictions #####
 
@@ -295,6 +299,8 @@ Lorsque l'utilisateur entre une coordonnée d'entrée, la condition est vérifi�
 
 La fonction :
 ```c
+restriction.c
+
 movement_restriction();
 ```
 est appelé durant deplacement_valide. Cette fonction appel la restriction adapté en fonction de la pièce.
@@ -302,7 +308,8 @@ est appelé durant deplacement_valide. Cette fonction appel la restriction adapt
 Si la restriction n'exige pas de conditions particulière, on fait appel a
 
 ```c
-Situé à mouvement.c :
+Situé à mouvement.c
+
 movement_valid_helper();
 ```
 
@@ -322,14 +329,18 @@ Pour les quatre cas *tour, fou, lance et parachute et leurs promotions respectif
 
 Après avoir effectué les restrictions, le joueur saisie les coordonnées d'arrivé. La condition dans
 ```c
-deplacement_valide(); et
-restriction_detector();
+mouvement.c
+
+void deplacement_valide(); et
+int restriction_detector();
 ```
 doivent être tout les deux vérifier pour pouvoir appliquer les déplacements.
 
 ```c
+restriction.c
+
 restriction_detector();
-permet de tester si la case d'arrivée est vide ou occupé par une pièce de couleur différente.
+// permet de tester si la case d'arrivée est vide ou occupé par une pièce de couleur différente.
 ```
 ###### Un commentaire pour pion parachute ######
 
@@ -359,17 +370,17 @@ struct stat st = {0};
 ```
 Va nous servir à vérifier plus tard, l'existence du dossier de sauvegare par la fonction :
 ```c
-stat();
+int stat();
 ```
 
 La fonction :
 ```c
-partie_sauvegarder();
+void partie_sauvegarder();
 ```
 est divisé en deux sous fonctions
 ```c
-game_save_board(); Qui permet de sauvegarder l'échiquier
-game_save_meta(); Qui permet de sauvegarder le contenue de la pile et file.
+void game_save_board(); Qui permet de sauvegarder l'échiquier
+void game_save_meta(); Qui permet de sauvegarder le contenue de la pile et file.
 ```
 
 Aussi, cwd permet de récupérer le chemin du projet actuelle pour pouvoir créer un dossier qui n'existe pas et de sauvegarder dans ce dossier.
@@ -402,3 +413,5 @@ C'est vraiment cool pour programmer le contrôleur. Plus besoins de refaire une 
 ___
 
 C'est la fin de cette documentation ou rapport de projet.
+
+<div class="page-break"></div>
