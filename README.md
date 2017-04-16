@@ -190,16 +190,8 @@ Un exemple :
  * @return int
  */
 ```
+On fait pas de loader.h car c'est de la merde.
 
-Les fichiers header (\*.h) doivent être situé dans un dossier src/header.
-Un fichier unique loader.h sera à inclure dans chaque fichier \*.c (A la fin du projet)
-```
-#!c
-#include "loader.h"
-```
-
-Lorsque vous push une modification, mettez un commentaire ce que vous avez modifié.code
-Comme ça, s'il y a un problème, on peut revenir en arrière !!
 ***
 # IMPORTANT #
 **Si vous trouvez un bug, [Signalez le](https://bitbucket.org/asiat/prog_imp_2017/issues?status=new&status=open) sur le bitbucket, pour pas qu'on l'oublie.
