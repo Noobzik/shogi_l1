@@ -10,9 +10,9 @@ ___
 
 ## Introduction ##
 
-Le sujet projet à été présenté durant le 20 mars 2017 en cours d'amphi de programmation impérative. Le sujet est donc le **Shogi**
+Le sujet projet à été présenté durant le 20 mars 2017 en cours d'amphi de programmation impérative. Le sujet est donc le **Shogi**.
 
-J'étais à la base dans un trinôme composé de 2 Informatique et 1 Maths (Oui je sais je me suis inclus, ne vous demandez pas pourquoi). Mais suite au restriction nouvelle d'être exclusivement entre la même promotion introduite cette année. J'ai du être tout seul. Je vous remercie Christophe Tollu pour cette superbe annonce :( .
+J'étais à la base dans un trinôme composé de 2 Informatiques et 1 Mathématiques (Oui je sais je me suis inclus, ne vous demandez pas pourquoi). Mais suite au restriction nouvelle d'être exclusivement entre la même promotion introduite cette année. J'ai du être tout seul. Je vous remercie Christophe Tollu pour cette superbe annonce :( .
 
 Le projet du shogi à été immédiatement commencé le jour même de la présentation. C'est pas marrant de passer les vacances à programmer alors que les maths c'est bien pour réviser.
 
@@ -27,10 +27,10 @@ En gros, on prends une fonction au hasard et on fait avec jusqu'à qu'on rencont
 
 Le projet est fait en sorte qu'il écrit sous forme de MVC (ou presque ...). Un petit rappel qui ne fait
 pas de mal : Modele, Vue, Controleur.
-La priorité absolue du projet est de modéliser la vue. Une fois que c'est fait, on peut commencer à
-coder en free-style.
+La priorité absolue du projet est de modéliser la vue. Une fois que c'est fait, on peut commencer à coder en free-style.
 
 ### Répartition des tâches ###
+C'est brouillon encore, donc c'est ma partie le temps qu'on fasse un truc plus pozey xD.
 
 J'ai tout fait :) L’avantage d'être tout seul, c'est qu'on finit le projet plus vite.
 
@@ -42,6 +42,13 @@ J'ai tout fait :) L’avantage d'être tout seul, c'est qu'on finit le projet pl
 Pendant ce temps, l'ENT de l'Université Paris 13 tombe souvent en rade depuis un très long moment. A qui la faute d'ailleurs ?
 
 Bref, en faite, je suis déjà dans un trinôme, le truc, c'est qu'on fait le projet dans notre coin et on rassemble à la fin... J'attends juste qu'ils finnissent leur projet.
+
+Les membres du groupe sont :
+*   Ibrahim Kouyate
+*   Emeric Bayard (Dryska)
+*   Rakib Sheikh (NoobZik)
+
+Bon la faut qu'on se fasse une réunion car la sa fait pitié cette partie de répartition de tâches...
 ___
 
 
@@ -69,14 +76,15 @@ Cette partie détaille les fonctions qui ont été modifié du sujet ou rajouté
 
 #### Un MAKEFILE pas comme les autres ####
 
-La description de l'utilisation du makefile est indiqué dans le README.md
+La description de l'utilisation du makefile est indiqué dans le README
 
 Cependant, le projet avait l'objectif très strict d'avoir 0 erreurs et 0 warnings à la compilation.
 
-De ce fait, le makefile contient tout les affichage warnings possible. C'est pour ça que l'affichage du terminal est très surchargé à la compilation du programme.
+De ce fait, le makefile contient tout les affichages de warnings possible. C'est pour ça que l'affichage du terminal est très surchargé à la compilation du programme. Non, non ce n'est pas des erreurs de compilation ce que vous voyez à la compilation rassurez-vous.
 
-Mais c'est pas du tout marrant de compiler avec tout les warnings dès le début du projet. C'est comme tricher. Je trouve que c'est vraiment marrant de le faire à la fin, quand -Wall n'affiche plus rien. Entre nous, compiler avec seulement le warning -Wall, ce n'est pas assez jouissif pour régler tout les warnings. -Wall c'est pour les débutants. Nous ce qu'on veut c'est du zéro tolérance, c'est amusant d'avoir environ 600 Warnings d'un coups.
+Mais c'est pas du tout marrant de compiler avec tout les warnings dès le début du projet. C'est comme tricher. Je trouve que c'est vraiment marrant de le faire à la fin. C'est-à-dire losque le -Wall n'affiche plus rien à la compilation. Entre nous, compiler avec seulement le warning -Wall, ce n'est pas assez jouissif pour régler tout les warnings. -Wall c'est pour les débutants. Nous ce qu'on veut c'est du zéro tolérance, c'est amusant d'avoir environ 600 Warnings d'un coups.
 
+Ca permet aussi d'avoir un code qui est propre, et optimisé pas comme dans les code des cours d'amphis.
 ___
 
 #### piece.c ####
@@ -88,9 +96,9 @@ Une structure pièce est caractérisé par trois champs :
 *   Un entier énuméré type représentant l'ensemble des pièces en plus de VIDE, SELECT* (Plus de détails plus bas).
 *   Un statut énuméré pour la représentation d'une piece pièce ou non promu.
 
-**promote_grant, demote_grant, demote_grant_reserve**
 
 ```c
+piece.c
 piece_couleur(); Initialement piece_joueur();
 
 Prend en argument une pièce piece_t et renvoie sa couleur associé.
@@ -108,7 +116,27 @@ ___
 
 La *file* représente l'historique des coups jouée et ses événement associé (Capture de piece et promotion).
 
+On a une structure pour pouvoir gérer efficacement les coordonnées :
+
+```c
+typdef struct movement_s {
+    int movement; /* Représente le numéro du mouvement */
+    coordinate_t input /* Représente les coordonnées d'entrée */
+    coordinate_t output /* Représente les coordonées de sortie */
+}movement_t,
+```
+Une fois qu'on à ça en tête de manière temporaire, on peut s'attaquer à la file.
+
+En gros ce qu'un élément de la file contient :
+*   Un mouvement (On a vu ça au dessus au passage)
+*   Un booléen de promotion
+*   Un booléen de capture
+*   Et deux champs pour le mouvement suivant et précédent.
+
+Cette élément de la file sera très utile lorsque l'on va traîter les déplacement expliqué plus tard dans cette documentation.
+
 La *pile* représente l'historique brute des pièces capturés.
+En gros, la pile contient seulement les pièces capturés.
 
 Pour la pile et la file, elle marche comme des liste qui sont doublement chaînée vu en TD. Cependant, deux fonctions on été introduite pour plus de clarté
 
@@ -136,16 +164,18 @@ Il s'agit de vérifier si les déplacements sont possible ou pas, de manière tr
 Ce fichier est décomposé en 5 blocs :
 
 1.  **Validation de coordonnées d'entré et de sortie :**
-*   Pour les coordonnées d'entrée, on vérifie qu'il sont bien dans l'échiquier 11x11
-*   En revanche pour les coordonnées d'arrivé, on doit vérifier qu'il sont dans l'échiquier 9x9 (c'est-à-dire sans la réserve). Une valeur de coordonées est créer pour déselectionner la case, qui est (42,42), si aucun mouvement n'est possible (Notament des parachute de pions).
+*   Pour les coordonnées d'entrées, on vérifie qu'il sont bien dans l'échiquier 11x11
+*   En revanche pour les coordonnées d'arrivées, on doit vérifier qu'il sont bien dans l'échiquier 9x9 (c'est-à-dire sans la réserve visuel). Une valeur de coordonées est crée pour désélectionner la case, qui est (42,42), si aucun mouvement n'est possible (Notament lors des parachute de pions).
 
 2.  **déplacement_valide et valide_win**
-*   déplacement valide est composé de switch case pour appeler la fonction de déplacement valide adéquate. Ici il y a aussi un truc pour déselectionner la pièce, il suffit de mettre les mêmes coordonées de départ et d'arrivée.
+*   déplacement valide est composé de *switch case* pour appeler la fonction de déplacement valide adéquate. Ici il y a aussi un truc pour déselectionner la pièce, il suffit de mettre les mêmes coordonées de départ et d'arrivée.
 
 *   valide_win Permet juste de savoir que si les coordonnées d'arrivé pointe un roi, bah la partie se termine. (**Remarque**: apparemment d'après plusieurs application shogi, il n'y a aucune annonce d'échec ou échec et mat dans le monde de compétition, en conséquence, ces deux fonction ne sont pas implémenté).
 
 3.  **deplacement_valide**(Inserer type de piece)
-*   Ce bloc contient tout les déplacement des pièces non promu et des pièces non promu
+*   Ce bloc contient tout les déplacement des pièces non promu et des pièces promu
+
+Je vous invite donc à regarder dans les commentaire pour leur fonctionnenement respectif.
 
 4.  **movement_valid_helper**
 *   Ce bloc sert essentiellement pour la restriction qui sera abordée plus en bas.
@@ -167,21 +197,35 @@ On commence donc à initialiser la valeur de promotion par
 ```c
 int promoted_v = is_promoted();
 ```
+is_promoted est une fonction qui permet de vérifier si la pièce en question peut être promu ou pas. Le résultat est renvoyé sous forme de booléen.
 
-La condition est de vérifier si les coordonnées d'arrivée contiennent une pièce.
-Une fois qu'elle est vérifié, on la place naturellement dans la capture des pièces en retirant de l'échiquier, et de boucher la pièce.
+Ensuite, on doit vérifier si les coordonnées d'arrivées contiennent une pièce.
+Dans le cas où les coordonnées d'arrivées contiennent bien une pièce, on place la pièce dans la capture des pièces qui est la pile, sans la retirer de l'échiquier.
 
 Vient ensuite le placement dans la réserve.
 
-Avant de commencer les boucles while tant attendu, il se peut que la pièce capturé est une pièce promu, dans ce cas, les conditions de promotions sont vérifié. Si c'est vrai, la piece est dépromu en changeant de couleur. Dans le cas contraire, on change juste la couleur.
+Avant de continuer, normalement, vous devez remarquer que nous avons stocké la pièce directement dans la pile mais pas dans la réserve. La méthode qu'on a employé est le dédoublement de la pièce capturé. On place d'abord la pièce dans la pile, et ensuite on la modifie pour la placer dans la reserve visuel.
 
-Comme il y a deux bloc de réserve pour chaque joueur, il y aura donc au totale 4 boucles while
+Avant de commencer les boucles while tant attendu, il se peut que la pièce capturé est une pièce promu, dans ce cas, les conditions de promotions sont vérifiés. Si c'est vrai, la piece est dépromu en changeant de couleur. Dans le cas contraire, on change juste la couleur.
+
+Les modifications liée à cette pièce est stocké dans une variable temporaire *p_tmp*
+
+Cette condition est vérifé par la fonction :
+```c
+demote_grant_reserve();
+Sinon
+color_switch();
+```
+
+Comme il y a deux bloc de réserve pour chaque joueur, il y aura donc au totale 4 boucles while.
 
 **Cas universel:** (Noir et vous devinerez pour les blanc qui est presque la même chose).
 
+Insertion d'image pour capter.
+
 La première boucle va parcourir la réserve du haut, de la droite vers la gauche.
 Pendant ce temps, on teste si la case est vide :
-*   Si elle est vide : On place la pièce capturé\*(**cf** *note_1*) à cette case, et on change la valeur de boucle pour sortir
+*   Si elle est vide : On place la pièce capturé modifié et stocké dans p_tmp à cette case, et on change la valeur de boucle pour sortir.
 *   Sinon on passe à la case suivante.
 
 Dans le cas ou toute les cases sont occupée, on change la variable de la deuxième boucle pour qu'on puisse entrer dans la deuxième boucle.
@@ -190,12 +234,13 @@ Donc on parcours maintenant la réserve de gauche, du haut vers le bas. C'est le
 
 Une fois qu'on à fait tout ça, il ne reste plus qu'à ajouter les données dans la file et de changer de joueur.
 
+Les données de la file sont :
+*   Le mouvement.
+*   Le booléen de test de promotion.
+*   Le booléen de capture de pièce.
+
 S'il n'y pas de pièce à l'arrivée, on applique tout simplement les déplacement.
 
-\* *cf note_1* : Dans le cas où la pièce est promu, on fait appel à la fonction
-```c
-demote_grant_reserve();
-```
 
 
 6.  **annuler_deplacement()**
@@ -203,9 +248,11 @@ demote_grant_reserve();
 Cette fonction permet de faire le chemin inverse de deplacement_apply.
 
 On fait une extraction du dernier élément inséré de la file. Puis en fonctions des données de cette élement on peut soit :
-*   Dépromouvoir une pièce
-*   Restaurer une pièce capturé en prenant soin de traiter la réserve. (Il est possible qu'il est toujours buggé, Utilisez la fonction Signalement de bug sur le repo du bitbucket)
+*   Dépromouvoir une pièce si il y a eu une promtion de la pièce.
+*   Restaurer une pièce capturé en prenant soin de traiter la réserve. (Il est possible qu'il est toujours buggé, Utilisez la fonction Signalement de bug sur le repo du bitbucket).
 *   Et dans tout les cas, restaurer la position initiale de la piece en question avant le déplacement.
+
+**Remarque** : Dans le cas ou la pièce capturé est une pièce qui était promu, il y a pas besoin de promouvoir cette pièce. En effet, cette pièce existe déjà, elle était tout simplement caché dans la pile.
 
 On prend aussi le soin de changer de joueur. Sinon c'est pas marrant de jouer deux fois d'affiler...
 
@@ -246,7 +293,7 @@ Pendant l'affichage de l'échiquier, il y a une condition qui permet d'entrer da
 
 Lorsque l'utilisateur entre une coordonnée d'entrée, la condition est vérifié et c'est ici que entre en jeux les restrictions.
 
-La fonction
+La fonction :
 ```c
 movement_restriction();
 ```
@@ -259,16 +306,17 @@ Situé à mouvement.c :
 movement_valid_helper();
 ```
 
-par une boucle for pour tester les cases.
+par une boucle for, pour tester les cases.
 
 Entrons dans les détails de ***movement_valid_helper.***
 
-Cette fonction permet de savoir si la case testé par la boucle for est valide pour déplacement ou pas. Ils font appel naturellement aux déplacements valide des pièces respectifs, **A l'exception de tour_promu et fou_promu qui font appel à roi.**
+Cette fonction permet de savoir si la case testé par la boucle for, est valide pou effectuer déplacement ou pas. Ils font appel naturellement aux déplacements valide des pièces respectifs, **A l'exception de tour_promu et fou_promu qui font appel à roi.**
 
-Si vous voulez comprendre pourquoi cette exception : Tout simplement car si on ne met pas ces exceptions, alors l'aide visuel va tout simplement permettre de sauter d'autre pieces pendant leur déplacement. Et justement c'est le but des restrictions on le rappel.
+Si vous voulez comprendre pourquoi cette exception. Tout simplement car si on ne met pas ces exceptions, alors l'aide visuel va tout simplement permettre de sauter les autres pièces pendant leur déplacement. Et justement c'est le but des restrictions d'empêcher les déplacement qui saute les autre pièces on le rappel.
 
 Pour en revenir à ***movement_restriction.***
-Pour les quatre cas *tour, fou, lance et parachute et leurs promotions respectifs* ont leur propres restrictions spécifique. qui sont définit dans le même fichier. Je vous invite donc à regarder les commentaires pour leur fonctionnement.
+
+Pour les quatre cas *tour, fou, lance et parachute et leurs promotions respectifs* ont leur propres restrictions spécifique, qui sont définit dans le même fichier. Je vous invite donc à regarder les commentaires pour leur fonctionnement.
 
 *   **Note** : Les parachutes, sauf pions, tout les cases sont changé en '\*'.
 
@@ -305,16 +353,16 @@ ___
 
 #### sauvegardes.c ####
 
-Donc déjà pour commencer
+Donc déjà on commence très fort par :
 ```c
 struct stat st = {0};
 ```
-Va nous servir à check si le dossier existe ou pas par la fonction
+Va nous servir à vérifier plus tard, l'existence du dossier de sauvegare par la fonction :
 ```c
 stat();
 ```
 
-La fonction
+La fonction :
 ```c
 partie_sauvegarder();
 ```
@@ -327,9 +375,29 @@ game_save_meta(); Qui permet de sauvegarder le contenue de la pile et file.
 Aussi, cwd permet de récupérer le chemin du projet actuelle pour pouvoir créer un dossier qui n'existe pas et de sauvegarder dans ce dossier.
 
 ##### Un commentaire pour partie charger : #####
-J'avais eu un problème de chargement de partie. Les pièces été affecté a la mauvaise position et à entraîné pour la première fois les erreurs de segmentations et les erreurs qui sont directement pointé les fichiers includes du système.
+J'avais eu un problème de chargement de partie. Apparament, il y a eu des problèmes touchant à la bibliothèque string qui à entraîné pour la première fois les erreurs de segmentations et les erreurs qui sont directement pointé les fichiers includes du système (En même temps, si on code comme un dieu, on casse le code source du compilateur). Un mail à été envoyé au chargé de TD du groupe, mais resté sans réponse. Je pense qu'il était aussi en PLS lorsqu'il a lu mes log du terminal. J'ai du réfléchir à un autre moyen de coder pour eviter de re-casser le code source du compilateur.
 
-Il s'avère qu'en changeant la boucle de 0 à 12 (Initialement de 0 à 11) cela règle le problème mais je n'ai pas compris pourquoi....
+L'erreur associé se trouve sur ces deux liens :
+
+*   [Les logs du terminal](https://gist.github.com/Noobzik/4fc71639442edb54d04513721be6807e)
+*   [Le code en question](https://gist.github.com/Noobzik/62f2537c3b39d1e6a3b7c3282cbfb8e6)
+
+Je m'en rappel plus comment je l'ai réglé ce bug d'ailleur, vu que je l'ai recodée à l'aide des cours (Non pas de Galilée mais de openclassroom).
+
+Aussi ,les pièces ont été affecté a la mauvaise position lors du chargement du fichier.
+Il s'avère qu'en changeant la boucle de 0 à 12 (Initialement de 0 à 11) cela règle le problème mais je n'ai pas compris pourquoi... Ne me demandez pas pourquoi, je repondrai 'proute' avec les deux paumes de main en l'aire.
+
+___
+#### debug.c ####
+
+C'est peut être la partie la plus fun de tout le projet. Il permet de moduler le programme en fonction de ce qu'on fait.
+
+C'est-à-dire :
+*   Inspecter les cases de l'échiquier.
+*   Prendre connaissance du contenue de la pile et file.
+*   Créer un plateaux SANS toucher au game.c   
+
+C'est vraiment cool pour programmer le contrôleur. Plus besoins de refaire une partie à zéro pour tester un truc en rapport avec les déplacement. Tout ça, sans toucher au code principale.
 
 ___
 
