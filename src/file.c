@@ -28,7 +28,7 @@ void file_detruire_element(file_element_t *e) { free(e); }
 
 /** file_list_add
  * Permet d'ajouter un element dans la liste
- * Avant de l'ajouter, on récup les donénes du mouvement effectué, puis on creer
+ * Avant de l'ajouter, on récup les données du mouvement effectué, puis on creer
  * l'élément et on l'on ajoute dans la liste
  * @params: file_list_t     -   l
  *          movement_t      -   file_element_t
