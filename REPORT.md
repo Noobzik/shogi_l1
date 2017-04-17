@@ -50,6 +50,10 @@ Les membres du groupe sont :
 *   Emeric Bayard (Dryska)
 *   Rakib Sheikh (NoobZik)
 
+*   **Rakib Sheikh (NoobZik) : Tous les déplacements + restrictions**
+*   **Ibrahim Kouyate :**
+*   **Emeric Bayard :**
+
 Bon la faut qu'on se fasse une réunion car la sa fait pitié cette partie de répartition de tâches...
 <div class="page-break"></div>
 
@@ -405,8 +409,14 @@ C'est peut être la partie la plus fun de tout le projet. Il permet de moduler l
 
 C'est-à-dire :
 *   Inspecter les cases de l'échiquier.
+Il se peut que des case de sont pas complètement vide. Inspecter une cellule permet de vérifier les champs de cette case.
+
 *   Prendre connaissance du contenue de la pile et file.
+Lorsque on à développé les pile
+
 *   Créer un plateaux SANS toucher au game.c   
+
+Le debug permet aussi de créer une partie sans toucher au game.c De cette manière, il est alors très simple de créer des situations de partie, pour pouvoir finir de programmer les fonctions. Par exemple, pour modéliser les déplacements du fou, on mettait un fou vide en plein millieu de l'échiquier. Lorsque l'on selectionne la pièce, l'aide visuel s'affiche. Et en fonction de l'aide visuel, on définit les conditions de déplacement.
 
 C'est vraiment cool pour programmer le contrôleur. Plus besoins de refaire une partie à zéro pour tester un truc en rapport avec les déplacement. Tout ça, sans toucher au code principale.
 
