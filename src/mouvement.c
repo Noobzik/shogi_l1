@@ -2,17 +2,18 @@
 #include "header/game.h"
 #include "header/piece.h"
 #include "header/restriction.h"
+
 #include <stdio.h>
 #include <string.h>
 #define MAX_CHAR 256
 
-/********************************** INDEX *************************************
- */
+/********************************** INDEX *************************************/
 /*   1) Bloc de validation d'entré et de sortie (valid_input et valid_output)
  *    2) Bloc de deplacement_valide et valide_win
  *    3) Bloc de deplacement_valide_($INSERT_TYPE_DE_PIECE)
  *    4) Bloc movement_valid_helper
  *    5) Bloc de is_promoted
+ *    6) Bloc de deplacement_apply + annuler
  */
 /************ Debut Bloc validation des entrés et sortie **********************/
 
@@ -21,18 +22,16 @@
  * Les coordonées doivent être dans l'échiquier, et doivent correspondre à une
  * case non vide et une piece du même couleur du joueur
  * @params: game_t       - g
- *          coordinate_t - coordinate_v
+ *          coordinate_t - c
  * @return: int
  */
-int movement_valid_input(game_t *g, coordinate_t coordinate_v) {
-  //======================================================================
-  // Main
-  //======================================================================
-  if (coordinate_v.x < 11 && coordinate_v.y < 11) {
+int movement_valid_input    (game_t *g, coordinate_t c) {
 
-    if (g->board[coordinate_v.x][coordinate_v.y].type != VIDE) {
+  if (c.x < 11 && c.y < 11) {
+
+    if (g->board[c.x][c.y].type != VIDE) {
       printf("Player ID %d\n", g->player);
-      if (g->player == g->board[coordinate_v.x][coordinate_v.y].color) {
+      if (g->player == g->board[c.x][c.y].color) {
         return 1;
       }
     }
@@ -45,15 +44,14 @@ int movement_valid_input(game_t *g, coordinate_t coordinate_v) {
 /** movement_valid_input
  * Permet de valider les coordonnées d'arrivée, Vérifie si les cordoonées sont
  * dans l'échiquier au format 9x9 (Sans la reserve)
- * @params :    coordinate_t    -   coordinate_v
+ * @params :    coordinate_t    -   c
  * @return :    int
  */
-
-int movement_valid_output(coordinate_t coordinate_v) {
-  if (coordinate_v.x == 42 && coordinate_v.y == 42)
+int movement_valid_output   (coordinate_t c) {
+  if (c.x == 42 && c.y == 42)
     return 1;
-  else if (coordinate_v.x > 0 && coordinate_v.y < 10 && coordinate_v.x < 10 &&
-           coordinate_v.y > 0)
+  else if (c.x > 0 && c.y < 10 && c.x < 10 &&
+           c.y > 0)
     return 1;
   return 0;
 }
@@ -66,12 +64,9 @@ int movement_valid_output(coordinate_t coordinate_v) {
  * @params:     game_t       - g
  *              coordinate_t - ci
  *              coordinate_t - co
- * @return:     void
+ * @return:     (void)
  */
-void deplacement_valide(game_t *g, coordinate_t ci, coordinate_t co) {
-  //======================================================================
-  // Main
-  //======================================================================
+void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
 
   /* Si cette condition n'est pas vérifié, alors sa déselectionne la piece
    * selectionné*/
@@ -340,25 +335,25 @@ void deplacement_valide(game_t *g, coordinate_t ci, coordinate_t co) {
 /** movement_valid_win
  * Si les coordonnées d'arrivé contient un roi, la partie se termine
  * @params:    game_t*       -   g
- *             coordinate_t  -   coordinate_v
+ *             coordinate_t  -   c
  * @return     int
  */
-int movement_valid_win(game_t *g, coordinate_t coordinate_v) {
+int movement_valid_win      (game_t *g, coordinate_t c) {
 
   /* Obliger de tester cette condtion pour eviter les erreurs de mémoires*/
 
-  if (coordinate_v.x == 42 && coordinate_v.y == 42)
+  if (c.x == 42 && c.y == 42)
     return 1;
   if (g->player == 0) {
 
-    if (g->board[coordinate_v.x][coordinate_v.y].type == ROI) {
+    if (g->board[c.x][c.y].type == ROI) {
       printf("La partie est gagné par les BLANCS\n");
       return 0;
     }
   }
 
-  else if (g->player == 1) {
-    if (g->board[coordinate_v.x][coordinate_v.y].type == ROI) {
+  if (g->player == 1) {
+    if (g->board[c.x][c.y].type == ROI) {
       printf("La partie est gagné par les NOIR\n");
       return 0;
     }
@@ -377,8 +372,8 @@ int movement_valid_win(game_t *g, coordinate_t coordinate_v) {
  *          coordinate_t -   co
  * @return: int
  */
-int deplacement_valide_pion(game_t *g, coordinate_t ci, coordinate_t co) {
-  int movement_tmp;
+int deplacement_valide_pion             (game_t *g, coordinate_t ci, coordinate_t co) {
+  int                                   movement_tmp;
 
   /* Initialisation par calcul de différence */
   movement_tmp = co.x - ci.x;
@@ -414,7 +409,7 @@ int deplacement_valide_pion(game_t *g, coordinate_t ci, coordinate_t co) {
  *        coordinate_t -   co
  * @return int
  */
-int deplacement_valide_tour(coordinate_t ci, coordinate_t co) {
+int deplacement_valide_tour             (coordinate_t ci, coordinate_t co) {
   return (ci.x == co.x || ci.y == co.y) ? 1 : 0;
 }
 
@@ -426,7 +421,7 @@ int deplacement_valide_tour(coordinate_t ci, coordinate_t co) {
  *          coordinate_t -   co
  * @return  int
  */
-int deplacement_valide_cavalier(game_t *g, coordinate_t ci, coordinate_t co) {
+int deplacement_valide_cavalier         (game_t *g, coordinate_t ci, coordinate_t co) {
 
   /* On vérifie les conditions pour les noir */
 
@@ -470,7 +465,7 @@ int deplacement_valide_cavalier(game_t *g, coordinate_t ci, coordinate_t co) {
  *          coordinate_t -   co
  * @return int
  */
-int deplacement_valide_fou(coordinate_t ci, coordinate_t co) {
+int deplacement_valide_fou              (coordinate_t ci, coordinate_t co) {
   int movement_1_tmp;
   int movement_2_tmp;
   int movement_1_bis_tmp;
@@ -503,7 +498,7 @@ int deplacement_valide_fou(coordinate_t ci, coordinate_t co) {
  *              coordinate_t - co
  * @return      int
  */
-int deplacement_valide_roi(coordinate_t ci, coordinate_t co) {
+int deplacement_valide_roi              (coordinate_t ci, coordinate_t co) {
 
   /* vertical checking */
   if (ci.x - 1 == co.x || ci.x + 1 == co.x || ci.x == co.x) {
@@ -526,7 +521,7 @@ int deplacement_valide_roi(coordinate_t ci, coordinate_t co) {
  *            coordinate_t - co
  * @return    int
  */
-int deplacement_valide_gold(game_t *g, coordinate_t ci, coordinate_t co) {
+int deplacement_valide_gold             (game_t *g, coordinate_t ci, coordinate_t co) {
   if (piece_couleur(g->board[ci.x][ci.y]) == NOIR) {
 
     /* Restriction sur les diagonales en arriere */
@@ -583,7 +578,7 @@ int deplacement_valide_gold(game_t *g, coordinate_t ci, coordinate_t co) {
  *            coordinate_t - co
  * @return    int
  */
-int deplacement_valide_silver(game_t *g, coordinate_t ci, coordinate_t co) {
+int deplacement_valide_silver           (game_t *g, coordinate_t ci, coordinate_t co) {
 
   /* En faite c'est les noir ici */
   if (piece_couleur(g->board[ci.x][ci.y]) == NOIR) {
@@ -624,7 +619,7 @@ int deplacement_valide_silver(game_t *g, coordinate_t ci, coordinate_t co) {
  *              coordinate_t    -   co
  *  @return:    int
  */
-int deplacement_valide_lancier(game_t *g, coordinate_t ci, coordinate_t co) {
+int deplacement_valide_lancier          (game_t *g, coordinate_t ci, coordinate_t co) {
 
   if (ci.y == co.y) {
     if ((ci.x < co.x) && piece_couleur(g->board[ci.x][ci.y]) == NOIR)
@@ -645,7 +640,7 @@ int deplacement_valide_lancier(game_t *g, coordinate_t ci, coordinate_t co) {
  *             coordinate_t    -   co
  * @return :   int
  */
-int deplacement_valide_pion_promu(game_t *g, coordinate_t ci, coordinate_t co) {
+int deplacement_valide_pion_promu       (game_t *g, coordinate_t ci, coordinate_t co) {
   return deplacement_valide_gold(g, ci, co);
 }
 
@@ -656,7 +651,7 @@ int deplacement_valide_pion_promu(game_t *g, coordinate_t ci, coordinate_t co) {
  *                  coordinate_t    -       co
  *  @return:        int
  */
-int deplacement_valide_tour_promu(coordinate_t ci, coordinate_t co) {
+int deplacement_valide_tour_promu       (coordinate_t ci, coordinate_t co) {
   return (deplacement_valide_tour(ci, co) || deplacement_valide_roi(ci, co));
 }
 
@@ -667,7 +662,7 @@ int deplacement_valide_tour_promu(coordinate_t ci, coordinate_t co) {
  *                  coordinate_t    -       co
  *  @return:        int
  */
-int deplacement_valide_cavalier_promu(game_t *g, coordinate_t ci,
+int deplacement_valide_cavalier_promu   (game_t *g, coordinate_t ci,
                                       coordinate_t co) {
   return (deplacement_valide_gold(g, ci, co));
 }
@@ -679,7 +674,7 @@ int deplacement_valide_cavalier_promu(game_t *g, coordinate_t ci,
  *                  coordinate_t    -       co
  *  @return:        int
  */
-int deplacement_valide_fou_promu(coordinate_t ci, coordinate_t co) {
+int deplacement_valide_fou_promu        (coordinate_t ci, coordinate_t co) {
   return (deplacement_valide_fou(ci, co) || deplacement_valide_roi(ci, co));
 }
 
@@ -690,7 +685,7 @@ int deplacement_valide_fou_promu(coordinate_t ci, coordinate_t co) {
  *                  coordinate_t    -       co
  *  @return:        int
  */
-int deplacement_valide_silver_promu(game_t *g, coordinate_t ci,
+int deplacement_valide_silver_promu     (game_t *g, coordinate_t ci,
                                     coordinate_t co) {
   return (deplacement_valide_gold(g, ci, co));
 }
@@ -702,7 +697,7 @@ int deplacement_valide_silver_promu(game_t *g, coordinate_t ci,
  *              coordinate_t    -   co
  *  @return:    int
  */
-int deplacement_valide_lancier_promu(game_t *g, coordinate_t ci,
+int deplacement_valide_lancier_promu    (game_t *g, coordinate_t ci,
                                      coordinate_t co) {
   return deplacement_valide_gold(g, ci, co);
 }
@@ -718,10 +713,7 @@ int deplacement_valide_lancier_promu(game_t *g, coordinate_t ci,
  *
  * @return int
  */
-int movement_valid_helper(game_t *g, coordinate_t ci, coordinate_t co) {
-  //======================================================================
-  // Main
-  //======================================================================
+int movement_valid_helper               (game_t *g, coordinate_t ci, coordinate_t co) {
   switch (g->board[ci.x][ci.y].type) {
     {
     case PION:
@@ -815,9 +807,8 @@ int movement_valid_helper(game_t *g, coordinate_t ci, coordinate_t co) {
  *              coordinate_t    -   co
  *  @return:    int
  */
-int is_promoted(game_t *g, coordinate_t ci, coordinate_t co) {
-
-  char promotion_confirmation[MAX_CHAR];
+int is_promoted                         (game_t *g, coordinate_t ci, coordinate_t co) {
+  char                                  promotion_confirmation[MAX_CHAR];
 
   /* On veut pas promouvoir les roi et les gold */
 
@@ -950,10 +941,9 @@ int is_promoted(game_t *g, coordinate_t ci, coordinate_t co) {
  *            coordinate_t  -   co
  *  @return:  VOID
  */
-void deplacement_apply(game_t *g, coordinate_t ci, coordinate_t co) {
-
-  movement_t gm_tmp;
-  piece_t p_tmp;
+void deplacement_apply                  (game_t *g, coordinate_t ci, coordinate_t co) {
+  movement_t                            gm_tmp;
+  piece_t                               p_tmp;
 
   gm_tmp.input = ci;
   gm_tmp.output = co;
@@ -1123,15 +1113,13 @@ void deplacement_apply(game_t *g, coordinate_t ci, coordinate_t co) {
 
 /** annuler_deplacement
  *  Permet d'annuler un deplacement
+ *  Chemin inverse de deplacement_apply normalement
  *  @param:     game_t    -   g
  *  @return:    VOID
  */
-
-void annuler_deplacement(game_t *g) {
-
-  /* Variables */
-  coordinate_t mo_tmp;
-  coordinate_t mi_tmp;
+void annuler_deplacement                (game_t *g) {
+  coordinate_t                          mo_tmp;
+  coordinate_t                          mi_tmp;
 
   file_element_t *be_tmp;
 

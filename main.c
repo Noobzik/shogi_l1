@@ -17,6 +17,7 @@ int main(int argc, char *argv[]) {
   /* Enlève le warning de variable pas utilisé*/
   (void) argc;
 
+  /* Si il y a un fichier passé en argument */
 
   if (argv[1] != NULL) {
     printf("Fichier à charger : %s\n", argv[1]);
@@ -31,7 +32,6 @@ int main(int argc, char *argv[]) {
     // game_t *game_new = debug_partie_nouvelle();
     game_t *game_new = partie_nouvelle();
     partie_jouer(game_new);
-    /* Début du programme principale */
   }
   /* Valeur de fonction */
 

@@ -10,7 +10,7 @@
  *        int c
  * @return file_element_t
  */
-file_element_t *file_creer_element(movement_t m, piece_statut_e p, int c) {
+file_element_t *file_creer_element  (movement_t m, piece_statut_e p, int c) {
   file_element_t *res = malloc(sizeof(file_element_t));
   res->movement = m;
   res->promotion = p;
@@ -23,8 +23,11 @@ file_element_t *file_creer_element(movement_t m, piece_statut_e p, int c) {
 /** File detruire element
  * Permet de detruire simplement l'element
  * @params: file_element_t      -   *e
+ * @return: (void)
  */
-void file_detruire_element(file_element_t *e) { free(e); }
+void file_detruire_element          (file_element_t *e) {
+     free(e);
+}
 
 /** file_list_add
  * Permet d'ajouter un element dans la liste
@@ -34,11 +37,11 @@ void file_detruire_element(file_element_t *e) { free(e); }
  *          movement_t      -   file_element_t
  *          piece_statut_e  -   p
  *          int             -   c
+ * @return: (void)
  */
-void file_list_add(file_list_t *l, movement_t m, piece_statut_e p, int c) {
-  file_element_t *e;
+void file_list_add                  (file_list_t *l, movement_t m, piece_statut_e p, int c) {
+  file_element_t *                  e;
 
-  /* Initialize */
   e = file_creer_element(m, p, c);
 
   if (file_list_vide(l)) {
@@ -47,7 +50,6 @@ void file_list_add(file_list_t *l, movement_t m, piece_statut_e p, int c) {
     l->fin->suivant = e;
     e->precedent = l->fin;
   }
-
   l->fin = e;
   l->taille++;
 }
@@ -57,13 +59,10 @@ void file_list_add(file_list_t *l, movement_t m, piece_statut_e p, int c) {
  * @param  file_list_t - l
  * @return  file_element_t
  */
-file_element_t *file_list_extract(file_list_t *l) {
+file_element_t *file_list_extract   (file_list_t *l) {
+  file_element_t *                  res;
 
-  file_element_t *res;
-
-  /* Initialize */
   res = NULL;
-
   if (!file_list_vide(l)) {
     res = l->fin;
     l->fin = res->precedent;
@@ -76,7 +75,6 @@ file_element_t *file_list_extract(file_list_t *l) {
   } else {
     l->debut = NULL;
   }
-
   return res;
 }
 
@@ -84,9 +82,10 @@ file_element_t *file_list_extract(file_list_t *l) {
  * Initialize une liste avec un pointeur vers le premier element et le dernier
  * element.
  * La liste étant vide, taille  = 0.
+ * @param: (void)
  * @return file_list_t
  */
-file_list_t *file_creer_list() {
+file_list_t *file_creer_list        () {
   file_list_t *res = malloc(sizeof(file_list_t));
   res->debut = NULL;
   res->fin = NULL;
@@ -96,9 +95,10 @@ file_list_t *file_creer_list() {
 
 /** file_detruire_list
  *  Permet de detruite simplement une liste non vide
- *  @return file_list_t l
+ *  @param:     file_list_t l
+ *  @return:    (void)
  */
-void file_detruire_list(file_list_t *l) {
+void file_detruire_list             (file_list_t *l) {
   while (!file_list_vide(l)) {
     file_detruire_element(file_list_extract(l));
   }
@@ -106,13 +106,11 @@ void file_detruire_list(file_list_t *l) {
 }
 
 /** file liste vide
- * file list vide
  * Teste si la liste est vide
- * Parameters:
  * @param  file_list_t - l
  * @return int
  */
-int file_list_vide(file_list_t *l) {
+int file_list_vide                  (file_list_t *l) {
   if (l->taille == 0) {
     return 1;
   }
@@ -124,31 +122,31 @@ int file_list_vide(file_list_t *l) {
  * @param : file_list_t - l
  * @return : int taille
  */
-int file_taille(file_list_t *l) { return l->taille; }
+int file_taille                     (file_list_t *l) {
+    return l->taille;
+}
 
 /** file_thread
  * Ajoute un element dans la file
- * @param: l      -   l
+ * @param: file_list_t      -   l
  *          movement_t      -   m
  *          piece_statut_e  -   p
  *          int             -   c
+ * @return: (void)
  */
-void file_thread(file_list_t *l, movement_t m, piece_statut_e p, int c) {
-
+void file_thread                    (file_list_t *l, movement_t m, piece_statut_e p, int c) {
   file_list_add(l, m, p, c);
 }
 
-/**
+/** file_unthread
  * file unthread
  * Extrait le dernier element de la liste
  * @param:    file_list_t     - l
  * @return    file_element_t
  */
-file_element_t *file_unthread(file_list_t *l) {
+file_element_t *file_unthread       (file_list_t *l) {
+  file_element_t *                  e;
 
-  file_element_t *e;
-
-  /* Initialize */
   e = file_list_extract(l);
   file_element_t *res = e;
 

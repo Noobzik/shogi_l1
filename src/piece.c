@@ -8,21 +8,18 @@
  * Le statut determine si cette piece est promu ou non
  * Complexité : O(1) Temps et Espace
  * Parameters:
- * @param piece_color_e  - piece_color_v
- *        piece_type_e   - piece_type_v
- *        piece_statut_e - piece_statut_v
+ * @param piece_color_e  - c
+ *        piece_type_e   - t
+ *        piece_statut_e - s
  *
- * @return struct piece_s
+ * @return piece_t
  */
-piece_t piece_creer(piece_color_e piece_color_v, piece_type_e piece_type_v,
-                    piece_statut_e piece_statut_v) {
+piece_t piece_creer         (piece_color_e c, piece_type_e t, piece_statut_e s) {
+  piece_t                   res;
 
-  piece_t res;
-
-  /* Initialiser */
-  res.color = piece_color_v;
-  res.type = piece_type_v;
-  res.statut = piece_statut_v;
+  res.color = c;
+  res.type = t;
+  res.statut = s;
 
   return res;
 }
@@ -31,20 +28,19 @@ piece_t piece_creer(piece_color_e piece_color_v, piece_type_e piece_type_v,
  * Renvoie tout simplement la couleur de piece
  * Complexité : O(1) Pour Espace / Temps
  * Parameters:
- * @param    piece_t - piece_v
- * @return int
+ * @param    piece_t - p
+ * @return   int
  */
-int piece_couleur(piece_t piece_v) { return piece_v.color; }
+int piece_couleur           (piece_t p) { return p.color; }
 
 /** Identification de piece
  * piece identifier
  * Description : En fonction du caractère, renvoie la piece associé
  * Complexite : O(1) Espace et Temps
- * Parameters:
  * @param    char - caracter_v
- * @return struct piece_s
+ * @return   piece_t
  */
-piece_t piece_identifier(char caracter_v) {
+piece_t piece_identifier    (char caracter_v) {
   if (caracter_v <= 'z' && caracter_v >= 'a') {
     switch (caracter_v) {
       // Non promu joueur 0
@@ -176,12 +172,12 @@ piece_t piece_identifier(char caracter_v) {
  * Permet d'associer chaque numéro à chaque piece en fonction du type enuméré
  * et de la couleur de piece
  * Parameters:
- * @param    piece_t - piece_v
- * @return char
+ * @param       piece_t - p
+ * @return      char
  */
-char piece_caractere(piece_t piece_v) {
-  if (piece_couleur(piece_v) == 0) {
-    switch (piece_v.type) {
+char piece_caractere        (piece_t p) {
+  if (piece_couleur(p) == 0) {
+    switch (p.type) {
       {
       case ROI:
         return 'k';
@@ -248,7 +244,7 @@ char piece_caractere(piece_t piece_v) {
       }
     }
   } else {
-    switch (piece_v.type) {
+    switch (p.type) {
       {
       case ROI:
         return 'K';
@@ -324,17 +320,17 @@ char piece_caractere(piece_t piece_v) {
  * Permet d'afficher tout simplement la piece sur l'echiquier
  * Complexite : O(1) pour Espace et Temps
  * Parameters:
- * @param    piece_t - piece_v
- * @return NADA
+ * @param    piece_t - p
+ * @return   (void)
  */
-void piece_afficher(piece_t piece_v) { printf("%c", piece_caractere(piece_v)); }
+void piece_afficher         (piece_t p) { printf("%c", piece_caractere(p)); }
 
 /** promote_grant
  *  Permet de promovoir la piece
- *  @params:    piece_t     -   piece
- *  @return:    void
+ *  @params:    piece_t     -   p
+ *  @return:    (void)
  */
-void promote_grant(piece_t *p) {
+void promote_grant          (piece_t *p) {
   switch (p->type) {
     {
     case PION:
@@ -377,10 +373,10 @@ void promote_grant(piece_t *p) {
   }
 }
 
-/** demote_grant
+/** demote_grant_reserve
  *  Permet de dé-promovoir la piece en changeant de couleur (Pour la reserve)
- *  @params:    piece_t     -   piece
- *  @return:    void
+ *  @params:    piece_t     -   p
+ *  @return:    (void)
  */
 piece_t demote_grant_reserve(piece_t p) {
   if (p.color == BLANC) {
@@ -481,8 +477,12 @@ piece_t demote_grant_reserve(piece_t p) {
   return p;
 }
 
-/** Démote la piece sans changer de couleur pour annuler_deplacement*/
-piece_t demote_grant(piece_t p) {
+/** demote_grant
+ * Démote la piece sans changer de couleur pour annuler_deplacement
+ * @param:  piece_t     -   p
+ * @return: piece_t
+ */
+piece_t demote_grant        (piece_t p) {
   switch (p.type) {
     {
     case PION_PROMU:
@@ -531,7 +531,7 @@ piece_t demote_grant(piece_t p) {
  * @params:  piece_t   -   p
  * @return:  piece_t
  */
-piece_t switch_color(piece_t p) {
+piece_t switch_color        (piece_t p) {
   if (p.color == BLANC)
     p.color = NOIR;
   else if (p.color == NOIR)

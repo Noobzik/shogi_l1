@@ -6,6 +6,7 @@
 #include "header/pile.h"
 #include "header/restriction.h"
 #include "header/sauvegardes.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,8 +19,11 @@
  * 3) partie_detruire
  * 4) partie_nouvelle
  * 5) bloc de gestion de case
- * 6)
- */
+ * 6) game_exit
+ * 7) game_selector
+ * 8) partie_jouer
+ --------------------------------INDEX--------------------------------------*/
+
 /** Info
  *  BLANC = 0
  *  NOIR  = 1
@@ -38,14 +42,13 @@ coordinate_t COORDINATE_NULL = {42, 42};
  * joueur La deuxieme boucle for affiche le contenue de chaque case de
  * l'échiquier
  * Parameters :
- * @param : game_t      - g
- *          coordinate_t
- * @return : VOID
+ * @param :     game_t          -   g
+ *              coordinate_t    -   g_i
+ * @return :    (void)
  */
-void afficher_echiquier(game_t *g, coordinate_t g_i) {
-
-  /* Variables de boucles pour les coordonnes*/
-  int x, y;
+void afficher_echiquier     (game_t *g, coordinate_t g_i) {
+  int                       x,
+                            y;
 
   /* Les cases de l'aide visuel sont enlevés */
   movement_restriction_destruct(g);
@@ -98,32 +101,33 @@ void afficher_echiquier(game_t *g, coordinate_t g_i) {
 /** partie_creer()
  * Description :
  * Permet de retourner un echiquier initialisé
- * @params: VOID
- * @return: VOID
+ * @params: (void)
+ * @return: (void)
  */
-game_t *partie_creer() {
-  game_t *res;
+game_t *partie_creer        () {
+  game_t *                  res;
   return res = malloc(sizeof(game_t));
 }
 
 /** partie_detruire()
  * Détruit tout simplement l'echiquier
- * @params: VOID
+ * @params: (void)
  * @return: game_t
  */
-void partie_detruire(game_t *g) { free(g); }
+void partie_detruire        (game_t *g) {
+    free(g);
+}
 
 /** partie_nouvelle
  * Description: Initialize tout les case en piece VIDE
  * Puis Place tout les pieces de debut de partie
- * @params: VOID
+ * @params: (void)
  * @return: game_t
  */
-game_t *partie_nouvelle() {
-  
-
-  int x, y;
-  game_t *res;
+game_t *partie_nouvelle     () {
+  int                       x,
+                            y;
+  game_t *                  res;
 
   /* Initialize */
   res = partie_creer();
@@ -199,15 +203,14 @@ game_t *partie_nouvelle() {
   return res;
 }
 
-/*----------------------------------------------------------------------------*/
 /*---------------------------BLOC DE GESTION DE CASE--------------------------*/
-/*----------------------------------------------------------------------------*/
+
 /** Case vide
  * Permet de savoir si la case est vide ou pas, Une case vide est caractisé par VIDE et SELECT
  * @params: piece_t   -    p
  * @return: int
  */
-int case_vide(piece_t p) {
+int case_vide               (piece_t p) {
   if (p.type == VIDE) {
     return 1;
   } else if (p.type == SELECT)
@@ -220,39 +223,34 @@ int case_vide(piece_t p) {
  *  @param game_t *g
  *         piece_t p
  *         coordinate_t coordonate_v
- *  @return RIEN
+ *  @return (void)
  */
-void modifier_case(game_t *g, piece_t p, coordinate_t c) {
+void modifier_case          (game_t *g, piece_t p, coordinate_t c) {
   piece_t res = piece_creer(p.color, p.type, p.statut);
   g->board[c.x][c.y] = res;
 }
 
 /** Changer joueur
  * Permet de changer le tour actuelle du joueur
- * @param game_t *g
+ * @param   game_t *g
+ * @return: (void)
  */
 /** Info
  *  BLANC = 0
  *  NOIR  = 1
  */
-void changer_joueur(game_t *g) {
+void changer_joueur         (game_t *g) {
   (g->player == 0) ? (g->player = 1) : (g->player = 0);
 }
-/*----------------------------------------------------------------------------*/
-/*---------------------- FIN BLOC DE GESTION DE CASE--------------------------*/
-/*----------------------------------------------------------------------------*/
-/*-----------------------  deplacement()  ------------------------------------*/
-/*----------------------------------------------------------------------------*/
 
 /** saisie_case
  *  Permet de saisir les coordonnées d'une case
  *  Cette fonction est un substitut du scanf, la façon dont elle est écrite n'accepte que les chiffres.
  *  Complexite : Temps O(p) Espace  O(1)
- *  Parameters :
  *  @param VIDE
  *  @return coordinate_t
  */
-coordinate_t saisie_case() {
+coordinate_t saisie_case    () {
 
   coordinate_t res;
   char *p;
@@ -288,11 +286,14 @@ coordinate_t saisie_case() {
   }
   return res;
 }
+/*---------------------------FIN DE GESTION DE CASE---------------------------*/
 
 /** game_seperator
  * Espace tout simplement
+ *  @param:     (void)
+ *  @return:    (void)
  */
-void game_seperator() {
+void game_seperator         () {
   //======================================================================
   // Main
   //======================================================================
@@ -308,7 +309,7 @@ void game_seperator() {
  * @param:    game_t    -   g
  * @return:   int
  */
-int game_exit(game_t *g) {
+int game_exit               (game_t *g) {
 
   file_detruire_list(g->file);
   pile_detruire(g->capture);
@@ -322,9 +323,9 @@ int game_exit(game_t *g) {
  * (Comparaison de deux chaine de caractères)
  * @params:   char - game_command
  *            char - select_v
- * @return int
+ * @return    int
  */
-int game_selector(char *game_command, const char *select_v) {
+int game_selector           (char *game_command, const char *select_v) {
   if (strcmp(game_command, select_v) == 0) {
     return 1;
   } else {
@@ -332,22 +333,18 @@ int game_selector(char *game_command, const char *select_v) {
   }
 }
 
-/*---------------------------------------------------------------------------*/
 /*-------------------------partie_jouer()------------------------------------*/
-/*---------------------------------------------------------------------------*/
 
 /** partie_jouer()
  * Description : voir commentaire au fur et à mesure...
  * @params: game_t    -   g
  * @return: void
  */
-void partie_jouer(game_t *g) {
-
-  char game_command[MAX_CHAR] = "";
-  char game_save_name[MAX_CHAR] = "";
-  char game_exit_confirmation[MAX_CHAR];
-
-  coordinate_t g_i, g_o;
+void partie_jouer           (game_t *g) {
+  char                      game_command[MAX_CHAR] = "";
+  char                      game_save_name[MAX_CHAR] = "";
+  char                      game_exit_confirmation[MAX_CHAR];
+  coordinate_t              g_i, g_o;
 
   /* Game setting */
   int game_command_dev = 0;
@@ -408,13 +405,12 @@ void partie_jouer(game_t *g) {
 
       /* Classic command */
       printf("SURREND               Declarer forfait.\n");
-      printf(
-          "MOVE                  Selectionner le deplacement d'une piece.\n");
+      printf("MOVE                  Selectionner le deplacement d'une piece.\n");
       printf("BACK                  Restaurer le deplacement precedent.\n");
       printf("SAVE                  Sauvegarder la partie.\n");
       printf("EXIT                  Quitter le jeu.\n");
       printf("42,42                 Pour désélectionner une pièce,(Seulement quand on demande des coordonées)\n");
-      
+
       /* Enter loop */
       afficher_echiquier(g, COORDINATE_NULL);
       printf("\n\n\n");
@@ -591,9 +587,8 @@ void partie_jouer(game_t *g) {
         } else {
           printf("Entrer le nom de la partie: ");
 
-          //  scanf("%s", game_save_name);
           // Hack pour warning: ignoring return value of 'scanf'
-
+          // On rappel que un scanf revoie un entier !
           // fgets(game_save_name, MAX_CHAR, stdin);
 
           if (scanf("%s", game_save_name) != 1) {

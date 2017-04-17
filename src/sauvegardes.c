@@ -15,15 +15,17 @@ struct stat st = {0};
  *  Permet de sauvegarder la partie en cours, découpé en deux fonctions
  *  @params:  game_t    -   g
  *            char      -   *game_save_name
- *  @return:  VOID
+ *  @return:  (void)
  */
-void partie_sauvegarder(game_t *g, char *game_save_name) {
-  char cwd[10000];
+void partie_sauvegarder     (game_t *g, char *game_save_name) {
+  char                      cwd[500];
 
   /* Hack pour supprimer les warning: ignoring return value of 'getcwd'*/
   if (getcwd(cwd, sizeof(cwd)) == NULL) {
     perror("getcwd :");
   }
+
+  /* Affichage du chemin actuelle du projet */
 
   printf("CWD : %s\n", cwd);
 
@@ -38,11 +40,11 @@ void partie_sauvegarder(game_t *g, char *game_save_name) {
  *  @params   :   game_t    -   g
  *                char*     -   save_name
  *                char*     -   cwd
- *  @return   :   VOID
+ *  @return   :   (void)
  */
-void game_save_board(game_t *g, char *save_name, char *cwd) {
-
-  int x, y;
+void game_save_board        (game_t *g, char *save_name, char *cwd) {
+  int                       x,
+                            y;
 
   FILE *fp = NULL;
 
@@ -58,6 +60,7 @@ void game_save_board(game_t *g, char *save_name, char *cwd) {
   printf("Current Working Directory : %s\n", game_plt_tmp);
 
   /* Création du répertoire si le dossier n'existe pas */
+  /* ATTENTION NE FONCTIONNE PAS SUR WINDOWS !*/
   if (stat(game_plt_tmp, &st) == -1) {
     printf("Dossier absent\nmkdir : %s\n", game_plt_tmp);
     mkdir(game_plt_tmp, 0777);
@@ -97,13 +100,12 @@ void game_save_board(game_t *g, char *save_name, char *cwd) {
  *  @params   :   game_t    -   g
  *                char*     -   save_name
  *                char*     -   cwd
- *  @return   :   VOID
+ *  @return   :   (void)
  */
 
-void game_save_meta(game_t *g, char *game_save_name, char *cwd) {
-
-  file_element_t *file_tmp;
-  pile_element_t *pile_tmp;
+void game_save_meta         (game_t *g, char *game_save_name, char *cwd) {
+  file_element_t *          file_tmp;
+  pile_element_t *          pile_tmp;
 
   /* Chemin de Sauvegarde*/
   char game_part_tmp[500] = "";
@@ -111,6 +113,8 @@ void game_save_meta(game_t *g, char *game_save_name, char *cwd) {
 
   printf("Sauvegarde de pile / file en cours ...\n");
   printf("CWD : %s\n", cwd);
+
+  /* Comme a la marternelle, on assemble les mots pour former une phrase...*/
   strcpy(game_part_tmp, cwd);
   strcat(game_part_tmp, "/partie");
   printf("Current Working Directory : %s\n", game_part_tmp);
@@ -121,13 +125,13 @@ void game_save_meta(game_t *g, char *game_save_name, char *cwd) {
     mkdir(game_part_tmp, 0777);
   }
 
-  /* Encore une partie de concatenation */
+  /* Encore une partie de concatenation de type marternelle */
   strcat(game_part_tmp, "/");
   strcat(game_part_tmp, game_save_name);
   strcat(game_part_tmp, ".part");
 
   fp = fopen(game_part_tmp, "w+");
-  
+
   if (!fp)
     perror("fopen");
 
@@ -169,11 +173,11 @@ void game_save_meta(game_t *g, char *game_save_name, char *cwd) {
 }
 
 /** partie_charger()
- *  Sauvegarde le positionnement des pieces de l'echiquier dans un fichier
+ *  Charge le positionnement des pieces de l'echiquier vers l'échiquier
  *  @params   :   char*     -   path
- *  @return   :   game_t    -   path
+ *  @return   :   game_t
  */
-game_t *partie_charger(char *path) {
+game_t *partie_charger      (char *path) {
 
   game_t *res = NULL;
 
@@ -182,11 +186,13 @@ game_t *partie_charger(char *path) {
   char game_check[50];
   int x, y;
 
+  /*  Encore un test pour bypass les warnings, il renvoie un entier  */
   if (getcwd(load, sizeof(load)) == NULL) {
     perror("getcwd");
     return NULL;
   }
 
+  /*  Maternelle : Atelier collage de mot  */
   strcat(load, "/plateaux");
   strcat(load, "/");
   strcat(load, path);
