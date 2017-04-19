@@ -1,9 +1,5 @@
-#include "header/game.h"
 #include "header/debug.h"
-#include "header/file.h"
 #include "header/mouvement.h"
-#include "header/piece.h"
-#include "header/pile.h"
 #include "header/restriction.h"
 #include "header/sauvegardes.h"
 

@@ -3,9 +3,7 @@
 
 /* Helpers */
 
-#include "file.h"
 #include "game.h"
-#include "pile.h"
 
 /*  Usual functions */
 

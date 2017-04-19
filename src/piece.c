@@ -1,8 +1,13 @@
 #include "header/piece.h"
 #include <stdio.h>
 #include <stdlib.h>
+/********************************** INDEX *************************************/
+/*    1) Bloc de pièces (sujet)
+ *    2) Bloc de deplacement_valide et valide_win
+ *    3) Bloc de gestion de promtion pour annuler / reserve.
+ */
 
-/** Création de piece
+/** piece_creer();
  * La couleur représente soit J1, soit J0
  * Le type de piece est la liste enuméré des type (ex : Fou)
  * Le statut determine si cette piece est promu ou non
@@ -31,9 +36,11 @@ piece_t piece_creer         (piece_color_e c, piece_type_e t, piece_statut_e s) 
  * @param    piece_t - p
  * @return   int
  */
-int piece_couleur           (piece_t p) { return p.color; }
+int piece_couleur           (piece_t p) {
+    return p.color;
+}
 
-/** Identification de piece
+/** piece_identifier();
  * piece identifier
  * Description : En fonction du caractère, renvoie la piece associé
  * Complexite : O(1) Espace et Temps
@@ -168,7 +175,7 @@ piece_t piece_identifier    (char caracter_v) {
   return piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
 }
 
-/** Detections de piece
+/** piece_caractere
  * Permet d'associer chaque numéro à chaque piece en fonction du type enuméré
  * et de la couleur de piece
  * Parameters:
@@ -316,14 +323,15 @@ char piece_caractere        (piece_t p) {
 }
 
 /** piece displayer
- * piece displayer
  * Permet d'afficher tout simplement la piece sur l'echiquier
  * Complexite : O(1) pour Espace et Temps
  * Parameters:
  * @param    piece_t - p
  * @return   (void)
  */
-void piece_afficher         (piece_t p) { printf("%c", piece_caractere(p)); }
+void piece_afficher         (piece_t p) {
+    printf("%c", piece_caractere(p));
+}
 
 /** promote_grant
  *  Permet de promovoir la piece

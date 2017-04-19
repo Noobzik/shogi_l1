@@ -4,7 +4,6 @@
 /* Helpers */
 
 #include "file.h"
-#include "piece.h"
 #include "pile.h"
 
 #define MAX_CHAR 256

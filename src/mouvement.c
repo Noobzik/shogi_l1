@@ -1,6 +1,4 @@
 #include "header/mouvement.h"
-#include "header/game.h"
-#include "header/piece.h"
 #include "header/restriction.h"
 
 #include <stdio.h>
@@ -8,7 +6,7 @@
 #define MAX_CHAR 256
 
 /********************************** INDEX *************************************/
-/*   1) Bloc de validation d'entré et de sortie (valid_input et valid_output)
+/*    1) Bloc de validation d'entré et de sortie (valid_input et valid_output)
  *    2) Bloc de deplacement_valide et valide_win
  *    3) Bloc de deplacement_valide_($INSERT_TYPE_DE_PIECE)
  *    4) Bloc movement_valid_helper
@@ -70,6 +68,12 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
 
   /* Si cette condition n'est pas vérifié, alors sa déselectionne la piece
    * selectionné*/
+
+   /* Le contenue du switch_case est assez répétitif
+   *  Condition : Vérifier que le déplacement est valide ET que la case
+   *  d'arrivé correspond à une case SELECT
+   */
+
 
   if (((ci.x != co.x || ci.y != co.y) &&
        (g->board[ci.x][ci.y].color != g->board[co.x][co.y].color)) ||
@@ -630,8 +634,8 @@ int deplacement_valide_lancier          (game_t *g, coordinate_t ci, coordinate_
   return 0;
 }
 
-/****************** Fin des validations des déplacements   ******************/
-/**************** Debut des validations des déplacements  PROMU *************/
+/* **************** Fin des validations des déplacements   ****************** */
+/* ************** Debut des validations des déplacements  PROMU ************* */
 
 /** deplacement_valide_pion_promu
  * Algo de GOLD
@@ -701,8 +705,9 @@ int deplacement_valide_lancier_promu    (game_t *g, coordinate_t ci,
                                      coordinate_t co) {
   return deplacement_valide_gold(g, ci, co);
 }
-/**************** FIN des validations des déplacements  PROMU
- * ****************/
+/* ************** FIN des validations des déplacements  PROMU *************** */
+/* ************** FIN des validations des déplacements  ********************* */
+/* ************************ movement_valid_helper *************************** */
 
 /** movement_valid_helper
  * En fonction de la piece, renvoie si le déplacement est valide ou pas
@@ -933,6 +938,7 @@ int is_promoted                         (game_t *g, coordinate_t ci, coordinate_
   }
   return 0;
 }
+/* *********************** Debut deplacement()  ***************************** */
 
 /** deplacement_apply()
  *  Permet d'appliquer les déplacements de pièces
@@ -980,9 +986,6 @@ void deplacement_apply                  (game_t *g, coordinate_t ci, coordinate_
        *  deuxieme boucle le l'axe des y
        */
       p_tmp = g->board[co.x][co.y];
-      printf("Avant éventuel demotion : ");
-      piece_afficher(p_tmp);
-      printf("\n");
       if (p_tmp.statut == PROMU)
         p_tmp = demote_grant_reserve(p_tmp);
       else
@@ -1022,7 +1025,7 @@ void deplacement_apply                  (game_t *g, coordinate_t ci, coordinate_
         }
       }
 
-      /** ---------------- Noir ---------------------**/
+      /** ---------------- Blanc ---------------------**/
 
       /** Blanc **/
 
@@ -1105,11 +1108,8 @@ void deplacement_apply                  (game_t *g, coordinate_t ci, coordinate_
     }
   }
 }
-/*----------------------------------------------------------------------------*/
-/*-------------------- FIN deplacement()  ------------------------------------*/
-/*----------------------------------------------------------------------------*/
-/*-------------------- annuler_deplacement  ----------------------------------*/
-/*----------------------------------------------------------------------------*/
+/* *********************** Fin deplacement()  ******************************* */
+/* *********************** Debut annuler_deplacement() ********************** */
 
 /** annuler_deplacement
  *  Permet d'annuler un deplacement
@@ -1243,3 +1243,4 @@ void annuler_deplacement                (game_t *g) {
 
   changer_joueur(g);
 }
+/* *********************** Fin annuler_deplacement() ************************ */

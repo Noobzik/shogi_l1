@@ -3,6 +3,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/********************************** INDEX *************************************/
+/*    1) Bloc de fonction général - movement_restriction
+ *    2) Bloc de restrictions spécifiques
+ *    3) movement_restriction_destruct
+ *    4) Bloc de restrictions parachute (Avec pions)
+ *    5) Bloc de detection de restrictions
+ */
+
 /**
  * global
  */

@@ -1,6 +1,4 @@
 #include "header/sauvegardes.h"
-#include "header/game.h"
-#include "header/piece.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,6 +8,10 @@
 /* Pour l'existence des dossiers de sauvegardes */
 
 struct stat st = {0};
+/********************************** INDEX *************************************/
+/*    1) Bloc de sauvegardes
+ *    2) Bloc de chargement
+ */
 
 /** partie_sauvegarder()
  *  Permet de sauvegarder la partie en cours, découpé en deux fonctions
@@ -73,9 +75,13 @@ void game_save_board        (game_t *g, char *save_name, char *cwd) {
 
   fp = fopen(game_plt_tmp, "w+");
 
-  /* Test d'ouverture de fichier, retourne le type d'erreur */
-  if (!fp)
+  /* Si on arrive pas à ouvrir le fichier, on quitte directement la fonction*/
+
+  if (!fp){
     perror("fopen");
+    printf("Echec de la sauvegarde de l'échiquier\n");
+    return;
+}
 
   /* Debut ecriture (fprintf est cassé) */
   else {
@@ -132,8 +138,13 @@ void game_save_meta         (game_t *g, char *game_save_name, char *cwd) {
 
   fp = fopen(game_part_tmp, "w+");
 
-  if (!fp)
+  /* Si on arrive pas à ouvrir le fichier, on quitte directement la fonction*/
+
+  if (!fp){
     perror("fopen");
+    printf("Echec de la sauvegarde des données de la partie\n");
+    return;
+}
 
   else {
     fputs("PR\n", fp);

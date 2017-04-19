@@ -12,13 +12,6 @@ ___
 
 Le sujet projet à été présenté durant le 20 mars 2017 en cours d'amphi de programmation impérative. Le sujet est donc le **Shogi**.
 
-J'étais à la base dans un trinôme composé de 2 Informatiques et 1 Mathématiques (Oui je sais je me suis inclus, ne vous demandez pas pourquoi). Mais suite au restriction nouvelle d'être exclusivement entre la même promotion introduite cette année. J'ai du être tout seul. Je vous remercie Christophe Tollu pour cette superbe annonce :( .
-
-Le projet du shogi à été immédiatement commencé le jour même de la présentation. C'est pas marrant de passer les vacances à programmer alors que les maths c'est bien pour réviser.
-
-Ensuite je me suis trouvée un duo pour constitué un groupe de trinome.
-
-
 Tout le projet a été développé à l’aide d’un GIT dans lequel nous avons développé de manière à pouvoir continuer à développer l’application à distance et permettre de retracer entièrement l’historique du projet (rapport de bug, état de développement des branches du programme et des différentes manipulations dans le code). L'avantage principale est de supprimer totalement la fragmentation des versions du projet. Vous voyez, j'aime pas avoir plusieurs versions.
 
 Cependant, la méthode du projet est de faire le projet chancun de notre côté, pour qu'on puisse avoir une idée du contenue de projet.
@@ -50,9 +43,11 @@ Pendant ce temps, l'ENT de l'Université Paris 13 tombe souvent en rade depuis u
 Bref, en faite, je suis déjà dans un trinôme, le truc, c'est qu'on fait le projet dans notre coin et on rassemble à la fin... J'attends juste qu'ils finnissent leur projet.
 
 Les membres du groupe sont :
-*   **Rakib Sheikh (NoobZik) : Tous les déplacements + restrictions**
-*   **Ibrahim Kouyate :**
-*   **Emeric Bayard :**
+*   **Rakib Sheikh (NoobZik) : Tous les déplacements + restrictions + tout ce qui en raport avec promotion / de-promotion + debug + makefile**
+*   **Ibrahim Kouyate : Le contenue du game.c - piles.c - files.c + Aide sur les déplacements algo**
+*   **Emeric Bayard : Sauvegardes et chargements de fichiers + Contenue du piece.c (Avec assistance sur les promotions)**
+
+C'est toujours provisoire, il faudra revoir l'organisation du code. Me tapper tout le mouvement c'est pas équitable, il faut divisier les fonctions de déplacements valides.
 
 Bon la faut qu'on se fasse une réunion car la sa fait pitié cette partie de répartition de tâches...
 <div class="page-break"></div>
@@ -241,7 +236,7 @@ Vient ensuite le placement dans la réserve.
 Avant de continuer, normalement, vous devez remarquer que nous avons stocké la pièce directement dans la pile mais pas dans la réserve. La méthode qu'on a employé est le dédoublement de la pièce capturé. On place d'abord la pièce dans la pile, et ensuite on la modifie pour la placer dans la reserve visuel.
 
 ___
-#### Image d'illustration : ####
+![test](http://www.clipular.com/c/6046203218493440.png?k=Ebgysn57VA-t0OQIGRME7JCrZRA)
 ___
 
 Avant de commencer les boucles while tant attendu, il se peut que la pièce capturé est une pièce promu, dans ce cas, les conditions de promotions sont vérifiés. Si c'est vrai, la piece est dépromu en changeant de couleur. Dans le cas contraire, on change juste la couleur.
@@ -301,6 +296,11 @@ Il suffit de remettre la pièce dans sa position de départ et de mettre une cas
 **Remarque** : Dans le cas ou la pièce capturé est une pièce qui était promu, il y a pas besoin de promouvoir cette pièce. En effet, cette pièce existe déjà, elle était tout simplement caché dans la pile. Plus de détail dans la partie. Les détails sont dans deplacement_apply();
 
 On prend aussi le soin de changer de joueur. Sinon c'est pas marrant de jouer deux fois d'affiler...
+
+Pour résumer
+
+![annulation](http://www.clipular.com/c/5109259122769920.png?k=v8txuDM4yQ4_6KSHeAGv7eXuk2o)
+<div class="page-break"></div>
 
 ___
 
@@ -364,13 +364,13 @@ Cette fonction permet de savoir si la case testé par la boucle for, est valide 
 
 Si vous voulez comprendre pourquoi cette exception. Tout simplement car si on ne met pas ces exceptions, alors l'aide visuel va tout simplement permettre de sauter les autres pièces pendant leur déplacement. Et justement c'est le but des restrictions d'empêcher les déplacement qui saute les autre pièces on le rappel.
 
-*Note : Lorsque on a implémanté les restrictions de tour_promu et fou_promu, on les a considéré qu'ils fonctionnent de manuère théorique. Mais ce n'était pas le cas, ce comportement anormale à été découvert très tardivement, par faute de temps, elle à été remplacé par les restrictions du roi.*
+*Note : Lorsque on a implémenté les restrictions de tour_promu et fou_promu, on les a considéré qu'ils fonctionnent de manière théorique. Mais ce n'était pas le cas, ce comportement anormale à été découvert très tardivement, par faute de temps, elle à été remplacé par les restrictions du roi, en plus des restrictions de tour et fou respectivement.*
 
 Pour en revenir à ***movement_restriction.***
 
 Pour les quatre cas *tour, fou, lance et parachute et leurs promotions respectifs* ont leur propres restrictions spécifique, qui sont définit dans le même fichier. Je vous invite donc à regarder les commentaires pour leur fonctionnement.
 
-*   **Note** : Les parachutes, sauf pions, tout les cases sont changé en '\*'.
+*   **Note** : Les parachutes, sauf le cas des pions, tout les cases sont changé en ' \* '.
 
 Après avoir effectué les restrictions, le joueur saisie les coordonnées d'arrivé. La condition dans
 ```c
@@ -398,13 +398,13 @@ Il faut aussi noter que pour acceder à la troisième boucle il faut que la cond
 *   La deuxième permet de parcourir chaque ligne de la colonne actuelle, si il y a on compatriote, on change la variable conditionnel pour ne pas rentrer dans la troisième boucle
 *   La troisième boucle permet de changer tout les case de la colonne en case SELECT pour l'aide visuel.
 
+<div class="page-break"></div>
 
-___
 #### game.c ####
 
 Pas grand chose à commenter ici, vu que game.c se focalise exclusivement de l’interaction utilisateur et machine par une interface graphique, appel les fonctions en fonction de l’interaction de l'utilisateur.
 
-Il suffit de lire les commentaire dans le dossier associé. Je ne vois pourquoi je détaillerai cette partie dans ce document...
+Il suffit de lire les commentaire dans le fichier game.c associé. Je ne vois pourquoi je détaillerai cette partie dans ce document...
 ___
 
 #### sauvegardes.c ####
@@ -430,6 +430,23 @@ void game_save_meta(); Qui permet de sauvegarder le contenue de la pile et file.
 
 Aussi, cwd permet de récupérer le chemin du projet actuelle pour pouvoir créer un dossier qui n'existe pas et de sauvegarder dans ce dossier.
 
+Le fonctionnement de game_save_meta et de game_save_board sont assez similaire au vu de la structure du code.
+
+*Ne soyez pas choqué si vous voyez des return qui sont tout seul. C'est normal, on veut quitter la fonction dès qu'il y a une erreur.*
+La première partie du bloc des sauvegardes est tout simplement une partie de concatenation. On va concatener dans l'ordre suivant:
+*   cwd
+*   /partie
+*   /
+*   "nom du ficher"
+*   Extension du fichier
+
+1.  game_save_board
+
+Il suffit d'écrire PL au début du fichier. Et ensuite il faut juste afficher l'échiquier dans le fichier avec fputc.
+2.  game_save_meta
+
+Il suffit d'écrire PR au début du fichier. Et ensuite on commence à écrire tout les éléments de la file dans le fichier (respectivement pile).
+
 ##### Un commentaire pour partie charger : #####
 J'avais eu un problème de chargement de partie. Apparament, il y a eu des problèmes touchant à la bibliothèque string qui à entraîné pour la première fois les erreurs de segmentations et les erreurs qui sont directement pointé les fichiers includes du système (En même temps, si on code comme un dieu, on casse le code source du compilateur). Un mail à été envoyé au chargé de TD du groupe, mais resté sans réponse. J'ai du réfléchir à un autre moyen de coder pour eviter de re-casser le code source du compilateur.
 
@@ -442,6 +459,7 @@ Je m'en rappel plus comment je l'ai réglé ce bug d'ailleur, vu que je l'ai rec
 
 Aussi ,les pièces ont été affecté a la mauvaise position lors du chargement du fichier.
 Il s'avère qu'en changeant la boucle de 0 à 12 (Initialement de 0 à 11) cela règle le problème mais je n'ai pas compris pourquoi... Ne me demandez pas pourquoi, je repondrai 'proute' avec les deux paumes de main en l'aire.
+<div class="page-break"></div>
 
 ___
 #### debug.c ####
@@ -462,6 +480,9 @@ Le debug permet aussi de créer une partie sans toucher au game.c De cette mani�
 C'est vraiment cool pour programmer le contrôleur. Plus besoins de refaire une partie à zéro pour tester un truc en rapport avec les déplacement. Tout ça, sans toucher au code principale.
 
 ___
+
+ ## Annexes ##
+
 
 C'est la fin de cette documentation ou rapport de projet.
 
