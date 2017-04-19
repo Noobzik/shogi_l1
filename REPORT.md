@@ -16,12 +16,16 @@ J'étais à la base dans un trinôme composé de 2 Informatiques et 1 Mathémati
 
 Le projet du shogi à été immédiatement commencé le jour même de la présentation. C'est pas marrant de passer les vacances à programmer alors que les maths c'est bien pour réviser.
 
+Ensuite je me suis trouvée un duo pour constitué un groupe de trinome.
+
+
 Tout le projet a été développé à l’aide d’un GIT dans lequel nous avons développé de manière à pouvoir continuer à développer l’application à distance et permettre de retracer entièrement l’historique du projet (rapport de bug, état de développement des branches du programme et des différentes manipulations dans le code). L'avantage principale est de supprimer totalement la fragmentation des versions du projet. Vous voyez, j'aime pas avoir plusieurs versions.
+
+Cependant, la méthode du projet est de faire le projet chancun de notre côté, pour qu'on puisse avoir une idée du contenue de projet.
 
 La supervision du répertoire git est exclusivement faite par NoobZik, en même temps c'est le seul qui a des connaissance dessus et qui n'aime pas attendre les modification par clé USB ou transfert par G-Drive ou mail.
 
-La méthode de développement est la « méthode agile ». C’est-à-dire de par adaptation
-systématique de l’application aux changements du besoin détecté lors de la conception-réalisation du projet et par remaniement régulier du code déjà produit (re-factoring). Avec un planning de développement à base de secteurs dans le programme sans réelle précision
+La méthode de développement est la « méthode agile ». C’est-à-dire de par adaptation systématique de l’application aux changements du besoin détecté lors de la conception-réalisation du projet et par remaniement régulier du code déjà produit (re-factoring). Avec un planning de développement à base de secteurs dans le programme sans réelle précision.
 
 En gros, on prends une fonction au hasard et on fait avec jusqu'à qu'on rencontre un problème.
 
@@ -46,10 +50,6 @@ Pendant ce temps, l'ENT de l'Université Paris 13 tombe souvent en rade depuis u
 Bref, en faite, je suis déjà dans un trinôme, le truc, c'est qu'on fait le projet dans notre coin et on rassemble à la fin... J'attends juste qu'ils finnissent leur projet.
 
 Les membres du groupe sont :
-*   Ibrahim Kouyate
-*   Emeric Bayard (Dryska)
-*   Rakib Sheikh (NoobZik)
-
 *   **Rakib Sheikh (NoobZik) : Tous les déplacements + restrictions**
 *   **Ibrahim Kouyate :**
 *   **Emeric Bayard :**
@@ -116,6 +116,32 @@ piece_t demote_grant_reserve(); // Permet de dépromouvoir la piece en changeant
 piece_t demote_grant(); // Exactement la même chose qu'au dessus mais sans changer de couleur.
 piece_t switch_color(); // Elle permet de changer de couleur avant de placer la pièce dans la réserve.
 ```
+La fonction promote_grant permet de promouvoir les pièces selon les règles en vigueur.
+Le contenu de cette fonction est découpé en trois partie :
+*   La partie général qui donne le choix de promouvoir ou non les pièces sur les deux avant dernières lignes de l'adversaire.
+*   La partie spécifique qui impose des restrictions de promotion comme pour le cavalier et les parachutages.
+*   La partie pour impose une promotion direct lorsqu'on arrive à la dernière ligne de l'adversaire.
+
+
+Lorsqu'on a essayé de modéliser les parachutes, on s'est rendu compte qu'il faut dé-promouvoir les pièces avant de les placer dans la reserve.
+On a une condition qui permet de vérifier si la pièce à mettre dans la réserve qui vérifie son statut.
+
+En fonction du résultat de la condition, il y a deux cas possible (soit deux fonctions) :
+*   demote_grant_reserve()
+*   switch_color        ()
+
+1.  **demote_grant_reserve()**
+
+Cette fonction permet de dépromouvoir une pièce en changeant de couleur. Elle est appelée si cette pièce en question est promu.
+
+2.  **switch_color()**
+
+Cette fonction permet juste de changer de couleur si cette pièce en question n'est pas promu.
+
+3.  **demote_grant()**
+
+Cette fonction permet de dé-promouvoir une pièce sans changer de couleur. Elle est exclusivement utilisé dans la partie annuler_deplacement
+
 ___
 
 #### pile.c / file.c ####
@@ -137,14 +163,14 @@ En gros ce qu'un élément de la file contient :
 *   Un mouvement (On a vu ça au dessus au passage)
 *   Un booléen de promotion
 *   Un booléen de capture
-*   Et deux champs pour le mouvement suivant et précédent.
+*   Et deux champs pour le mouvement suivant et précédent. C'est le principe d'une liste doublement chainée.
 
 Cette élément de la file sera très utile lorsque l'on va traîter les déplacement expliqué plus tard dans cette documentation.
 
 La *pile* représente l'historique brute des pièces capturés.
 En gros, la pile contient seulement les pièces capturés.
 
-Pour la pile et la file, elle marche comme des liste qui sont doublement chaînée vu en TD. Cependant, deux fonctions on été introduite pour plus de clarté
+Pour la pile et la file, elle marche comme des liste qui sont doublement chaînée vu en TD. Cependant, deux fonctions on été introduite pour plus de clarté.
 
 Les fontions suivantes on été rajouté pour plus de clarté dans le code:
 ```c
@@ -198,6 +224,7 @@ Mais dès l'introduction de la réserve de parachute, il a fallu le refacturer. 
 Avant de commencer à commenter la réserve, **il faut avoir en tête que**:
 *   La réserve du haut et de la gauche sans la case 0,9 constitue la réserve noir
 *   La réserve du bas et de la droite sans la case 10,0 constitue la réserve blanc
+Il y a une image d'illustration plus bas de cette documentation.
 
 On commence donc à initialiser la valeur de promotion par
 
@@ -213,6 +240,10 @@ Vient ensuite le placement dans la réserve.
 
 Avant de continuer, normalement, vous devez remarquer que nous avons stocké la pièce directement dans la pile mais pas dans la réserve. La méthode qu'on a employé est le dédoublement de la pièce capturé. On place d'abord la pièce dans la pile, et ensuite on la modifie pour la placer dans la reserve visuel.
 
+___
+#### Image d'illustration : ####
+___
+
 Avant de commencer les boucles while tant attendu, il se peut que la pièce capturé est une pièce promu, dans ce cas, les conditions de promotions sont vérifiés. Si c'est vrai, la piece est dépromu en changeant de couleur. Dans le cas contraire, on change juste la couleur.
 
 Les modifications liée à cette pièce est stocké dans une variable temporaire *p_tmp*
@@ -223,6 +254,7 @@ piece_t demote_grant_reserve();
 // Sinon
 piece_t color_switch();
 ```
+On en a parlée dans la partie piece.c
 
 Comme il y a deux bloc de réserve pour chaque joueur, il y aura donc au totale 4 boucles while.
 
@@ -232,7 +264,7 @@ Comme il y a deux bloc de réserve pour chaque joueur, il y aura donc au totale 
 
 La première boucle va parcourir la réserve du haut, de la droite vers la gauche.
 Pendant ce temps, on teste si la case est vide :
-*   Si elle est vide : On place la pièce capturé modifié et stocké dans p_tmp à cette case, et on change la valeur de boucle pour sortir.
+*   Si elle est vide : On place la pièce capturé modifié qui est stocké dans p_tmp à cette case, et on change la valeur de boucle pour sortir.
 *   Sinon on passe à la case suivante.
 
 Dans le cas ou toute les cases sont occupée, on change la variable de la deuxième boucle pour qu'on puisse entrer dans la deuxième boucle.
@@ -255,11 +287,18 @@ S'il n'y pas de pièce à l'arrivée, on applique tout simplement les déplaceme
 Cette fonction permet de faire le chemin inverse de deplacement_apply.
 
 On fait une extraction du dernier élément inséré de la file. Puis en fonctions des données de cette élement on peut soit :
-*   Dépromouvoir une pièce si il y a eu une promtion de la pièce.
-*   Restaurer une pièce capturé en prenant soin de traiter la réserve. (Il est possible qu'il est toujours buggé, Utilisez la fonction Signalement de bug sur le repo du bitbucket).
-*   Et dans tout les cas, restaurer la position initiale de la piece en question avant le déplacement.
 
-**Remarque** : Dans le cas ou la pièce capturé est une pièce qui était promu, il y a pas besoin de promouvoir cette pièce. En effet, cette pièce existe déjà, elle était tout simplement caché dans la pile.
+*   Dépromouvoir une pièce si il y a eu une promtion de la pièce.
+Grâce aux information de la file, il y a un booléen qui permet de savoir si le mouvement précédent a donnée lieu à une promotion. Si c'est vrai, on utilise demote_grant()
+
+*   Restaurer une pièce capturé en prenant soin de traiter la réserve. (Il est possible qu'il est toujours buggé, Utilisez la fonction Signalement de bug sur le repo du [bitbucket](https://bitbucket.org/asiat/prog_imp_2017/issues/new)).
+Egalement avec les information de la file, il y a un booléen qui permet de savoir si le mouvement précédent donne lieu à une capture de pièce.
+Dans ce cas, il y aura un extraction de la pièce capturé situé dans la pile, avec traitement de la réserve.
+
+*   Et dans tout les cas, restaurer la position initiale de la piece en question avant le déplacement.
+Il suffit de remettre la pièce dans sa position de départ et de mettre une case vide dans la position d'arrivée.
+
+**Remarque** : Dans le cas ou la pièce capturé est une pièce qui était promu, il y a pas besoin de promouvoir cette pièce. En effet, cette pièce existe déjà, elle était tout simplement caché dans la pile. Plus de détail dans la partie. Les détails sont dans deplacement_apply();
 
 On prend aussi le soin de changer de joueur. Sinon c'est pas marrant de jouer deux fois d'affiler...
 
@@ -285,7 +324,7 @@ est modifié pour que les pièces peuvent se déplacer exclusivement sur des cas
 
 C'est ici que se fait le prototype de l'aide visuel, avec les cases '\*' (SELECT)
 
-***L'aide visuel*** *permet d'afficher les déplacement possible sur l'échiquier.*
+***L'aide visuel*** *permet d'afficher les déplacement possible sur l'échiquier. Elle est très efficace lors des développement des déplacements de pièces*
 
 ##### Détails du fonctionnement des restrictions #####
 
@@ -307,7 +346,7 @@ restriction.c
 
 movement_restriction();
 ```
-est appelé durant deplacement_valide. Cette fonction appel la restriction adapté en fonction de la pièce.
+est appelé durant deplacement_valide. Cette fonction appel la restriction adapté en fonction de la pièce sélectionné.
 
 Si la restriction n'exige pas de conditions particulière, on fait appel a
 
@@ -324,6 +363,8 @@ Entrons dans les détails de ***movement_valid_helper.***
 Cette fonction permet de savoir si la case testé par la boucle for, est valide pou effectuer déplacement ou pas. Ils font appel naturellement aux déplacements valide des pièces respectifs, **A l'exception de tour_promu et fou_promu qui font appel à roi.**
 
 Si vous voulez comprendre pourquoi cette exception. Tout simplement car si on ne met pas ces exceptions, alors l'aide visuel va tout simplement permettre de sauter les autres pièces pendant leur déplacement. Et justement c'est le but des restrictions d'empêcher les déplacement qui saute les autre pièces on le rappel.
+
+*Note : Lorsque on a implémanté les restrictions de tour_promu et fou_promu, on les a considéré qu'ils fonctionnent de manuère théorique. Mais ce n'était pas le cas, ce comportement anormale à été découvert très tardivement, par faute de temps, elle à été remplacé par les restrictions du roi.*
 
 Pour en revenir à ***movement_restriction.***
 
@@ -390,7 +431,7 @@ void game_save_meta(); Qui permet de sauvegarder le contenue de la pile et file.
 Aussi, cwd permet de récupérer le chemin du projet actuelle pour pouvoir créer un dossier qui n'existe pas et de sauvegarder dans ce dossier.
 
 ##### Un commentaire pour partie charger : #####
-J'avais eu un problème de chargement de partie. Apparament, il y a eu des problèmes touchant à la bibliothèque string qui à entraîné pour la première fois les erreurs de segmentations et les erreurs qui sont directement pointé les fichiers includes du système (En même temps, si on code comme un dieu, on casse le code source du compilateur). Un mail à été envoyé au chargé de TD du groupe, mais resté sans réponse. Je pense qu'il était aussi en PLS lorsqu'il a lu mes log du terminal. J'ai du réfléchir à un autre moyen de coder pour eviter de re-casser le code source du compilateur.
+J'avais eu un problème de chargement de partie. Apparament, il y a eu des problèmes touchant à la bibliothèque string qui à entraîné pour la première fois les erreurs de segmentations et les erreurs qui sont directement pointé les fichiers includes du système (En même temps, si on code comme un dieu, on casse le code source du compilateur). Un mail à été envoyé au chargé de TD du groupe, mais resté sans réponse. J'ai du réfléchir à un autre moyen de coder pour eviter de re-casser le code source du compilateur.
 
 L'erreur associé se trouve sur ces deux liens :
 

@@ -8,7 +8,7 @@ WARNING :=  -Wall -Wextra -pedantic -Wshadow -Wpointer-arith -Wcast-align \
 		-Wredundant-decls -Wnested-externs -Winline -Wno-long-long \
 		-Wuninitialized -Wconversion -Wstrict-prototypes
 # Flags du compilateur
-CFLAGS = -g -O3 -fpic $(WARNING) -std=c11
+CFLAGS = -g -O3 $(WARNING) -std=c11
 
 # On force la derniere norme de compilation qui est C11
 
