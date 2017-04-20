@@ -350,14 +350,14 @@ int movement_valid_win      (game_t *g, coordinate_t c) {
     return 1;
   if (g->player == 0) {
 
-    if (g->board[c.x][c.y].type == ROI) {
+    if (g->board[c.x][c.y].type == ROI && g->board[c.x][c.y].color == NOIR) {
       printf("La partie est gagné par les BLANCS\n");
       return 0;
     }
   }
 
   if (g->player == 1) {
-    if (g->board[c.x][c.y].type == ROI) {
+    if (g->board[c.x][c.y].type == ROI && g->board[c.x][c.y].color == BLANC) {
       printf("La partie est gagné par les NOIR\n");
       return 0;
     }

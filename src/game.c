@@ -580,6 +580,9 @@ void partie_jouer           (game_t *g) {
           /* Separator */
           game_seperator();
           printf("Merci d'avoir jouer a ce jeu.\n");
+
+          game_play = game_exit(g);
+
         } else {
           printf("Entrer le nom de la partie: ");
 
@@ -608,6 +611,8 @@ void partie_jouer           (game_t *g) {
 
           printf("La partie a ete sauvergarder.\n");
           printf("Merci d'avoir joué à ce jeu\n\n\n");
+
+          game_play = game_exit(g);
         }
       }
 
