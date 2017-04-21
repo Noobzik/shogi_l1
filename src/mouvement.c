@@ -80,6 +80,17 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
       /* En cas de parachutage impossible */
       (co.x != 42 && co.y != 42)) {
 
+        /* Cas de parachutage, Elle ne doit pas faire appele à deplacement valide*/
+        if (((ci.x == 10 && (ci.y < 11 && ci.y >= 0)) ||
+             (ci.y == 10 && (ci.x < 11 && ci.x >= 0)) ||
+             (ci.x == 0  && (ci.y < 11 && ci.y >=0))  ||
+             (ci.y == 0  && (ci.x < 11 && ci.x >=0))) &&
+             restriction_detector(g, co))           {
+              deplacement_apply(g, ci, co);
+              printf("Le déplacement de type parachutage à été effectué\n");
+              return;
+        }
+
     switch (g->board[ci.x][ci.y].type) {
       {
       case PION:
@@ -293,6 +304,8 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
       }
       {
       case LANCIER:
+        printf("Condition lanicer %d %d\n", deplacement_valide_lancier(g, ci, co),
+            restriction_detector(g, co));
 
         if (deplacement_valide_lancier(g, ci, co) &&
             restriction_detector(g, co)) {
