@@ -78,7 +78,7 @@ void game_save_board        (game_t *g, char *save_name, char *cwd) {
   /* Si on arrive pas à ouvrir le fichier, on quitte directement la fonction*/
 
   if (!fp){
-    perror("fopen");
+    perror("fopen :");
     printf("Echec de la sauvegarde de l'échiquier\n");
     return;
 }
@@ -141,7 +141,7 @@ void game_save_meta         (game_t *g, char *game_save_name, char *cwd) {
   /* Si on arrive pas à ouvrir le fichier, on quitte directement la fonction*/
 
   if (!fp){
-    perror("fopen");
+    perror("fopen : ");
     printf("Echec de la sauvegarde des données de la partie\n");
     return;
 }

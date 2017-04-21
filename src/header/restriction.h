@@ -16,6 +16,7 @@ void    movement_restriction_fou                (game_t *g, coordinate_t ci);
 void    movement_restriction_parachute          (game_t *g);
 void    movement_restriction_pion_parachute     (game_t *g);
 int     restriction_detector                    (game_t *g, coordinate_t ci);
+int     restriction_detector_parachute          (game_t *g, coordinate_t ci);
 void    movement_restriction_destruct           (game_t *g);
 
 #endif //SHOGI_RESTRICTION_H

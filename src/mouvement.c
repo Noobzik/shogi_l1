@@ -28,7 +28,6 @@ int movement_valid_input    (game_t *g, coordinate_t c) {
   if (c.x < 11 && c.y < 11) {
 
     if (g->board[c.x][c.y].type != VIDE) {
-      printf("Player ID %d\n", g->player);
       if (g->player == g->board[c.x][c.y].color) {
         return 1;
       }
@@ -85,7 +84,7 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
              (ci.y == 10 && (ci.x < 11 && ci.x >= 0)) ||
              (ci.x == 0  && (ci.y < 11 && ci.y >=0))  ||
              (ci.y == 0  && (ci.x < 11 && ci.x >=0))) &&
-             restriction_detector(g, co))           {
+             restriction_detector_parachute(g, co))           {
               deplacement_apply(g, ci, co);
               printf("Le déplacement de type parachutage à été effectué\n");
               return;
@@ -304,9 +303,6 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
       }
       {
       case LANCIER:
-        printf("Condition lanicer %d %d\n", deplacement_valide_lancier(g, ci, co),
-            restriction_detector(g, co));
-
         if (deplacement_valide_lancier(g, ci, co) &&
             restriction_detector(g, co)) {
 

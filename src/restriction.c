@@ -368,3 +368,15 @@ int restriction_detector            (game_t *g, coordinate_t ci) {
     return 1;
   return 0;
 }
+
+/** restriction_detector_parachute
+ *  Permet de detecter si la case selectionnée est uniquement selectionn
+ *  C'est pour éviter de parachuter des pièces en capturant directement les pièces
+ *  adverse
+ *  @params:  game_t  *     -   g
+ *            coordinate_t  -   ci
+ *  @return   int
+ */
+int restriction_detector_parachute (game_t *g, coordinate_t ci){
+  return (g->board[ci.x][ci.y].type == SELECT)? 1 : 0;
+}
