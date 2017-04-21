@@ -333,6 +333,7 @@ void piece_afficher         (piece_t p) {
     printf("%c", piece_caractere(p));
 }
 
+/* Cette partie ci dessous est rédigé par Rakib Sheikh (NoobZik)*/
 /** promote_grant
  *  Permet de promovoir la piece
  *  @params:    piece_t     -   p
@@ -545,4 +546,18 @@ piece_t switch_color        (piece_t p) {
   else if (p.color == NOIR)
     p.color = BLANC;
   return p;
+}
+
+/** piece_cmp_reserve
+ *  Permet de comparer deux pieces de couleur différente
+ *  Pour la gestion de la réserve en annulation
+ *  @params : piece_t           -   p
+ *  @return : int
+ */
+int piece_cmp_reserve       (piece_t p1, piece_t p2){
+  if(!(p1.color == p2.color))
+    if(p1.type == p2.type)
+      if(p1.statut == p2.statut)
+        return 1;
+  return 0;
 }

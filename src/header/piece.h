@@ -58,5 +58,5 @@ void    promote_grant           (piece_t *p);
 piece_t demote_grant_reserve    (piece_t p);
 piece_t demote_grant            (piece_t p);
 piece_t switch_color            (piece_t p);
-
+int     piece_cmp_reserve       (piece_t p1, piece_t p2);
 #endif //SHOGI_PIECE_H

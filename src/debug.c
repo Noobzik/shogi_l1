@@ -80,6 +80,9 @@ void debug_cell         (game_t *g, coordinate_t c) {
   piece_afficher(g->board[c.x][c.y]);
   printf(" (%d; %d)", c.x, c.y);
   printf("\nJoueur: %d", g->board[c.x][c.y].color);
+  printf("Information sur la pièce \n"
+  "Couleur: %d\n,Type: %d,Statut: %d",
+  g->board[c.x][c.y].color, g->board[c.x][c.y].type, g->board[c.x][c.y].statut);
 
 }
 

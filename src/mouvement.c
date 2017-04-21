@@ -1000,13 +1000,13 @@ void deplacement_apply                  (game_t *g, coordinate_t ci, coordinate_
 
         while (test == 1) {
           if (case_vide(g->board[0][x]) == 1) {
-            test = 0;
             g->board[0][x] = p_tmp;
+            break;
           }
-          if (x > 0 && test != 0) {
-            x--;
-          } else if (x == 0) {
+          if (x > 0 && test != 0) x--;
+          else if (x == 0) {
             test_bis = 1;
+            break;
           }
         }
 
@@ -1016,12 +1016,11 @@ void deplacement_apply                  (game_t *g, coordinate_t ci, coordinate_
 
         while (test_bis == 1) {
           if (case_vide(g->board[y][0]) == 1) {
-            test_bis = 0;
             g->board[y][0] = p_tmp;
+            break;
           }
-          if (y < 10 && test != 0) {
-            y++;
-          }
+          if (y < 10 && test != 0) y++;
+          else break;
         }
       }
 
@@ -1032,33 +1031,31 @@ void deplacement_apply                  (game_t *g, coordinate_t ci, coordinate_
       if (g->player == 0) {
 
         x = 0;
-
         /** vertiale checking, de la gauche -> droite **/
 
         while (test == 1) {
           if (case_vide(g->board[10][x]) == 1) {
-            test = 0;
             g->board[10][x] = p_tmp;
+            break;
           }
-          if (x < 11 && test != 0) {
-            x++;
-          } else if (x == 10) {
+          if (x < 11 && test != 0) x++;
+          else if (x == 10  || x == 11) {
             test_bis = 1;
+            test = 0;
+            break;
           }
         }
-        y = 10;
+        y = 9;
 
+        //Counter infinite boucle
         while (test_bis == 1) {
-
           /** horizontal checking, de la Bas -> Haut **/
-
           if (case_vide(g->board[y][10]) == 1) {
             test_bis = 0;
-            g->board[y][0] = p_tmp;
+            g->board[y][10] = p_tmp;
           }
-          if (y > 0 && test_bis != 0) {
-            y--;
-          }
+          if (y > 0 && test_bis != 0) y--;
+          else break;
         }
       }
       /* ----------------------------------------------------------------- */
@@ -1120,6 +1117,7 @@ void deplacement_apply                  (game_t *g, coordinate_t ci, coordinate_
 void annuler_deplacement                (game_t *g) {
   coordinate_t                          mo_tmp;
   coordinate_t                          mi_tmp;
+  piece_t                               p_r_tmp;
 
   file_element_t *be_tmp;
 
@@ -1151,6 +1149,9 @@ void annuler_deplacement                (game_t *g) {
      * piece capturé de la pile*/
     g->board[mo_tmp.x][mo_tmp.y] = pile_unstacking(g->capture);
 
+    /* Création de variable de comparaison réserve */
+    p_r_tmp = demote_grant_reserve(g->board[mo_tmp.x][mo_tmp.y]);
+
     /* --------------------Enlevement de la piece de la reserve ------------- */
 
     /* Si le tour actuelle est 0 (Blanc), on regarde la reserve de
@@ -1161,9 +1162,12 @@ void annuler_deplacement                (game_t *g) {
 
       /** horizontal checking, de la Bas -> Haut **/
 
+      /** On doit vérifier chaque case de la réserve pour enlever la pièce concernée **/
+
       while (test == 1) {
 
-        if (case_vide(g->board[y][0]) == 0) {
+        if ((case_vide(g->board[y][0]) == 0) &&
+             piece_cmp_reserve(g->board[y][0], p_r_tmp)) {
           test = 0;
           g->board[y][0] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
         }
@@ -1180,8 +1184,8 @@ void annuler_deplacement                (game_t *g) {
 
       x = 0;
       while (test_bis == 1) {
-
-        if (case_vide(g->board[0][x]) == 0) {
+        if ((case_vide(g->board[0][x]) == 0) &&
+             piece_cmp_reserve(g->board[0][x], p_r_tmp)) {
           test_bis = 0;
           g->board[0][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
         }
@@ -1202,7 +1206,8 @@ void annuler_deplacement                (game_t *g) {
       y = 1;
 
       while (test == 1) {
-        if (case_vide(g->board[y][10]) == 0) {
+        if ((case_vide(g->board[y][10]) == 0) &&
+             piece_cmp_reserve(g->board[y][10], p_r_tmp)) {
           test = 0;
           g->board[y][10] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
         }
@@ -1219,7 +1224,8 @@ void annuler_deplacement                (game_t *g) {
       x = 10;
 
       while (test_bis == 1) {
-        if (case_vide(g->board[10][x]) == 0) {
+        if ((case_vide(g->board[10][x]) == 0) &&
+             piece_cmp_reserve(g->board[10][x], p_r_tmp)) {
           test_bis = 0;
           g->board[10][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
         }
