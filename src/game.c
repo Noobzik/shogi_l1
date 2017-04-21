@@ -254,12 +254,20 @@ coordinate_t saisie_case    () {
 
   printf("x: ");
 
+/* Permet de récuperer la saisie, stocké dans s*/
   while (fgets(s, sizeof(s), stdin)) {
+
+    /* Convertie en entier depuis un long int */
     res.y = (int)strtol(s, &p, 10);
 
+    /* Etant donnée que *p est initialisé en NULL, il faut vérifier si fgets a
+     * fonctionné ou contient pas de chiffres après strtol*/
     if (p == s || *p != '\n') {
       printf("x: ");
-    } else {
+    }
+
+    /* Sinon on sort de la boucle */
+    else {
       break;
     }
   }
