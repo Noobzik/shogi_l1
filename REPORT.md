@@ -4,8 +4,7 @@
 
 ***Rédaction : NoobZik***
 
-Le rapport il à été rédigé en markdown, flemme d'ouvrir Office qui met 5 ans à démarrer pour rédiger un rapport projet. Accrochez vous bien, car le rapport que vous allez lire n'est pas un
-rapport comme les autres.
+Le rapport il à été rédigé en markdown, flemme d'ouvrir Office qui met 5 ans à démarrer pour rédiger un rapport projet. Accrochez vous bien, car le rapport que vous allez lire n'est pas un rapport comme les autres.
 ___
 
 ## Introduction ##
@@ -29,23 +28,12 @@ La priorité absolue du projet est de modéliser la vue. Une fois que c'est fait
 ___
 
 ### Répartition des tâches ###
-C'est brouillon encore, donc c'est ma partie le temps qu'on fasse un truc plus pozey xD.
 
-J'ai tout fait :) L’avantage d'être tout seul, c'est qu'on finit le projet plus vite.
-
-
-> Prenez exemple chez Free. Lors du lancement de Free Mobile, le site officiel était tellement surchargé qu'il a planté en fin de journée avec des conséquence de grosse base de données rendu inexploitable. Il y a eu seulement 7 500 requete enrengistré, tout le reste ... à la corbeille.
->
->  Rani Assaf, directeur technique de Free, a re-coder tout l’infrastructure en 4 jours seulement, tout le travail de 6 Ingénieur faite en 2 ans. Vous voyez, avec de la motivation de le faire tout seule, on fini vite.
-
-Pendant ce temps, l'ENT de l'Université Paris 13 tombe souvent en rade depuis un très long moment. A qui la faute d'ailleurs ?
-
-Bref, en faite, je suis déjà dans un trinôme, le truc, c'est qu'on fait le projet dans notre coin et on rassemble à la fin... J'attends juste qu'ils finnissent leur projet.
 
 Les membres du groupe sont :
 *   **Rakib Sheikh (NoobZik) : Tous les déplacements + restrictions + tout ce qui en raport avec promotion / de-promotion + debug + makefile**
-*   **Ibrahim Kouyate : Le contenue du game.c - piles.c - files.c + Aide sur les déplacements algo**
-*   **Emeric Bayard : Sauvegardes et chargements de fichiers + Contenue du piece.c (Avec assistance sur les promotions)**
+*   **Ibrahim Kouyate : Le contenue du game.c - piles.c - files.c**
+*   **Emeric Bayard : Sauvegardes et chargements de fichiers + Contenue du piece.c**
 
 C'est toujours provisoire, il faudra revoir l'organisation du code. Me tapper tout le mouvement c'est pas équitable, il faut divisier les fonctions de déplacements valides.
 
@@ -118,16 +106,16 @@ Le contenu de cette fonction est découpé en trois partie :
 *   La partie pour impose une promotion direct lorsqu'on arrive à la dernière ligne de l'adversaire.
 
 
-Lorsqu'on a essayé de modéliser les parachutes, on s'est rendu compte qu'il faut dé-promouvoir les pièces avant de les placer dans la reserve.
-On a une condition qui permet de vérifier si la pièce à mettre dans la réserve qui vérifie son statut.
+Lorsqu'on a essayé de modéliser les parachutes, on s'est rendu compte qu'il faut dé-promouvoir les pièces avant de les placer dans la réserve.
+On a une condition qui permet de vérifier si la pièce est à mettre dans la réserve en vérifiant son statut.
 
 En fonction du résultat de la condition, il y a deux cas possible (soit deux fonctions) :
-*   demote_grant_reserve()
-*   switch_color        ()
+*   demote_grant_reserve();
+*   switch_color        ();
 
 1.  **demote_grant_reserve()**
 
-Cette fonction permet de dépromouvoir une pièce en changeant de couleur. Elle est appelée si cette pièce en question est promu.
+Cette fonction permet de dé-promouvoir une pièce en changeant de couleur. Elle est appelée si cette pièce en question est promu.
 
 2.  **switch_color()**
 
@@ -141,7 +129,7 @@ ___
 
 #### pile.c / file.c ####
 
-La *file* représente l'historique des coups jouée et ses événement associé (Capture de piece et promotion).
+La *file* représente l'historique des coups joués et ses événement associé (Capture de piece et promotion).
 
 On a une structure pour pouvoir gérer efficacement les coordonnées :
 
@@ -166,6 +154,10 @@ La *pile* représente l'historique brute des pièces capturés.
 En gros, la pile contient seulement les pièces capturés.
 
 Pour la pile et la file, elle marche comme des liste qui sont doublement chaînée vu en TD. Cependant, deux fonctions on été introduite pour plus de clarté.
+
+Lors de l'execution du programme, la pile et la file marchent comme des pile. C'est à dire qu'on fait que d'empiler les deux listes.
+
+Cependant à l'enrengistrement, la pile et la file marchent comme des file. C'est à dire qu'on extrait le premier élément, jusqu'au dernier élément.
 
 Les fontions suivantes on été rajouté pour plus de clarté dans le code:
 ```c
