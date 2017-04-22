@@ -45,9 +45,15 @@ Répertoire Git pour le développement du projet de programmation impérative, U
 5.  Pour utilisez les commandes, saissiez help.
 
 ***
-# Version Actuelle: 0.9 Final Beta Release Candidate 3 #
+# Version Actuelle: 1.00 Test Deployement Candidate #
 
-## CHANGELOGS 0.9 ##
+## CHANGELOGS 1.00 ##
+*   Mise à jour du rapport (Contenu vérifié par tout les membre du trinome).
+*   Clean du code
+*   Ajout d'un fichier TL:DR notes.txt (Version très court du README.md)
+
+
+#### CHANGELOGS 0.9 Final Beta Release Candidate 3 ####
 *   Divers corrections de comportement du jeu.
 *   Divers corrections de mémoire.
 *   Mise à jour du rapport.
