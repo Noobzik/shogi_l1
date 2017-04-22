@@ -593,10 +593,6 @@ void partie_jouer           (game_t *g) {
         } else {
           printf("Entrer le nom de la partie: ");
 
-          // Hack pour warning: ignoring return value of 'scanf'
-          // On rappel que un scanf revoie un entier !
-          // fgets(game_save_name, MAX_CHAR, stdin);
-
           if (scanf("%s", game_save_name) != 1) {
 
             /* Separator */
@@ -663,10 +659,6 @@ void partie_jouer           (game_t *g) {
 
       printf("Entrer le nom de la partie: ");
 
-      //  scanf("%s", game_save_name);
-      // Hack pour warning: ignoring return value of 'scanf'
-
-      // fgets(game_save_name, MAX_CHAR, stdin);
 
       if (scanf("%s", game_save_name) != 1) {
 
@@ -724,7 +716,6 @@ void partie_jouer           (game_t *g) {
         printf("Merci d'avoir jouer a ce jeu.\n");
 
         /* Exit loop */
-        //  free(game_save_name);
 
         game_play = game_exit(g);
       } else {

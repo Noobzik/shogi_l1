@@ -1,0 +1,6 @@
+Version TL:DR (Too Long, didn't read / Trop long, je n'ai pas lu)
+tapez make
+ensuite help
+???
+Voila.
+Plus de détail README.md

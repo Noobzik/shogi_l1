@@ -13,7 +13,7 @@ ___
    ------------ | ------------- | -------------
  Rakib Sheikh | 11502605 | Groupe 9
  Ibrahim Kouyate | 11507047 | Groupe 6
- Emeric Bayard | 11600611 | Groupe ?
+ Emeric Bayard | 11600611 | Groupe 8
 
 ## Introduction ##
 

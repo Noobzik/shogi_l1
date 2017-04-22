@@ -232,8 +232,8 @@ void movement_restriction_lancier   (game_t *g, coordinate_t ci) {
  * movement fou restriction
  * Normalement on connait la chanson par déduction logique...
  * Sinon, Le fou peut se déplacer sur toute sa diagonal jusqu'à qu'il y a un obstacle
- * @params:*     game_t       - g
- *               coordinate_t - ci
+ * @params:     game_t      *- g
+ *              coordinate_t - ci
  * @return:     (void)
  */
 void movement_restriction_fou       (game_t *g, coordinate_t ci) {
