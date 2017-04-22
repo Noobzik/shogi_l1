@@ -28,9 +28,7 @@ int movement_valid_input    (game_t *g, coordinate_t c) {
   if (c.x < 11 && c.y < 11) {
 
     if (g->board[c.x][c.y].type != VIDE) {
-      if (g->player == g->board[c.x][c.y].color) {
-        return 1;
-      }
+      if (g->player == g->board[c.x][c.y].color) return 1;
     }
   }
   printf("Vous avez saisie une case vide ou vous avez saisie la pièce de "
@@ -45,11 +43,8 @@ int movement_valid_input    (game_t *g, coordinate_t c) {
  * @return :    int
  */
 int movement_valid_output   (coordinate_t c) {
-  if (c.x == 42 && c.y == 42)
-    return 1;
-  else if (c.x > 0 && c.y < 10 && c.x < 10 &&
-           c.y > 0)
-    return 1;
+  if (c.x == 42 && c.y == 42)                             return 1;
+  else if (c.x > 0 && c.y < 10 && c.x < 10 && c.y > 0)    return 1;
   return 0;
 }
 
@@ -355,8 +350,7 @@ int movement_valid_win      (game_t *g, coordinate_t c) {
 
   /* Obliger de tester cette condtion pour eviter les erreurs de mémoires*/
 
-  if (c.x == 42 && c.y == 42)
-    return 1;
+  if (c.x == 42 && c.y == 42)   return 1;
   if (g->player == 0) {
 
     if (g->board[c.x][c.y].type == ROI && g->board[c.x][c.y].color == NOIR) {
@@ -444,9 +438,7 @@ int deplacement_valide_cavalier         (game_t *g, coordinate_t ci, coordinate_
     if (ci.y - 1 == co.y || ci.y + 1 == co.y) {
 
       /* On vérifie les conditions vers l'avant (haut) soit y+2 */
-      if (ci.x + 2 == co.x) {
-        return 1;
-      }
+      if (ci.x + 2 == co.x) return 1;
     }
   }
 
@@ -458,9 +450,7 @@ int deplacement_valide_cavalier         (game_t *g, coordinate_t ci, coordinate_
     if (ci.y - 1 == co.y || ci.y + 1 == co.y) {
 
       /* On vérifie les conditions vers l'arriere (bas) soit x-2 */
-      if (ci.x - 2 == co.x) {
-        return 1;
-      }
+      if (ci.x - 2 == co.x) return 1;
     }
   }
 
@@ -538,45 +528,40 @@ int deplacement_valide_gold             (game_t *g, coordinate_t ci, coordinate_
   if (piece_couleur(g->board[ci.x][ci.y]) == NOIR) {
 
     /* Restriction sur les diagonales en arriere */
-    if (ci.x - 1 == co.x) {
-      if (ci.y == co.y)
-        return 1;
-    }
+    if (ci.x - 1 == co.x)
+      if (ci.y == co.y)  return 1;
+
     /* Deplacement vers l'avant */
     if (ci.x + 1 == co.x &&
         (ci.y + 1 == co.y || ci.y - 1 == co.y || ci.y == co.y)) {
       return 1;
     }
+
     /* Deplacement vers la gauche sur la meme ligne */
-    if (ci.x == co.x && ci.y - 1 == co.y) {
-      return 1;
-    }
+    if (ci.x == co.x && ci.y - 1 == co.y) return 1;
+
     /* Deplacement vers la droite sur la meme ligne */
-    if (ci.x == co.x && ci.y + 1 == co.y) {
-      return 1;
-    }
+    if (ci.x == co.x && ci.y + 1 == co.y) return 1;
   }
 
   if (piece_couleur(g->board[ci.x][ci.y]) == BLANC) {
 
     /* Restriction sur les diagonales en arriere */
-    if (ci.x + 1 == co.x) {
-      if (ci.y == co.y)
-        return 1;
-    }
+    if (ci.x + 1 == co.x)
+      if (ci.y == co.y)   return 1;
+
     /* Deplacement vers l'avant */
     if (ci.x - 1 == co.x &&
         (ci.y + 1 == co.y || ci.y - 1 == co.y || ci.y == co.y)) {
       return 1;
     }
+
     /* Deplacement vers la gauche sur la meme ligne */
-    if (ci.x == co.x && ci.y - 1 == co.y) {
-      return 1;
-    }
+    if (ci.x == co.x && ci.y - 1 == co.y) return 1;
+
     /* Deplacement vers la droite sur la meme ligne */
-    if (ci.x == co.x && ci.y + 1 == co.y) {
-      return 1;
-    }
+    if (ci.x == co.x && ci.y + 1 == co.y) return 1;
+
   }
 
   return 0;
@@ -959,6 +944,7 @@ int is_promoted                         (game_t *g, coordinate_t ci, coordinate_
 void deplacement_apply                  (game_t *g, coordinate_t ci, coordinate_t co) {
   movement_t                            gm_tmp;
   piece_t                               p_tmp;
+  int                                   promotion_v;
 
   gm_tmp.input = ci;
   gm_tmp.output = co;
@@ -970,7 +956,7 @@ void deplacement_apply                  (game_t *g, coordinate_t ci, coordinate_
 
   /* On regarde si la piece qui doit être jouer peut/doit être promu ou pas*/
 
-  int promotion_v = is_promoted(g, ci, co);
+  promotion_v = is_promoted(g, ci, co);
 
   /*------ Checking présence de piece (Si c'est le cas -> capture) -----------*/
 
@@ -995,10 +981,9 @@ void deplacement_apply                  (game_t *g, coordinate_t ci, coordinate_
        *  deuxieme boucle le l'axe des y
        */
       p_tmp = g->board[co.x][co.y];
-      if (p_tmp.statut == PROMU)
-        p_tmp = demote_grant_reserve(p_tmp);
-      else
-        p_tmp = switch_color(p_tmp);
+      if (p_tmp.statut == PROMU) p_tmp = demote_grant_reserve(p_tmp);
+      else                       p_tmp = switch_color(p_tmp);
+
       /** ---------------- Noir ---------------------**/
 
       if (g->player == 1) {
@@ -1050,7 +1035,6 @@ void deplacement_apply                  (game_t *g, coordinate_t ci, coordinate_
           if (x < 11 && test != 0) x++;
           else if (x == 10  || x == 11) {
             test_bis = 1;
-            test = 0;
             break;
           }
         }
@@ -1073,21 +1057,19 @@ void deplacement_apply                  (game_t *g, coordinate_t ci, coordinate_
 
       /* Initialisateur du compteur de coups */
 
-      if (file_list_vide(g->file))
-        gm_tmp.valeur = 1;
-      else
-        gm_tmp.valeur = g->file->taille + 1;
+      if (file_list_vide(g->file)) gm_tmp.valeur = 1;
+      else                         gm_tmp.valeur = g->file->taille + 1;
 
       /* Apply movement */
 
       g->board[co.x][co.y] = g->board[ci.x][ci.y];
 
       /* Changement en piece vide de la position de départ */
-      g->board[ci.x][ci.y] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+      g->board[ci.x][ci.y] = piece_identifier('.');
 
       /* Piece switch et ajout dans la file*/
 
-      file_thread(g->file, gm_tmp, promotion_v, 1);
+      file_thread   (g->file, gm_tmp, promotion_v, 1);
       changer_joueur(g);
     }
 
@@ -1098,14 +1080,12 @@ void deplacement_apply                  (game_t *g, coordinate_t ci, coordinate_
       g->board[co.x][co.y] = g->board[ci.x][ci.y];
 
       /* Changement en piece vide de la position de départ */
-      g->board[ci.x][ci.y] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+      g->board[ci.x][ci.y] = piece_identifier('.');
 
       /* Initialisateur du compteur de coups */
 
-      if (file_list_vide(g->file))
-        gm_tmp.valeur = 1;
-      else
-        gm_tmp.valeur = g->file->taille + 1;
+      if (file_list_vide(g->file)) gm_tmp.valeur = 1;
+      else                         gm_tmp.valeur = g->file->taille + 1;
 
       /* Piece switch et ajout dans la file*/
 
@@ -1127,8 +1107,7 @@ void annuler_deplacement                (game_t *g) {
   coordinate_t                          mo_tmp;
   coordinate_t                          mi_tmp;
   piece_t                               p_r_tmp;
-
-  file_element_t *be_tmp;
+  file_element_t *                      be_tmp;
 
   /* Comme pour la reserve, ces deux Variables vont servir de sortir ou entrer
    * dans la boucle */
@@ -1142,9 +1121,9 @@ void annuler_deplacement                (game_t *g) {
 
   /* Verfication si le mouvement precedent à une promotion */
 
-  if (be_tmp->promotion) {
+  if (be_tmp->promotion)
     g->board[mo_tmp.x][mo_tmp.y] = demote_grant(g->board[mo_tmp.x][mo_tmp.y]);
-  }
+
 
   /* Vérification s'il le mouvement precedent est un mouvement de capture*/
 
@@ -1177,15 +1156,14 @@ void annuler_deplacement                (game_t *g) {
 
         if ((case_vide(g->board[y][0]) == 0) &&
              piece_cmp_reserve(g->board[y][0], p_r_tmp)) {
-          test = 0;
-          g->board[y][0] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+          g->board[y][0] = piece_identifier('.');
+          break;
         }
 
-        if (y > 0 && test != 0) {
-          y--;
-        } else if (y == 0) {
+        if (y > 0 && test != 0)  y--;
+        else if (y == 0) {
           test_bis = 1;
-          test = 0;
+          break;
         }
       }
 
@@ -1195,14 +1173,11 @@ void annuler_deplacement                (game_t *g) {
       while (test_bis == 1) {
         if ((case_vide(g->board[0][x]) == 0) &&
              piece_cmp_reserve(g->board[0][x], p_r_tmp)) {
-          test_bis = 0;
-          g->board[0][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+          g->board[0][x] = piece_identifier('.');
+          break;
         }
-        if (x < 11 && test_bis != 0)
-          x++;
-        else {
-          test_bis = 0;
-        }
+        if (x < 11 && test_bis != 0) x++;
+        else break;
       }
     }
 
@@ -1218,13 +1193,12 @@ void annuler_deplacement                (game_t *g) {
         if ((case_vide(g->board[y][10]) == 0) &&
              piece_cmp_reserve(g->board[y][10], p_r_tmp)) {
           test = 0;
-          g->board[y][10] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+          g->board[y][10] = piece_identifier('.');
         }
-        if (y < 10 && test != 0)
-          y++;
+        if (y < 10 && test != 0)  y++;
         else if (y == 10) {
           test_bis = 1;
-          test = 0;
+          break;
         }
       }
 
@@ -1235,22 +1209,17 @@ void annuler_deplacement                (game_t *g) {
       while (test_bis == 1) {
         if ((case_vide(g->board[10][x]) == 0) &&
              piece_cmp_reserve(g->board[10][x], p_r_tmp)) {
-          test_bis = 0;
-          g->board[10][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+          g->board[10][x] = piece_identifier('.');
+          break;
         }
-        if (x > 0 && test_bis != 0) {
-          x--;
-        } else {
-          test_bis = 0;
-        }
+        if (x > 0 && test_bis != 0) x--;
+        else break;
       }
     }
   }
 
   /* Si il n'y pas eu de capture de piece au tour precedent ------------------*/
-  else {
-    g->board[mo_tmp.x][mo_tmp.y] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
-  }
+  else g->board[mo_tmp.x][mo_tmp.y] = piece_identifier('.');
 
   /* Destruction du maillon et changement de joueur*/
 

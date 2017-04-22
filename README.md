@@ -1,5 +1,9 @@
 # README #
 
+*(Chargé de TD) cf : "Mise en route" pour le fonctionnement du projet
+
+ Merci de lire le rapport nommée Report.pdf pour les groupes + numéro étudiants*
+
 ### Projet Programmation Impérative 2017  Guide de développement ###
 ***
 ## Quick summary ##
@@ -13,12 +17,12 @@ Répertoire Git pour le développement du projet de programmation impérative, U
 **Le jeu à faire : Le Shôgi**
 *Le sujet est disponible sur l'ENT, on attend la version définitif avant de l'inclure dans le répertoire*
 
-*Le sujet est rempli de faute de règles, de fonctions*
+*Le sujet est rempli de faute de règles, de fonctions (Qui a déjà vu une reine dans le shogi d'ailleurs ?)*
 
-*   Il est interdit d'annoncer à l'adversaire qu'il est en échec (Règle officiel)
+*   Il est interdit d'annoncer à l'adversaire qu'il est en échec. (D'après plusieurs applications shogi).
 *   La fin de partie se caractérise par la capture du Roi adverse
 
-*Plus que 2 semaine pour boucler le projet*
+*Plus que quelques heures pour boucler le projet*
 ## Mise en route ##
 
 1.  Compilez le ficher avec make
@@ -38,10 +42,18 @@ Répertoire Git pour le développement du projet de programmation impérative, U
   #!bash
   ./shogi "non_du_fichier_sans_extension"
   ```
+5.  Pour utilisez les commandes, saissiez help.
 
 ***
-# Version Actuelle: 0.4 Beta Release Candidate 2 #
-## CHANGELOGS 0.4 Release candidate 2 ##
+# Version Actuelle: 0.9 Final Beta Release Candidate 3 #
+
+## CHANGELOGS 0.9 ##
+*   Divers corrections de comportement du jeu.
+*   Divers corrections de mémoire.
+*   Mise à jour du rapport.
+*   Indentation remise en norme ETNA.
+
+#### CHANGELOGS 0.4 Release candidate 2 ####
 *   Les restrictions des fou promus et des tour promus ont été fixé.
 *   D'important problème de mémoire sur la partie sauvegarde ont été fixé.
 *   Une partie des noms des variables ont été simplifié
@@ -175,7 +187,7 @@ Les commentaires pour les fonctions auront le style suivant :
 /** nom_de_la_fonction()
  * Description de la fonction
  * Complexité : Espace O() - Temps O()
- * @param type_t variable_v
+ * @param   type_t  -  variable_v
  * @return "juste le type"
  */
 ```
@@ -186,8 +198,8 @@ Un exemple :
  * Permet de connaitre si la case actuelle peut être sélectionnable par l'utilisateur
  * en fonction du type de pièce. Fait appel aux autres fonctions déplacement_diagonal /
  * pion / vertical / horizontal
- * @param case_t case_v
- * @return int
+ * @param   case_t  -   case_v
+ * @return  int
  */
 ```
 On fait pas de loader.h car c'est de la merde.

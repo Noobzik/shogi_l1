@@ -141,60 +141,59 @@ game_t *partie_nouvelle     () {
   for (x = 0; x < 11; x++) {
 
     for (y = 0; y < 11; y++) {
-      res->board[y][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
-      res->board[y][x] = piece_creer(VIDE_PIECE, VIDE, NON_PROMU);
+      res->board[y][x] = piece_identifier('.');
     }
   }
 
   /* Pions */
   for (x = 1; x < 10; x++) {
-    res->board[7][x] = piece_creer(BLANC, PION, NON_PROMU);
-    res->board[3][x] = piece_creer(NOIR, PION, NON_PROMU);
+    res->board[7][x] = piece_identifier('p');
+    res->board[3][x] = piece_identifier('P');
   }
 
   /* Tour */
 
-  res->board[8][2] = piece_creer(BLANC, TOUR, NON_PROMU);
-  res->board[2][8] = piece_creer(NOIR, TOUR, NON_PROMU);
+  res->board[8][2] = piece_identifier('r');
+  res->board[2][8] = piece_identifier('R');
 
   /* Roi */
 
-  res->board[9][5] = piece_creer(BLANC, ROI, NON_PROMU);
-  res->board[1][5] = piece_creer(NOIR, ROI, NON_PROMU);
+  res->board[9][5] = piece_identifier('k');
+  res->board[1][5] = piece_identifier('K');
 
   /* Fou */
 
-  res->board[8][8] = piece_creer(BLANC, FOU, NON_PROMU);
-  res->board[2][2] = piece_creer(NOIR, FOU, NON_PROMU);
+  res->board[8][8] = piece_identifier('b');
+  res->board[2][2] = piece_identifier('B');
 
   /* Gold */
 
-  res->board[1][4] = piece_creer(NOIR, GOLD, NON_PROMU);
-  res->board[1][6] = piece_creer(NOIR, GOLD, NON_PROMU);
-  res->board[9][4] = piece_creer(BLANC, GOLD, NON_PROMU);
-  res->board[9][6] = piece_creer(BLANC, GOLD, NON_PROMU);
+  res->board[1][4] = piece_identifier('G');
+  res->board[1][6] = piece_identifier('G');
+  res->board[9][4] = piece_identifier('g');
+  res->board[9][6] = piece_identifier('g');
 
   /* Sivler */
 
-  res->board[9][3] = piece_creer(BLANC, SILVER, NON_PROMU);
-  res->board[9][7] = piece_creer(BLANC, SILVER, NON_PROMU);
+  res->board[9][3] = piece_identifier('s');
+  res->board[9][7] = piece_identifier('s');
 
-  res->board[1][3] = piece_creer(NOIR, SILVER, NON_PROMU);
-  res->board[1][7] = piece_creer(NOIR, SILVER, NON_PROMU);
+  res->board[1][3] = piece_identifier('S');
+  res->board[1][7] = piece_identifier('S');
 
   /* Cavalier */
 
-  res->board[1][2] = piece_creer(NOIR, CAVALIER, NON_PROMU);
-  res->board[1][8] = piece_creer(NOIR, CAVALIER, NON_PROMU);
-  res->board[9][2] = piece_creer(BLANC, CAVALIER, NON_PROMU);
-  res->board[9][8] = piece_creer(BLANC, CAVALIER, NON_PROMU);
+  res->board[1][2] = piece_identifier('N');
+  res->board[1][8] = piece_identifier('N');
+  res->board[9][2] = piece_identifier('n');
+  res->board[9][8] = piece_identifier('n');
 
   /* Lancier */
 
-  res->board[1][1] = piece_creer(NOIR, LANCIER, NON_PROMU);
-  res->board[1][9] = piece_creer(NOIR, LANCIER, NON_PROMU);
-  res->board[9][1] = piece_creer(BLANC, LANCIER, NON_PROMU);
-  res->board[9][9] = piece_creer(BLANC, LANCIER, NON_PROMU);
+  res->board[1][1] = piece_identifier('L');
+  res->board[1][9] = piece_identifier('L');
+  res->board[9][1] = piece_identifier('l');
+  res->board[9][9] = piece_identifier('l');
 
   return res;
 }

@@ -220,12 +220,9 @@ game_t *partie_charger      (char *path) {
   else {
     printf("Le fichier %s est ouvert avec succès\n", path);
 
-    if (fscanf(fp, "%s\n", game_check) != 1) {
-      perror("fscanf :");
-    }
+    if (fscanf(fp, "%s\n", game_check) != 1)  perror("fscanf :");
 
     if (strcmp(game_check, "PL") == 0) {
-      printf("Je suis rentré ici ?\n");
       res = partie_creer();
       res->capture = pile_create();
       res->file = file_creer_list();
@@ -248,24 +245,9 @@ game_t *partie_charger      (char *path) {
           }
         }
       }
-
-      fseek(fp, 3, SEEK_SET);
-
-      /* Débug pour connaitre la reconnaissance des pièces après lecture du fichiers*/
-      for (x = 0; x < 11; x++) {
-        for (y = 0; y < 12; y++) {
-          game_piece_check = fgetc(fp);
-          if (game_piece_check != '\n') {
-            piece_afficher(res->board[x][y]);
-          }
-        }
-        printf("\n");
-      }
-
     }
 
-    else
-      printf("Ce fichier est corrompu\n");
+    else printf("Ce fichier est corrompu\n");
 
     fclose(fp);
   }

@@ -2,10 +2,18 @@
 
 ## Ou autrement dit : Rapport de Projet ##
 
-***Rédaction : NoobZik***
+***Rédaction : Rakib SHEIKH (NoobZik)***
 
 Le rapport a été rédigé en markdown, flemme d'ouvrir Office qui met 5 ans à démarrer pour rédiger un rapport projet. Accrochez-vous bien, car le rapport que vous allez lire n'est pas un rapport comme les autres.
 ___
+
+## Membre du groupe ##
+
+   Prénom Nom | Numéro Etudiant | Groupe
+   ------------ | ------------- | -------------
+ Rakib Sheikh | 11502605 | Groupe 9
+ Ibrahim Kouyate | 11507047 | Groupe 6
+ Emeric Bayard | 11600611 | Groupe ?
 
 ## Introduction ##
 
@@ -13,9 +21,9 @@ Le sujet projet à été présenté durant le 20 mars 2017 en cours d'amphi de p
 
 Tout le projet a été développé à l’aide d’un GIT dans lequel nous avons développé de manière à pouvoir continuer à développer l’application à distance et permettre de retracer entièrement l’historique du projet (rapport de bug, état de développement des branches du programme et des différentes manipulations dans le code). L'avantage principale est de supprimer totalement la fragmentation des versions du projet. Vous voyez, je n'aime pas avoir plusieurs versions.
 
-Cependant, la méthode du projet est de faire le projet chacun de notre côté, pour qu'on puisse avoir une idée du contenue de projet.
+Cependant, la méthode du projet est de faire une partie du projet chacun de notre côté, pour qu'on puisse avoir une idée du contenue de projet. Une fois qu'on a une idée du contenu du projet, on se rassemble à la fin et on commence à programmer.
 
-La supervision du répertoire git est exclusivement faite par NoobZik, en même temps c'est le seul qui a des connaissances dessus et qui n'aime pas attendre les modifications par clé USB ou transfert par G-Drive ou mail.
+La supervision du répertoire git est exclusivement faite par Rakib, en même temps c'est le seul qui a des connaissances dessus et qui n'aime pas attendre les modifications par clé USB ou transfert par G-Drive ou mail. Mais exeptionnelement, je me charge tout seul mettre à jour le code sur le répo.
 
 La méthode de développement est la « méthode agile ». C’est-à-dire de par adaptation systématique de l’application aux changements du besoin détecté lors de la conception-réalisation du projet et par remaniement régulier du code déjà produit (re-factoring). Avec un planning de développement à base de secteurs dans le programme sans réelle précision.
 
@@ -29,7 +37,6 @@ ___
 
 ### Répartition des tâches ###
 
-
 Les membres du groupe sont :
 *   **Rakib Sheikh (NoobZik) : Tous les déplacements + restrictions + tout ce qui en rapport avec promotion / de-promotion + debug + makefile**
 *   **Ibrahim Kouyaté : Le contenue du game.c - piles.c - files.c**
@@ -40,8 +47,6 @@ D'un point de vue sur le MVC :
 *   **Modèle :** Emeric Bayard (Les pièces + L'échiquier)
 *   **Vue :** Ibrahim Kouyate (Bah tout ce qui concerne l'affichage de l'échiquier) + Rakib Sheikh (Affichage des debugs)
 
-
-<div class="page-break"></div>
 
 ## Descriptions des fichiers ##
 
@@ -63,22 +68,26 @@ ___
 ### Description détaillé des fichiers ###
 
 Cette partie détaille les fonctions qui ont été modifié du sujet ou rajouté.
-Pour le chargé de TD, on essaye de vous disposer plusieurs plateaux de sauvegardes pour rapidement tester un peu près tous les fonctionnalités du programme.
+
+Pour le chargé de TD, on essaye de vous disposer plusieurs plateaux de sauvegardes pour tester rapidement un peu près tous les fonctionnalités du programme.
 
 Actuellement, le programme peut (liste non exhaustive):
 *   Jouer une partie jusqu'à la fin (Caractérisé par une capture du roi adverse).
 *   Quitter une partie à tout moment.
-*   Sauvegarder le contenue de l'échiquier et l'historique (Capture + Mouvements).
+*   Sauvegarder le contenu de l'échiquier et l'historique (Capture + Mouvements).
 *   Charger le plateau.
+*   Créer des dossiers de sauvegardes s'il n'existent pas.
 *   Capturer des pièces.
 *   Gestion des parachutages avec en complément la restriction sur les pions.
-*   Afficher une aide-visuel lors des déplacements.
+*   Afficher une **aide-visuel** lors des déplacements.
 *   Annuler des déplacements.
-*   Gestion des promotions.
+*   Gestion des promotions et de dé-promotions.
 *   Gestion active de la réserve des deux joueurs.
 *   Gestion active de la mémoire allouée. (Grâce au pile et files)
 *   Commandes de développeurs (nommé debug).
-*   Compiler sans erreurs et warnings.
+*   Compiler sans erreurs, warnings et pas de problème de mémoire.
+
+<div class="page-break"></div>
 
 #### **Un MAKEFILE pas comme les autres** ####
 
@@ -264,7 +273,7 @@ piece_t demote_grant_reserve();
 // Sinon
 piece_t color_switch();
 ```
-On en a parlée dans la partie piece.c
+On en a parlée dans la partie piece.c.
 
 Comme il y a deux bloc de réserve pour chaque joueur, il y aura donc au totale 4 boucles while.
 
@@ -282,6 +291,8 @@ Dans le cas ou toute les cases sont occupées, on change la variable de la deuxi
 Donc on parcourt maintenant la réserve de gauche, du haut vers le bas. C'est le même algorithme que ci-dessus. Mais on parcourt jusqu'à l'avant dernière case (Car la dernière case c'est pour l'autre joueur).
 
 Une fois qu'on a fait tout ça, il ne reste plus qu'à ajouter les données dans la file et de changer de joueur.
+
+Dans la structure des mouvements, on avait vu qu'il y a un entier qui représente le numéro du mouvement. On inscrit donc le numéro du mouvement dans la file en récupérant la taille de la file + 1.
 
 Les données de la file sont :
 *   Le mouvement.
@@ -301,7 +312,7 @@ On fait une extraction du dernier élément inséré de la file. Puis en fonctio
 *   Dé-promouvoir une pièce s'il y a eu une promotion de la pièce.
 Grâce aux information de la file, il y a un booléen qui permet de savoir si le mouvement précédent a donné lieu à une promotion. Si c'est vrai, on utilise demote_grant()
 
-*   Restaurer une pièce capturé en prenant soin de traiter la réserve. (Il est possible qu'il est toujours buggé, Utilisez la fonction Signalement de bug sur le repo du [bitbucket](https://bitbucket.org/asiat/prog_imp_2017/issues/new)).
+*   Restaurer une pièce capturé en prenant soin de traiter la réserve grâce aux boucles while inversé de deplacement_apply. (Il est possible qu'il est toujours buggé, Utilisez la fonction Signalement de bug sur le repo du [bitbucket](https://bitbucket.org/asiat/prog_imp_2017/issues/new)).
 Egalement avec les informations de la file, il y a un booléen qui permet de savoir si le mouvement précédent donne lieu à une capture de pièce.
 Dans ce cas, il y aura une extraction de la pièce capturée situé dans la pile, avec traitement de la réserve.
 
@@ -314,11 +325,12 @@ On prend aussi le soin de changer de joueur. Sinon ce n'est pas marrant de jouer
 
 ***Note :*** En date du Vendredi 21 Avril, un comportement anormal assez majeur est rapporté.
 
-*Description de ce comportement anormale:* Après un parachutage d'une pièce, la case est vide. En conséquence, lors des captures de pièces, cette case vide sera à nouveau utilisable pour stocker les pièces capturer. Un conflit majeur intervient lors de l'annulation. En effet, les boucles whiles retire la dernière pièce dans la réserve. Mais puisque la dernière pièce capturée se trouve entre deux pièces capturé, les boucles whiles retirent la mauvaise pièce.
+*Description de ce comportement anormale:* Après un parachutage d'une pièce, la case est vide. En conséquence, lors des captures de pièces, cette case vide sera à nouveau utilisable pour stocker les pièces capturées. Un conflit majeur intervient lors de l'annulation. En effet, les boucles whiles retire la dernière pièce dans la réserve. Mais puisque la dernière pièce capturée se trouve entre deux pièces capturé, les boucles whiles retirent la mauvaise pièce.
 
 *Résolution :* La résolution de ce comportement anormale est fait par Rakib Sheikh (NoobZik). Une implémentation d'une nouvelle fonction nommé piece_cmp_reserve() permet de comparer deux pièces, retourne un entier s'il sont égales (avec deux couleur différente) ou pas.
+On a crée une nouvelle variable p_r_tmp pour stocker la pièce à retirer de la réserve. Cette variable sert de comparaison de pièce.
 
-Pour résumer
+Pour résumer sous forme de schéma SysML
 
 ![annulation](http://www.clipular.com/c/5109259122769920.png?k=v8txuDM4yQ4_6KSHeAGv7eXuk2o)
 <div class="page-break"></div>
@@ -407,7 +419,12 @@ restriction.c
 
 restriction_detector();
 // permet de tester si la case d'arrivée est vide ou occupée par une pièce de couleur différente.
+restriction_detector_parachute(); // Exactement la même chose mais pour les parachute. Case exclusivement vide.
 ```
+###### **Un commentaire sur les restriction parachutes** ######
+
+Tous les pièces qui sont situé dans la réserve (sauf pion qui est un cas particulier) peuvent se placer sur n'importe quel case vide de l'échiquier. On pourrait se dire que restriction_detector suffit. Mais ce n'est pas le cas. Il y a un cas de figure où on peut parachuter sur une case occupé par l'adversaire qui faut traiter. D'où la fonction restriction_detector_parachute qui restreint aux case qui sont exclusivement vide.
+
 ###### **Un commentaire pour pion parachute** ######
 
 Donc les pions ont une restriction particulière, ils ne peuvent pas se placer sur la colonne où il y a déjà son compatriote du même type.
@@ -493,7 +510,7 @@ Il suffit d'écrire PL au début du fichier. Et ensuite il faut juste afficher l
 Il suffit d'écrire PR au début du fichier. Et ensuite on commence à écrire tous les éléments de la file dans le fichier (respectivement pile).
 
 ##### **Un commentaire pour partie charger :** #####
-J'avais eu un problème de chargement de partie. Apparemment, il y a eu des problèmes touchant à la bibliothèque string qui a entraîné pour la première fois les erreurs de segmentations et les erreurs qui sont directement pointé les fichiers includes du système (En même temps, si on code comme un dieu, on casse le code source du compilateur). Un mail à été envoyé au chargé de TD du groupe, mais resté sans réponse. J'ai dû réfléchir à un autre moyen de coder pour éviter de recasser le code source du compilateur.
+J'avais eu un problème de chargement de partie. Apparemment, il y a eu des problèmes touchant à la bibliothèque string qui a entraîné pour la première fois les erreurs de segmentations et les erreurs qui sont directement pointé les fichiers includes du système (En même temps, si on code comme un dieu, on casse les includes du code C). Un mail à été envoyé au chargé de TD du groupe, mais resté sans réponse. J'ai dû réfléchir à un autre moyen de coder pour éviter de recasser la bibliothèque source du compilateur.
 
 L'erreur associé se trouve sur ces deux liens :
 
@@ -504,7 +521,6 @@ Je m'en rappel plus comment je l'ai réglé ce bug d'ailleurs, vu que je l'ai re
 
 Aussi, les pièces ont été affecté à la mauvaise position lors du chargement du fichier.
 Il s'avère qu'en changeant la boucle de 0 à 12 (Initialement de 0 à 11) cela règle le problème mais je n'ai pas compris pourquoi... Ne me demandez pas pourquoi, je répondrai 'proute' avec les deux paumes de main en l'air.
-<div class="page-break"></div>
 
 ___
 #### **debug.c** ####
@@ -525,14 +541,19 @@ Le debug permet aussi de créer une partie sans toucher au game.c De cette mani�
 C'est vraiment cool pour programmer le contrôleur. Plus besoins de refaire une partie à zéro pour tester un truc en rapport avec les déplacements. Tout ça, sans toucher au code principale.
 
 ___
+<div class="page-break"></div>
 
 ## Annexes ##
 
-***Diagramme de dépendances.***
-
+***Diagramme SysML de dépendances.***
 
 ![Imgur](http://i.imgur.com/xUHdI45.png?1)
 
+<div class="page-break"></div>
+
+***Diagramme SysML de fonctionnement du programme pour un mouvement***
+
+![Imgur](http://i.imgur.com/D1Tz8PZ.jpg)
 
 C'est la fin de cette documentation ou rapport de projet.
 
