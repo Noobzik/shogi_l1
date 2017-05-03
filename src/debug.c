@@ -60,7 +60,7 @@ void debug_file         (game_t *g) {
   printf("DEBUG | File\n");
   printf("Taille: %d\n", l->taille);
 
-  if (!file_list_vide(l)) {
+  if (file_list_vide(l)) {
       printf("La file ne contient rien\n");
       return;
   }
