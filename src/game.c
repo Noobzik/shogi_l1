@@ -1,13 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   game.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: NoobZik <rakib.hernandez@gmail.com>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/04/30 18:55:43 by NoobZik           #+#    #+#             */
+/*   Updated: 2017/04/30 21:04:50 by NoobZik          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "header/debug.h"
+#include "header/display.h"
 #include "header/mouvement.h"
 #include "header/restriction.h"
 #include "header/sauvegardes.h"
+
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define MAX_CHAR 256
+
+/* Variable globale (Limite du code C, pas d'argument optionnel)*/
+coordinate_t COORDINATE_NULL = {42, 42};
 
 /*--------------------------------INDEX--------------------------------------*/
 /* 1) Afficher_echiquier
@@ -25,8 +43,7 @@
  *  NOIR  = 1
  */
 
-/* Variable globale (Limite du code C, pas d'argument optionnel)*/
-coordinate_t COORDINATE_NULL = {42, 42};
+
 
 /*---------------------------------------------------------------------------*/
 /*------------------- BLOC afficher_echiquier -------------------------------*/
@@ -50,46 +67,36 @@ void afficher_echiquier     (game_t *g, coordinate_t g_i) {
   movement_restriction_destruct(g);
 
   /* Affichage par imprimante */
-  printf("\n");
-  printf("           x->     y  0  1  2  3  4  5  6  7  8  9  10\n");
+  printf("\n           x->     y  0  1  2  3  4  5  6  7  8  9  10\n");
   printf("                      _________________________________\n");
 
   for (x = 0; x < 11; x++) {
     if ((x < 6 && x > 3) || ((x == 0) || x == 10)) {
-      if (x == 10)
-        printf("                  %d  ", x);
-      else
-        printf("                   %d  ", x);
+      if (x == 10) printf("                  %d  ", x);
+      else         printf("                   %d  ", x);
     } else if (x < 6) {
       /* Player Indicator */
-      if (g->player == 1) {
-        printf("  NOIR->           %d  ", x);
-      } else {
-        printf("                   %d  ", x);
+      if (g->player == 1)     printf("  NOIR->           %d  ", x);
+      else                    printf("                   %d  ", x);
       }
 
-    } else if (x > 1) {
+      else if (x > 1) {
       /** Player Indicator : BLANC
        *  Premier if = hack pour pas afficher blanc a la 6eme ligne
        */
-      if (g->player == 0 && x > 6) {
-        printf("  BLANC->          %d  ", x);
-      } else
-        printf("                   %d  ", x);
+      if (g->player == 0 && x > 6) printf("  BLANC->          %d  ", x);
+      else                         printf("                   %d  ", x);
     }
 
     /* Application de l'aide visuel */
 
-    if (g_i.x != 42 || g_i.y != 42) {
-      movement_restriction(g, g_i);
-    }
+    if (g_i.x != 42 || g_i.y != 42) movement_restriction(g, g_i);
 
     /* Echiquier */
     for (y = 0; y < 11; y++) {
       piece_afficher(g->board[x][y]);
       printf("  ");
     }
-
     printf("\n");
   }
 }
@@ -206,10 +213,8 @@ game_t *partie_nouvelle     () {
  * @return: int
  */
 int case_vide               (piece_t p) {
-  if (p.type == VIDE) {
-    return 1;
-  } else if (p.type == SELECT)
-    return 1;
+  if (p.type == VIDE)            return 1;
+  else if (p.type == SELECT)     return 1;
   return 0;
 }
 
@@ -261,32 +266,24 @@ coordinate_t saisie_case    () {
 
     /* Etant donnée que *p est initialisé en NULL, il faut vérifier si fgets a
      * fonctionné ou contient pas de chiffres après strtol*/
-    if (p == s || *p != '\n') {
-      printf("x: ");
-    }
+    if (p == s || *p != '\n') printf("x: ");
 
     /* Sinon on sort de la boucle */
-    else {
-      break;
-    }
+    else                      break;
   }
 
   printf("y: ");
   /* Le fgets marche comme un scanf*/
   while (fgets(s, sizeof(s), stdin)) {
     res.x = (int)strtol(s, &p, 10);
-    if (p == s || *p != '\n') {
-      printf("y: ");
-    } else {
-      break;
-    }
+    if (p == s || *p != '\n') printf("y: ");
+    else                      break;
+
   }
 
-  if (res.x > 0 && res.x < 11) {
-    if (res.y > 0 && res.y < 11) {
-      return res;
-    }
-  }
+  if (res.x > 0 && res.x < 11)
+    if (res.y > 0 && res.y < 11)  return res;
+
   return res;
 }
 /*---------------------------FIN DE GESTION DE CASE---------------------------*/
@@ -329,11 +326,7 @@ int game_exit               (game_t *g) {
  * @return    int
  */
 int game_selector           (char *game_command, const char *select_v) {
-  if (strcmp(game_command, select_v) == 0) {
-    return 1;
-  } else {
-    return 0;
-  }
+  return (strcmp(game_command, select_v) == 0) ? 1:0;
 }
 
 /*-------------------------partie_jouer()------------------------------------*/
@@ -392,27 +385,8 @@ void partie_jouer           (game_t *g) {
       /** Advanced commands
        *   Si les commands de developpeur sont activées
        */
-      if (game_command_dev) {
-        printf("PASS                  Passe le tour du joueur.\n");
-        printf("FILE                  Affiche les donnes contenu dans la "
-               "file.\n");
-        printf("PILE                  Affiche les donnes contenu dans la "
-               "pile.\n");
-        printf("CELL                  Inspecter une cellule.\n");
-      }
 
-      else {
-        printf("DEV                   Pour activer les command developpeur.\n");
-      }
-      printf("\n");
-
-      /* Classic command */
-      printf("SURREND               Declarer forfait.\n");
-      printf("MOVE                  Selectionner le deplacement d'une piece.\n");
-      printf("BACK                  Restaurer le deplacement precedent.\n");
-      printf("SAVE                  Sauvegarder la partie.\n");
-      printf("EXIT                  Quitter le jeu.\n");
-      printf("42,42                 Pour désélectionner une pièce,(Seulement quand on demande des coordonées)\n");
+      show_menu(game_command_dev);
 
       /* Enter loop */
       afficher_echiquier(g, COORDINATE_NULL);
@@ -421,26 +395,21 @@ void partie_jouer           (game_t *g) {
       /** Developper command
        *  Permet d'activer les commandes de developpeur ou de les désactiver
        */
-    } else if (game_selector(game_command, "dev")) {
+    }
+    else if (game_selector(game_command, "dev")) {
 
       /* Separator */
       game_seperator();
 
-      if (game_command_dev == 0) {
-        printf("Les commandes developpeur sont active,\nSaisissez 'help' pour "
-               "en savoir plus sur les commandes.\n");
-        game_command_dev = 1;
-      } else {
-        printf("Les commandes developpeur ont été désactivé.\n");
-        game_command_dev = 0;
-      }
+      game_command_dev = dev_enabler(game_command_dev);
 
       /* Enter loop */
       afficher_echiquier(g, COORDINATE_NULL);
       printf("\n\n\n");
 
       /* Developper command pass le tour*/
-    } else if (game_selector(game_command, "pass") && game_command_dev) {
+    }
+    else if (game_selector(game_command, "pass") && game_command_dev) {
 
       /* Separator */
       game_seperator();
@@ -452,7 +421,8 @@ void partie_jouer           (game_t *g) {
       printf("\n\n\n");
 
       /* Developper command file, affiche le contenu de la file */
-    } else if (game_selector(game_command, "file") && game_command_dev) {
+    }
+    else if (game_selector(game_command, "file") && game_command_dev) {
 
       /* Separator */
       game_seperator();
@@ -464,7 +434,8 @@ void partie_jouer           (game_t *g) {
       printf("\n\n\n");
 
       /* Developper command pile, affiche le contenu de la pile */
-    } else if (game_selector(game_command, "pile") && game_command_dev) {
+    }
+    else if (game_selector(game_command, "pile") && game_command_dev) {
 
       /* Separator */
       game_seperator();
@@ -476,17 +447,14 @@ void partie_jouer           (game_t *g) {
       printf("\n\n\n");
 
       /* Developper command cell, permet d'inspecter les données de la case */
-    } else if (game_selector(game_command, "cell") && game_command_dev) {
+    }
+    else if (game_selector(game_command, "cell") && game_command_dev) {
 
       /* Input */
       /* Separator */
       game_seperator();
-      printf("Saisir les coordonnees d'une piece:\n");
 
-      /* Enter loop */
-      afficher_echiquier(g, COORDINATE_NULL);
-      printf("\n\n\n");
-      g_i = saisie_case();
+      g_i = cell_input(g,g_i);
 
       /* Separator */
       game_seperator();
@@ -498,35 +466,32 @@ void partie_jouer           (game_t *g) {
       printf("\n\n\n");
 
       /* Surrend command */
-    } else if (game_selector(game_command, "surrend")) {
+    }
+
+    else if (game_selector(game_command, "surrend")) {
 
       /* Separator */
       game_seperator();
 
       changer_joueur(g);
-      printf("Le joueur ");
 
-      if (g->player == 0) {
-        printf("Blanc");
-      } else if (g->player == 1) {
-        printf("Noir");
-      }
-
-      printf(" a gagner la partie par abandon.\n");
+      surrend(g);
 
       /* Exit loop */
       afficher_echiquier(g, COORDINATE_NULL);
       game_play = 0;
 
       /* Move command */
-    } else if (game_selector(game_command, "move")) {
+    }
+    else if (game_selector(game_command, "move")) {
 
       /* Input : Tant que les coordonées d'entrée ne sont pas correcte, on reste
        * dans la boucle*/
       do {
         /* Separator */
         game_seperator();
-        printf("Saisir les coordonnées d'une piece:\n");
+
+        print__select_piece();
 
         /* Enter loop */
         afficher_echiquier(g, COORDINATE_NULL);
@@ -540,14 +505,8 @@ void partie_jouer           (game_t *g) {
       do {
         /* Separator */
         game_seperator();
-        printf("Vous avez selectionner la piece '");
-        piece_afficher(g->board[g_i.x][g_i.y]);
-        printf("' de coordonnees (%d;%d) du joueur ", g_i.x, g_i.y);
-        printf("%d.", g->board[g_i.x][g_i.y].color);
-        printf("\n\nSi vous voulez parachuter un pion et qu'il n'y a pas "
-               "d'étoile, "
-               "saisissez 42, 42\n");
-        printf("\nSaisir les coordonnees du movement:\n");
+
+        selected_piece(g,g_i);
 
         /* Enter loop */
         afficher_echiquier(g, g_i);
@@ -766,14 +725,9 @@ void partie_jouer           (game_t *g) {
     }
 
     else {
-
       /* Separator */
       game_seperator();
-
-      printf("'%s' n'est pas reconnu comme une commande,\nsaisissez 'help' "
-             "pour en savoir plus sur les commandes.\n",
-             game_command);
-
+      unknow_cmd(game_command);
       /* Enter loop */
       afficher_echiquier(g, COORDINATE_NULL);
       printf("\n\n\n");

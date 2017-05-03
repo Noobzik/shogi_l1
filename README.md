@@ -1,8 +1,8 @@
 # README #
 
-*(Chargé de TD) cf : "Mise en route" pour le fonctionnement du projet
+*(Chargé de TD) cf : "Mise en route" pour le fonctionnement du projet*
 
- Merci de lire le rapport nommée Report.pdf pour les groupes + numéro étudiants*
+*Merci de lire le rapport nommée Report.pdf pour les groupes + numéro étudiants*
 
 ### Projet Programmation Impérative 2017  Guide de développement ###
 ***
@@ -279,7 +279,7 @@ Je vous conseil fortement de coder avec [Atom](http://atom.io) en installant les
 *   Pour eviter de passer sur le terminal pour regler les Warning et les erreurs [linter](https://atom.io/packages/linter) et [linter-gcc](https://atom.io/packages/linter-gcc)
 *   Pour vous retrouver dans le programme long [minimap](https://atom.io/packages/minimap)
 *   Pour afficher les couleurs d'erreurs dans la minimap [minimap-linter](https://atom.io/packages/minimap-linter)
-*   Pour clang-format, il faut avoir installé clang au préalable
+*   Pour clang-format, il faut avoir installé clang au préalable (déconseillée maintenant, application norme 42)
 
 ```
 #!bash

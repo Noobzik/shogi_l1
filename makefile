@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: NoobZik <rakib.hernandez@gmail.com>        +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2017/05/03 21:53:36 by NoobZik           #+#    #+#              #
+#    Updated: 2017/05/03 21:53:38 by NoobZik          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 # Projet imcopilable avec C90, n'essayez pas de compiler sur windows... J'en ai fais les frais
 # Indication du compilateur
 CC=gcc
@@ -13,7 +25,7 @@ CFLAGS = -g -O3 $(WARNING) -std=c11
 # On force la derniere norme de compilation qui est C11
 
 #Liste des fichiers *.o à rassembler en un executable
-FICHIER = game.o piece.o file.o pile.o mouvement.o debug.o restriction.o sauvegardes.o main.o
+FICHIER = game.o piece.o file.o pile.o mouvement.o debug.o restriction.o sauvegardes.o display.o main.o
 
 #Programme après la compilation
 OUT = shogi
@@ -53,6 +65,9 @@ debug.o:src/debug.c
 
 sauvegardes.o:src/sauvegardes.c
 	$(CCSEP) src/sauvegardes.c
+
+display.o:src/display.c
+	$(CCSEP) src/display.c
 
 main.o:main.c
 	$(CCSEP) main.c

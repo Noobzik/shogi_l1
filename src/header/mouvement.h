@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mouvement.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: NoobZik <rakib.hernandez@gmail.com>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/04/30 21:04:06 by NoobZik           #+#    #+#             */
+/*   Updated: 2017/05/03 20:32:39 by NoobZik          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #ifndef SHOGI_MOUVEMENT_H
 #define SHOGI_MOUVEMENT_H
 
@@ -17,11 +28,11 @@ int     movement_valid_win                  (game_t *g, coordinate_t coordinate_
 /****************** Bloc des validations des déplacements   *****************-*/
 
 int     deplacement_valide_pion             (game_t *g, coordinate_t ci, coordinate_t co);
-int     deplacement_valide_tour             (coordinate_t ci, coordinate_t co);
+int     deplacement_valide_tour             (game_t *g, coordinate_t ci, coordinate_t co);
 int     deplacement_valide_cavalier         (game_t *g, coordinate_t ci, coordinate_t co);
-int     deplacement_valide_fou              (coordinate_t ci, coordinate_t co);
+int     deplacement_valide_fou              (game_t *g, coordinate_t ci, coordinate_t co);
 
-int     deplacement_valide_roi              (coordinate_t ci, coordinate_t co);
+int     deplacement_valide_roi              (game_t *g, coordinate_t ci, coordinate_t co);
 int     deplacement_valide_gold             (game_t *g, coordinate_t ci, coordinate_t co);
 int     deplacement_valide_silver           (game_t *g, coordinate_t ci, coordinate_t co);
 int     deplacement_valide_lancier          (game_t *g, coordinate_t ci, coordinate_t co);
@@ -30,9 +41,9 @@ int     deplacement_valide_parachutage      (game_t *g, coordinate_t ci, coordin
 /**************** Debut des validations des déplacements  PROMU *************/
 
 int     deplacement_valide_pion_promu       (game_t *g, coordinate_t ci, coordinate_t co);
-int     deplacement_valide_tour_promu       (coordinate_t ci, coordinate_t co);
+int     deplacement_valide_tour_promu       (game_t *g, coordinate_t ci, coordinate_t co);
 int     deplacement_valide_cavalier_promu   (game_t *g, coordinate_t ci, coordinate_t co);
-int     deplacement_valide_fou_promu        (coordinate_t ci, coordinate_t co);
+int     deplacement_valide_fou_promu        (game_t *g, coordinate_t ci, coordinate_t co);
 int     deplacement_valide_silver_promu     (game_t *g, coordinate_t ci,coordinate_t co);
 int     deplacement_valide_lancier_promu    (game_t *g, coordinate_t ci,coordinate_t co);
 

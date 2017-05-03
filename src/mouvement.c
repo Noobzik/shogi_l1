@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mouvement.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: NoobZik <rakib.hernandez@gmail.com>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/04/30 21:04:53 by NoobZik           #+#    #+#             */
+/*   Updated: 2017/05/03 21:47:54 by NoobZik          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "header/mouvement.h"
 #include "header/restriction.h"
 
@@ -5,6 +16,34 @@
 #include <string.h>
 #define MAX_CHAR 256
 
+/*
+ ** list_fct
+ ** suppression du switch case
+ ** Elle comprends l'ensembles de fonctions en rapport avec les déplacements
+ ** Ceci est un tableau de pointeurs
+ ** @params : game_t        -     *g
+ **           coordinate_t  -      ci
+ **           coordinate_t  -      co
+ ** @return : int tab
+ */
+int (*list_fct[16])(game_t*,coordinate_t,coordinate_t) = {
+  0,
+  deplacement_valide_roi,
+  deplacement_valide_tour,
+  deplacement_valide_fou,
+  deplacement_valide_gold,
+  deplacement_valide_silver,
+  deplacement_valide_cavalier,
+  deplacement_valide_lancier,
+  deplacement_valide_pion,
+  deplacement_valide_pion_promu,
+  deplacement_valide_lancier_promu,
+  deplacement_valide_cavalier_promu,
+  deplacement_valide_fou_promu,
+  deplacement_valide_tour_promu,
+  deplacement_valide_silver_promu,
+  0
+};
 /********************************** INDEX *************************************/
 /*    1) Bloc de validation d'entré et de sortie (valid_input et valid_output)
  *    2) Bloc de deplacement_valide et valide_win
@@ -70,11 +109,10 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
 
 
   if (((ci.x != co.x || ci.y != co.y) &&
-       (g->board[ci.x][ci.y].color != g->board[co.x][co.y].color)) ||
-      /* En cas de parachutage impossible */
-      (co.x != 42 && co.y != 42)) {
+       (g->board[ci.x][ci.y].color !=
+          g->board[co.x][co.y].color)) ||
+          (co.x != 42 && co.y != 42))   {
 
-        /* Cas de parachutage, Elle ne doit pas faire appele à deplacement valide*/
         if (((ci.x == 10 && (ci.y < 11 && ci.y >= 0)) ||
              (ci.y == 10 && (ci.x < 11 && ci.x >= 0)) ||
              (ci.x == 0  && (ci.y < 11 && ci.y >=0))  ||
@@ -85,9 +123,9 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
               return;
         }
 
-    switch (g->board[ci.x][ci.y].type) {
-      {
-      case PION:
+  switch (g->board[ci.x][ci.y].type) {
+    {
+    case PION:
 
         if (deplacement_valide_pion(g, ci, co) && restriction_detector(g, co)) {
 
@@ -102,9 +140,8 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
 
         break;
       }
-
-      {
-      case PION_PROMU:
+    {
+    case PION_PROMU:
         if (deplacement_valide_pion_promu(g, ci, co) &&
             restriction_detector(g, co)) {
 
@@ -120,13 +157,10 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
         }
         break;
       }
+    {
+    case TOUR:
 
-      {
-      case TOUR:
-
-        /* Sinon ...*/
-
-        if (deplacement_valide_tour(ci, co) && restriction_detector(g, co)) {
+        if (deplacement_valide_tour(g, ci, co) && restriction_detector(g, co)) {
 
           deplacement_apply(g, ci, co);
 
@@ -140,10 +174,10 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
 
         break;
       }
-      {
-      case TOUR_PROMU:
+    {
+    case TOUR_PROMU:
 
-        if (deplacement_valide_tour_promu(ci, co) &&
+        if (deplacement_valide_tour_promu(g, ci, co) &&
             restriction_detector(g, co)) {
 
           deplacement_apply(g, ci, co);
@@ -159,8 +193,8 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
 
         break;
       }
-      {
-      case CAVALIER:
+    {
+    case CAVALIER:
 
         if (deplacement_valide_cavalier(g, ci, co) &&
             restriction_detector(g, co)) {
@@ -177,8 +211,8 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
 
         break;
       }
-      {
-      case CAVALIER_PROMU:
+    {
+    case CAVALIER_PROMU:
 
         if (deplacement_valide_cavalier_promu(g, ci, co) &&
             restriction_detector(g, co)) {
@@ -195,10 +229,10 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
 
         break;
       }
-      {
-      case FOU:
+    {
+    case FOU:
 
-        if (deplacement_valide_fou(ci, co) && restriction_detector(g, co)) {
+        if (deplacement_valide_fou(g, ci, co) && restriction_detector(g, co)) {
 
           deplacement_apply(g, ci, co);
 
@@ -212,10 +246,10 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
 
         break;
       }
-      {
-      case FOU_PROMU:
+    {
+    case FOU_PROMU:
 
-        if (deplacement_valide_fou_promu(ci, co) &&
+        if (deplacement_valide_fou_promu(g, ci, co) &&
             restriction_detector(g, co)) {
 
           deplacement_apply(g, ci, co);
@@ -231,8 +265,8 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
 
         break;
       }
-      {
-      case GOLD:
+    {
+    case GOLD:
 
         if (deplacement_valide_gold(g, ci, co) && restriction_detector(g, co)) {
 
@@ -246,8 +280,8 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
 
         break;
       }
-      {
-      case SILVER:
+    {
+    case SILVER:
 
         if (deplacement_valide_silver(g, ci, co) &&
             restriction_detector(g, co)) {
@@ -261,8 +295,8 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
 
         break;
       }
-      {
-      case SILVER_PROMU:
+    {
+    case SILVER_PROMU:
 
         if (deplacement_valide_gold(g, ci, co) && restriction_detector(g, co)) {
 
@@ -279,10 +313,10 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
 
         break;
       }
-      {
-      case ROI:
+    {
+    case ROI:
 
-        if (deplacement_valide_roi(ci, co) && restriction_detector(g, co)) {
+        if (deplacement_valide_roi(g, ci, co) && restriction_detector(g, co)) {
 
           deplacement_apply(g, ci, co);
 
@@ -296,8 +330,8 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
 
         break;
       }
-      {
-      case LANCIER:
+    {
+    case LANCIER:
         if (deplacement_valide_lancier(g, ci, co) &&
             restriction_detector(g, co)) {
 
@@ -312,8 +346,8 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
         }
         break;
       }
-      {
-      case LANCIER_PROMU:
+    {
+    case LANCIER_PROMU:
         if (deplacement_valide_lancier_promu(g, ci, co) &&
             restriction_detector(g, co)) {
 
@@ -328,8 +362,8 @@ void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
           printf("Le déplacement du LANCIER_PROMU à échoué\n");
         }
       }
-      {
-      default:
+    {
+    default:
         break;
       }
     }
@@ -416,7 +450,8 @@ int deplacement_valide_pion             (game_t *g, coordinate_t ci, coordinate_
  *        coordinate_t -   co
  * @return int
  */
-int deplacement_valide_tour             (coordinate_t ci, coordinate_t co) {
+int deplacement_valide_tour             (game_t *g, coordinate_t ci, coordinate_t co) {
+  (void) g;
   return (ci.x == co.x || ci.y == co.y) ? 1 : 0;
 }
 
@@ -468,11 +503,12 @@ int deplacement_valide_cavalier         (game_t *g, coordinate_t ci, coordinate_
  *          coordinate_t -   co
  * @return int
  */
-int deplacement_valide_fou              (coordinate_t ci, coordinate_t co) {
+int deplacement_valide_fou              (game_t *g, coordinate_t ci, coordinate_t co) {
   int movement_1_tmp;
   int movement_2_tmp;
   int movement_1_bis_tmp;
   int movement_2_bis_tmp;
+  (void) g;
 
   /* Initialize */
 
@@ -501,7 +537,8 @@ int deplacement_valide_fou              (coordinate_t ci, coordinate_t co) {
  *              coordinate_t - co
  * @return      int
  */
-int deplacement_valide_roi              (coordinate_t ci, coordinate_t co) {
+int deplacement_valide_roi              (game_t *g, coordinate_t ci, coordinate_t co) {
+  (void) g;
 
   /* vertical checking */
   if (ci.x - 1 == co.x || ci.x + 1 == co.x || ci.x == co.x) {
@@ -649,8 +686,9 @@ int deplacement_valide_pion_promu       (game_t *g, coordinate_t ci, coordinate_
  *                  coordinate_t    -       co
  *  @return:        int
  */
-int deplacement_valide_tour_promu       (coordinate_t ci, coordinate_t co) {
-  return (deplacement_valide_tour(ci, co) || deplacement_valide_roi(ci, co));
+int deplacement_valide_tour_promu       (game_t *g, coordinate_t ci, coordinate_t co) {
+  (void) g;
+  return (deplacement_valide_tour(g, ci, co) || deplacement_valide_roi(g, ci, co));
 }
 
 /** deplacement_valide_cavalier_promu
@@ -672,8 +710,9 @@ int deplacement_valide_cavalier_promu   (game_t *g, coordinate_t ci,
  *                  coordinate_t    -       co
  *  @return:        int
  */
-int deplacement_valide_fou_promu        (coordinate_t ci, coordinate_t co) {
-  return (deplacement_valide_fou(ci, co) || deplacement_valide_roi(ci, co));
+int deplacement_valide_fou_promu        (game_t *g, coordinate_t ci, coordinate_t co) {
+  (void) g;
+  return (deplacement_valide_fou(g, ci, co) || deplacement_valide_roi(g, ci, co));
 }
 
 /** deplacement_valide_silver_promu
@@ -712,89 +751,22 @@ int deplacement_valide_lancier_promu    (game_t *g, coordinate_t ci,
  *
  * @return int
  */
-int movement_valid_helper               (game_t *g, coordinate_t ci, coordinate_t co) {
-  switch (g->board[ci.x][ci.y].type) {
-    {
-    case PION:
-      return (deplacement_valide_pion(g, ci, co)) ? 1 : 0;
-      break;
-    }
-    {
-    case PION_PROMU:
-      return (deplacement_valide_pion_promu(g, ci, co)) ? 1 : 0;
-      break;
-    }
-    /* Je ne pense pas que ce cas est nécessaire */
-    {
-    case TOUR:
-      return (deplacement_valide_tour(ci, co)) ? 1 : 0;
-      break;
-    }
-    {
-    case TOUR_PROMU:
-      return (deplacement_valide_roi(ci, co)) ? 1 : 0;
-      break;
-    }
-    {
-    case CAVALIER:
 
-      return (deplacement_valide_cavalier(g, ci, co)) ? 1 : 0;
+/*
+** movement_valid_helper
+** En fonction de la pièce, renvoie si le déplacements est valide ou pas
+** Suppression du switch_case qui fait 40 milliards de ligne
+** @params :  game_t            -   *g
+**            coordinate_t      -    ci
+**            coordinate_t      -    co
+** @return :  int
+*/
+int movement_valid_helper               (game_t *g, coordinate_t ci, coordinate_t co){
+  int (*fonctionDeCalcul)               (game_t *,coordinate_t, coordinate_t);
+  int type = g->board[ci.x][ci.y].type;
 
-      break;
-    }
-    {
-    case CAVALIER_PROMU:
-      return (deplacement_valide_cavalier_promu(g, ci, co)) ? 1 : 0;
-      break;
-    }
-    /* Je ne pense pas que ce cas est nécessaire */
-    {
-    case FOU:
-
-      return (deplacement_valide_fou(ci, co)) ? 1 : 0;
-      break;
-    }
-    {
-    case FOU_PROMU:
-      return (deplacement_valide_roi(ci, co)) ? 1 : 0;
-      break;
-    }
-    {
-    case GOLD:
-
-      return (deplacement_valide_gold(g, ci, co)) ? 1 : 0;
-      break;
-    }
-    {
-    case ROI:
-
-      return (deplacement_valide_roi(ci, co)) ? 1 : 0;
-      break;
-    }
-    {
-    case SILVER:
-      return (deplacement_valide_silver(g, ci, co)) ? 1 : 0;
-      break;
-    }
-    {
-    case SILVER_PROMU:
-      return (deplacement_valide_silver_promu(g, ci, co)) ? 1 : 0;
-      break;
-    }
-    {
-    case LANCIER:
-      return (deplacement_valide_lancier(g, ci, co)) ? 1 : 0;
-    }
-    {
-    case LANCIER_PROMU:
-      return (deplacement_valide_lancier_promu(g, ci, co)) ? 1 : 0;
-    }
-    {
-    default:
-      return 0;
-    }
-  }
-  return 0;
+  fonctionDeCalcul = list_fct[type];
+  return ((*fonctionDeCalcul)(g,ci,co));
 }
 
 /** movement is_promoted

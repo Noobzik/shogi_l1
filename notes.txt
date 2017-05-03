@@ -1,6 +1,7 @@
-Version TL:DR (Too Long, didn't read / Trop long, je n'ai pas lu)
-tapez make
-ensuite help
-???
-Voila.
-Plus de détail README.md
+﻿Version TL:DR (Too Long, didn't read / Trop long, je n'ai pas lu)
+Etape 1 :tapez make
+Etape 2 :tappez help
+Etape 3 :???
+Etape 4 :Profit
+
+Plus de détail dans README.md (s'ouvre comme un texte)
