@@ -6,7 +6,7 @@
 /*   By: NoobZik <rakib.hernandez@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/30 21:04:53 by NoobZik           #+#    #+#             */
-/*   Updated: 2017/05/03 21:47:54 by NoobZik          ###   ########.fr       */
+/*   Updated: 2017/05/10 03:36:07 by NoobZik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "header/mouvement.h"
@@ -44,6 +44,18 @@ int (*list_fct[16])(game_t*,coordinate_t,coordinate_t) = {
   deplacement_valide_silver_promu,
   0
 };
+
+char const *p_list[16] = {"Vide", "Roi", "Tour", "Fou", "Gold", "Silver",
+                        "Cavalier", "Lanicer", "Pion", "Pion Promu",
+                        "Lancier Promu", "Cavalier Promu", "Fou Promu",
+                        "Tour Promu", "Silver Promu", "Select"};
+
+int check_reserve       (coordinate_t ci){
+  return ((ci.x == 10 && (ci.y < 11 && ci.y >= 0)) ||
+   (ci.y == 10 && (ci.x < 11 && ci.x >= 0)) ||
+   (ci.x == 0  && (ci.y < 11 && ci.y >=0))  ||
+   (ci.y == 0  && (ci.x < 11 && ci.x >=0)))? 1 : 0;
+}
 /********************************** INDEX *************************************/
 /*    1) Bloc de validation d'entré et de sortie (valid_input et valid_output)
  *    2) Bloc de deplacement_valide et valide_win
@@ -87,288 +99,38 @@ int movement_valid_output   (coordinate_t c) {
   return 0;
 }
 
-/** deplacement_valide
- *  Permet de valider les deplacement en fonctiont des coordonne de depart (pour
- * Parachutage) et appelle la fonction deplacement valide adéquate pour les
- * pieces
- *
- * @params:     game_t       - g
- *              coordinate_t - ci
- *              coordinate_t - co
- * @return:     (void)
- */
+/*
+** deplacement_valide
+** Permet de valider les deplacement en fonctiont des coordonne de depart (pour
+** Parachutage) et appelle la fonction deplacement valide adéquate pour les
+** pieces
+**
+** @params:     game_t       - g
+**              coordinate_t - ci
+**              coordinate_t - co
+** @return:     (void)
+*/
 void deplacement_valide     (game_t *g, coordinate_t ci, coordinate_t co) {
-
-  /* Si cette condition n'est pas vérifié, alors sa déselectionne la piece
-   * selectionné*/
-
-   /* Le contenue du switch_case est assez répétitif
-   *  Condition : Vérifier que le déplacement est valide ET que la case
-   *  d'arrivé correspond à une case SELECT
-   */
-
-
-  if (((ci.x != co.x || ci.y != co.y) &&
-       (g->board[ci.x][ci.y].color !=
-          g->board[co.x][co.y].color)) ||
-          (co.x != 42 && co.y != 42))   {
-
-        if (((ci.x == 10 && (ci.y < 11 && ci.y >= 0)) ||
-             (ci.y == 10 && (ci.x < 11 && ci.x >= 0)) ||
-             (ci.x == 0  && (ci.y < 11 && ci.y >=0))  ||
-             (ci.y == 0  && (ci.x < 11 && ci.x >=0))) &&
-             restriction_detector_parachute(g, co))           {
-              deplacement_apply(g, ci, co);
-              printf("Le déplacement de type parachutage à été effectué\n");
-              return;
-        }
-
-  switch (g->board[ci.x][ci.y].type) {
-    {
-    case PION:
-
-        if (deplacement_valide_pion(g, ci, co) && restriction_detector(g, co)) {
-
-          deplacement_apply(g, ci, co);
-          printf("Le PION à été deplacé de (%d;%d) à (%d;%d) avec succès.\n",
-                 ci.x, ci.y, co.x, co.y);
-        }
-
-        else {
-          printf("Le déplacement du PION à échoué.\n");
-        }
-
-        break;
-      }
-    {
-    case PION_PROMU:
-        if (deplacement_valide_pion_promu(g, ci, co) &&
-            restriction_detector(g, co)) {
-
-          deplacement_apply(g, ci, co);
-
-          printf(
-              "Le PION_PROMU à été deplace de (%d;%d) à (%d;%d) avec succès.\n",
-              ci.x, ci.y, co.x, co.y);
-        }
-
-        else {
-          printf("Le déplacement du PION_PROMU à échoué\n");
-        }
-        break;
-      }
-    {
-    case TOUR:
-
-        if (deplacement_valide_tour(g, ci, co) && restriction_detector(g, co)) {
-
-          deplacement_apply(g, ci, co);
-
-          printf("La tour à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
-                 ci.x, ci.y, co.x, co.y);
-        }
-
-        else {
-          printf("Le deplacement de la tour à échoué.\n");
-        }
-
-        break;
-      }
-    {
-    case TOUR_PROMU:
-
-        if (deplacement_valide_tour_promu(g, ci, co) &&
-            restriction_detector(g, co)) {
-
-          deplacement_apply(g, ci, co);
-
-          printf(
-              "La TOUR_PROMU à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
-              ci.x, ci.y, co.x, co.y);
-        }
-
-        else {
-          printf("Le déplacement de la TOUR_PROMU à échoué.\n");
-        }
-
-        break;
-      }
-    {
-    case CAVALIER:
-
-        if (deplacement_valide_cavalier(g, ci, co) &&
-            restriction_detector(g, co)) {
-
-          deplacement_apply(g, ci, co);
-          printf(
-              "Le cavalier à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
-              ci.x, ci.y, co.x, co.y);
-        }
-
-        else {
-          printf("Le deplacement du cavalier à échoué.\n");
-        }
-
-        break;
-      }
-    {
-    case CAVALIER_PROMU:
-
-        if (deplacement_valide_cavalier_promu(g, ci, co) &&
-            restriction_detector(g, co)) {
-
-          deplacement_apply(g, ci, co);
-          printf("Le CAVALIER_PROMU à été déplacé de (%d;%d) a (%d;%d) avec "
-                 "succès.\n",
-                 ci.x, ci.y, co.x, co.y);
-        }
-
-        else {
-          printf("Le déplacement du CAVALIER_PROMU à échoué.\n");
-        }
-
-        break;
-      }
-    {
-    case FOU:
-
-        if (deplacement_valide_fou(g, ci, co) && restriction_detector(g, co)) {
-
-          deplacement_apply(g, ci, co);
-
-          printf("Le FOU à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
-                 ci.x, ci.y, co.x, co.y);
-        }
-
-        else {
-          printf("Le deplacement du FOU à échoué.\n");
-        }
-
-        break;
-      }
-    {
-    case FOU_PROMU:
-
-        if (deplacement_valide_fou_promu(g, ci, co) &&
-            restriction_detector(g, co)) {
-
-          deplacement_apply(g, ci, co);
-
-          printf(
-              "Le FOU_PROMU à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
-              ci.x, ci.y, co.x, co.y);
-        }
-
-        else {
-          printf("Le deplacement du FOU_PROMU à échoué.\n");
-        }
-
-        break;
-      }
-    {
-    case GOLD:
-
-        if (deplacement_valide_gold(g, ci, co) && restriction_detector(g, co)) {
-
-          deplacement_apply(g, ci, co);
-
-          printf("Le GOLD à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
-                 ci.x, ci.y, co.x, co.y);
-        } else {
-          printf("Le déplacement du GOLD à échoué.\n");
-        }
-
-        break;
-      }
-    {
-    case SILVER:
-
-        if (deplacement_valide_silver(g, ci, co) &&
-            restriction_detector(g, co)) {
-
-          deplacement_apply(g, ci, co);
-          printf("Le SILVER à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
-                 ci.x, ci.y, co.x, co.y);
-        } else {
-          printf("Le déplacement du SILVER à échoué.\n");
-        }
-
-        break;
-      }
-    {
-    case SILVER_PROMU:
-
-        if (deplacement_valide_gold(g, ci, co) && restriction_detector(g, co)) {
-
-          deplacement_apply(g, ci, co);
-
-          printf("Le SILVER_PROMU à été déplacé de (%d;%d) a (%d;%d) avec "
-                 "succès.\n",
-                 ci.x, ci.y, co.x, co.y);
-        }
-
-        else {
-          printf("Le déplacement du SILVER_PROMU à échoué.\n");
-        }
-
-        break;
-      }
-    {
-    case ROI:
-
-        if (deplacement_valide_roi(g, ci, co) && restriction_detector(g, co)) {
-
-          deplacement_apply(g, ci, co);
-
-          printf("Le ROI à été déplacé de (%d;%d) a (%d;%d) avec succès.\n",
-                 ci.x, ci.y, co.x, co.y);
-        }
-
-        else {
-          printf("Le deplacement du ROI à échoué.\n");
-        }
-
-        break;
-      }
-    {
-    case LANCIER:
-        if (deplacement_valide_lancier(g, ci, co) &&
-            restriction_detector(g, co)) {
-
-          deplacement_apply(g, ci, co);
-
-          printf("Le LANCIER à été déplacé de (%d;%d) à (%d;%d) avec succès\n",
-                 ci.x, ci.y, co.x, co.y);
-        }
-
-        else {
-          printf("Le déplacement du LANCIER à échoué\n");
-        }
-        break;
-      }
-    {
-    case LANCIER_PROMU:
-        if (deplacement_valide_lancier_promu(g, ci, co) &&
-            restriction_detector(g, co)) {
-
-          deplacement_apply(g, ci, co);
-
-          printf("Le LANCIER_PROMU à été déplacé de (%d;%d) à (%d;%d) avec "
-                 "succès\n",
-                 ci.x, ci.y, co.x, co.y);
-        }
-
-        else {
-          printf("Le déplacement du LANCIER_PROMU à échoué\n");
-        }
-      }
-    {
-    default:
-        break;
-      }
+  int (*fonctionDeCalcul)   (game_t *,coordinate_t, coordinate_t);
+  int type = g->board[ci.x][ci.y].type;
+
+  fonctionDeCalcul = list_fct[type];
+
+  if (((ci.x != co.x || ci.y != co.y) && (g->board[ci.x][ci.y].color !=
+        g->board[co.x][co.y].color)) || (co.x != 42 && co.y != 42))   {
+    if (check_reserve(ci) && restriction_detector_parachute(g, co))        {
+      deplacement_apply(g, ci, co);
+      printf("Le déplacement de type parachutage à été effectué\n");
+      return;
     }
+    if( (*fonctionDeCalcul)(g, ci, co) && restriction_detector(g, co)){
+      printf("%s à été déplacé de (%d:%d) à (%d:%d) avec succès.\n",
+            p_list[g->board[ci.x][ci.y].type], ci.x, ci.y, co.x, co.y);
+      deplacement_apply(g, ci, co);
+    }
+    else printf("Le déplacement %s à échoué\n", p_list[g->board[ci.x][ci.y].type]);
+    return;
   }
-
   else {
     printf("Le deplacement à été annulée.\n");
   }
@@ -1080,12 +842,10 @@ void annuler_deplacement                (game_t *g) {
   coordinate_t                          mi_tmp;
   piece_t                               p_r_tmp;
   file_element_t *                      be_tmp;
-
-  /* Comme pour la reserve, ces deux Variables vont servir de sortir ou entrer
-   * dans la boucle */
-  int x, y, test = 1, test_bis = 0;
-
-  /* Extraction du dernier coup joué de la file et initialisation */
+  int                                   x,
+                                        y,
+                                        test = 1,
+                                        test_bis = 0;
 
   be_tmp = file_unthread(g->file);
   mo_tmp = be_tmp->movement.output;
@@ -1095,7 +855,6 @@ void annuler_deplacement                (game_t *g) {
 
   if (be_tmp->promotion)
     g->board[mo_tmp.x][mo_tmp.y] = demote_grant(g->board[mo_tmp.x][mo_tmp.y]);
-
 
   /* Vérification s'il le mouvement precedent est un mouvement de capture*/
 

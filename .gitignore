@@ -1,3 +1,4 @@
 shogi
 *.gch
 *.o
+vgcore.*

@@ -6,7 +6,7 @@
 /*   By: NoobZik <rakib.hernandez@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/30 21:05:03 by NoobZik           #+#    #+#             */
-/*   Updated: 2017/04/30 21:05:04 by NoobZik          ###   ########.fr       */
+/*   Updated: 2017/05/10 03:34:28 by NoobZik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "header/restriction.h"
@@ -27,6 +27,24 @@
  */
 coordinate_t mc_tmp;
 
+void (*list_fct_res[16])(game_t* , coordinate_t) = {
+  0,
+  movement_restriction_general, /* Roi */
+  movement_restriction_tour,
+  movement_restriction_fou,
+  movement_restriction_general, /* Gold*/
+  movement_restriction_general, /* Silver */
+  movement_restriction_general, /* Cavalier */
+  movement_restriction_lancier,
+  movement_restriction_general, /* Pion */
+  movement_restriction_general, /* Pion promu*/
+  movement_restriction_general, /* Lanicer promu */
+  movement_restriction_general, /* Cavalier Promu */
+  movement_restriction_fou_promu,
+  movement_restriction_tour_promu,
+  movement_restriction_general, /*  Silver promu */
+  0
+};
 /** movement_restriction
  *  En fonction des coordonée, appele la restriction adéquate
  * @param:  game_t       - *g
@@ -34,106 +52,29 @@ coordinate_t mc_tmp;
  * @return: (void)
  */
 void movement_restriction           (game_t *g, coordinate_t ci) {
+  void (*fonctionDeCalcul)   (game_t *,coordinate_t);
+  int type = g->board[ci.x][ci.y].type;
 
+  fonctionDeCalcul = list_fct_res[type];
   /* Develement Restrictions Parachutage */
   /* Au cas ou vous avez oublié (Rapport), jsuis gentil jfais un rappel :
    * Cette condition vérifie si les coordonées d'entré font partie de la reserve
    */
 
-  if ((ci.x == 10 && (ci.y < 11 && ci.y >= 0)) ||
-      (ci.y == 10 && (ci.x < 11 && ci.x >= 0)) ||
-      (ci.x == 0  && (ci.y < 11 && ci.y >=0))  ||
-      (ci.y == 0  && (ci.x < 11 && ci.x >=0)))  {
+  if (check_reserve(ci))  {
     if (g->board[ci.x][ci.y].type == PION) {
       movement_restriction_pion_parachute(g);
-    } else {
-      movement_restriction_parachute(g);
+      return;
     }
+    movement_restriction_parachute(g);
+    return;
   }
   /* Fin restriction Parachutage*/
 
-  else {
-    switch (g->board[ci.x][ci.y].type) {
-      {
-      case PION:
-        movement_restriction_general(g, ci);
-        break;
-      }
-      {
-      case TOUR:
-        movement_restriction_tour(g, ci);
-        break;
-      }
-      {
-      case CAVALIER:
-        movement_restriction_general(g, ci);
-        break;
-      }
-      {
-      case FOU:
-        movement_restriction_fou(g, ci);
-        break;
-      }
-      {
-      case ROI:
-        movement_restriction_general(g, ci);
-        break;
-      }
-      {
-      case GOLD:
-        movement_restriction_general(g, ci);
-        break;
-      }
-      {
-      case SILVER:
-        movement_restriction_general(g, ci);
-        break;
-      }
-      {
-      case LANCIER:
-        movement_restriction_lancier(g, ci);
-        break;
-      }
-      {
-      case PION_PROMU:
-        movement_restriction_general(g, ci);
-        break;
-      }
-      {
-      case TOUR_PROMU:
-        movement_restriction_tour(g, ci);
-        movement_restriction_general(g, ci);
+  (* fonctionDeCalcul)(g, ci);
 
-        break;
-      }
-      {
-      case CAVALIER_PROMU:
-        movement_restriction_general(g, ci);
-        break;
-      }
-      {
-      case FOU_PROMU:
-        movement_restriction_fou(g, ci);
-        movement_restriction_general(g, ci);
-        break;
-      }
-      {
-      case SILVER_PROMU:
-        movement_restriction_general(g, ci);
-        break;
-      }
-      {
-      case LANCIER_PROMU:
-        movement_restriction_general(g, ci);
-        break;
-      }
-      {
-      default:
-        break;
-      }
-    }
-  }
 }
+
 
 /** movement_restriction_general
  * Bah, si la case du restriction est valide, on affiche l'aide visuel SELECT
@@ -208,6 +149,17 @@ void movement_restriction_tour      (game_t *g, coordinate_t ci) {
   }
 }
 
+/*
+**  movement_restriction_tour_promu
+**  Restrictions des mouvement de la tour + gold
+**  @params:  game_t        -   *g
+**            coordinate_t  -   ci
+**  @return:  (void)
+*/
+void movement_restriction_tour_promu  (game_t *g, coordinate_t ci){
+  movement_restriction_tour(g, ci);
+  movement_restriction_general(g, ci);
+}
 /** movement_restriction_lancier
  * Bah, si la case du restriction est valide, on affiche l'aide visuel SELECT
  * Les lanciers peuvent seulement se déplacer sur la ligne droite devant eux.
@@ -286,7 +238,17 @@ void movement_restriction_fou       (game_t *g, coordinate_t ci) {
     g->board[mc_4_tmp.x][mc_4_tmp.y].type = SELECT;
   }
 }
-
+/*
+**  movement_restriction_fou_promu
+**  Restrictions des mouvement du fou + gold
+**  @params:  game_t        -   *g
+**            coordinate_t  -   ci
+**  @return:  (void)
+*/
+void movement_restriction_fou_promu  (game_t *g, coordinate_t ci){
+  movement_restriction_fou(g, ci);
+  movement_restriction_general(g, ci);
+}
 /** movement_restriction_destruct
  * Les cases SELECT sont remis en case VIDE
  * @params:     game_t - g

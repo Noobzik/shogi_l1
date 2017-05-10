@@ -6,7 +6,7 @@
 /*   By: NoobZik <rakib.hernandez@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/30 21:04:06 by NoobZik           #+#    #+#             */
-/*   Updated: 2017/05/03 20:32:39 by NoobZik          ###   ########.fr       */
+/*   Updated: 2017/05/10 03:35:59 by NoobZik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef SHOGI_MOUVEMENT_H
@@ -16,10 +16,16 @@
 
 #include "game.h"
 
+/*
+** p_list
+** Servant de variables pour afficher les textes
+*/
+
 /*  Usual functions */
 
 /********************* Bloc validation des entrés et sortie *******************/
 
+int     check_reserve                       (coordinate_t ci);
 int     movement_valid_input                (game_t *g, coordinate_t coordinate_v);
 int     movement_valid_output               (coordinate_t coordinate_v);
 void    deplacement_valide                  (game_t *g, coordinate_t ci, coordinate_t co);
