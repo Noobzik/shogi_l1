@@ -6,7 +6,7 @@
 /*   By: NoobZik <rakib.hernandez@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/30 21:04:57 by NoobZik           #+#    #+#             */
-/*   Updated: 2017/04/30 21:04:57 by NoobZik          ###   ########.fr       */
+/*   Updated: 2017/05/12 15:55:16 by NoobZik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "header/piece.h"
@@ -30,6 +30,10 @@
  *
  * @return piece_t
  */
+
+char tab_piece_white[17] = ".krbgsnlpdjcfta*";
+char tab_piece_black[17] = ".KRBGSNLPDJCFTA*";
+
 piece_t piece_creer         (piece_color_e c, piece_type_e t, piece_statut_e s) {
   piece_t                   res;
 
@@ -194,143 +198,9 @@ piece_t piece_identifier    (char caracter_v) {
  * @return      char
  */
 char piece_caractere        (piece_t p) {
-  if (piece_couleur(p) == 0) {
-    switch (p.type) {
-      {
-      case ROI:
-        return 'k';
-      }
-      {
-      case TOUR:
-        return 'r';
-      }
-      {
-      case FOU:
-        return 'b';
-      }
-      {
-      case GOLD:
-        return 'g';
-      }
-      {
-      case SILVER:
-        return 's';
-      }
-      {
-      case CAVALIER:
-        return 'n';
-      }
-      {
-      case LANCIER:
-        return 'l';
-      }
-      {
-      case PION:
-        return 'p';
-      }
-      {
-      case PION_PROMU:
-        return 'd'; // PION PROMU
-      }
-      {
-      case LANCIER_PROMU:
-        return 'j'; // LANCIER PROMU
-      }
-      {
-      case CAVALIER_PROMU:
-        return 'c'; // CAVALIER PROMU
-      }
-      {
-      case FOU_PROMU:
-        return 'f'; // FOU PROMU
-      }
-      {
-      case TOUR_PROMU:
-        return 't'; // TOUR PROMU
-      }
-      {
-      case SILVER_PROMU:
-        return 'a'; // SILVER PROMU
-      }
-      {
-      case SELECT:
-        return '*';
-      }
-      {
-      default:
-        return '.';
-      }
-    }
-  } else {
-    switch (p.type) {
-      {
-      case ROI:
-        return 'K';
-      }
-      {
-      case TOUR:
-        return 'R';
-      }
-      {
-      case FOU:
-        return 'B';
-      }
-      {
-      case GOLD:
-        return 'G';
-      }
-      {
-      case SILVER:
-        return 'S';
-      }
-      {
-      case CAVALIER:
-        return 'N';
-      }
-      {
-      case LANCIER:
-        return 'L';
-      }
-      {
-      case PION:
-        return 'P';
-      }
-      {
-      case PION_PROMU:
-        return 'D'; // PION PROMU
-      }
-      {
-      case LANCIER_PROMU:
-        return 'J'; // LANCIER PROMU
-      }
-      {
-      case CAVALIER_PROMU:
-        return 'C'; // CAVALIER PROMU
-      }
-      {
-      case FOU_PROMU:
-        return 'F'; // FOU PROMU
-      }
-      {
-      case TOUR_PROMU:
-        return 'T'; // TOUR PROMU
-      }
-      {
-      case SILVER_PROMU:
-        return 'A'; // SILVER PROMU
-      }
-      {
-      case SELECT:
-        return '*';
-      }
-      {
-      default:
-        return '.';
-      }
-    }
-  }
-
-  return '.';
+  if (piece_couleur(p) == 0)
+    return tab_piece_white[p.type];
+  return tab_piece_black[p.type];
 }
 
 /** piece displayer
@@ -355,42 +225,37 @@ void promote_grant          (piece_t *p) {
     {
     case PION:
       p->type = PION_PROMU;
-      p->statut = PROMU;
       break;
     }
     {
     case LANCIER:
       p->type = LANCIER_PROMU;
-      p->statut = PROMU;
       break;
     }
     {
     case CAVALIER:
       p->type = CAVALIER_PROMU;
-      p->statut = PROMU;
       break;
     }
     {
     case FOU:
       p->type = FOU_PROMU;
-      p->statut = PROMU;
       break;
     }
     {
     case TOUR:
       p->type = TOUR_PROMU;
-      p->statut = PROMU;
       break;
     }
     {
     case SILVER:
       p->type = SILVER_PROMU;
-      p->statut = PROMU;
       break;
     }
   default:
     break;
   }
+  p->statut = PROMU;
 }
 
 /** demote_grant_reserve
@@ -403,97 +268,77 @@ piece_t demote_grant_reserve(piece_t p) {
     switch (p.type) {
       {
       case PION_PROMU:
-        p.color = NOIR;
         p.type = PION;
-        p.statut = NON_PROMU;
         break;
       }
       {
       case LANCIER_PROMU:
-        p.color = NOIR;
         p.type = LANCIER;
-        p.statut = NON_PROMU;
         break;
       }
       {
       case CAVALIER_PROMU:
-        p.color = NOIR;
         p.type = CAVALIER;
-        p.statut = NON_PROMU;
         break;
       }
       {
       case FOU_PROMU:
-        p.color = NOIR;
         p.type = FOU;
-        p.statut = NON_PROMU;
         break;
       }
       {
       case TOUR_PROMU:
-        p.color = NOIR;
         p.type = TOUR;
-        p.statut = NON_PROMU;
         break;
       }
       {
       case SILVER_PROMU:
-        p.color = NOIR;
         p.type = SILVER;
-        p.statut = NON_PROMU;
         break;
       }
     default:
       break;
     }
+    p.color = NOIR;
+    p.statut = NON_PROMU;
   } else if (p.color == NOIR) {
     switch (p.type) {
       {
       case PION_PROMU:
-        p.color = BLANC;
         p.type = PION;
-        p.statut = NON_PROMU;
         break;
       }
       {
       case LANCIER_PROMU:
-        p.color = BLANC;
         p.type = LANCIER;
-        p.statut = NON_PROMU;
         break;
       }
       {
       case CAVALIER_PROMU:
-        p.color = BLANC;
         p.type = CAVALIER;
-        p.statut = NON_PROMU;
         break;
       }
       {
       case FOU_PROMU:
-        p.color = BLANC;
         p.type = FOU;
-        p.statut = NON_PROMU;
         break;
       }
       {
       case TOUR_PROMU:
-        p.color = BLANC;
         p.type = TOUR;
-        p.statut = NON_PROMU;
         break;
       }
       {
       case SILVER_PROMU:
-        p.color = BLANC;
         p.type = SILVER;
-        p.statut = NON_PROMU;
         break;
       }
     default:
       break;
     }
   }
+  p.color = BLANC;
+  p.statut = NON_PROMU;
   return p;
 }
 
@@ -507,41 +352,38 @@ piece_t demote_grant        (piece_t p) {
     {
     case PION_PROMU:
       p.type = PION;
-      p.statut = NON_PROMU;
       break;
     }
     {
     case LANCIER_PROMU:
       p.type = LANCIER;
-      p.statut = NON_PROMU;
       break;
     }
     {
     case CAVALIER_PROMU:
       p.type = CAVALIER;
-      p.statut = NON_PROMU;
       break;
     }
     {
     case FOU_PROMU:
       p.type = FOU;
-      p.statut = NON_PROMU;
       break;
     }
     {
     case TOUR_PROMU:
       p.type = TOUR;
-      p.statut = NON_PROMU;
       break;
     }
     {
     case SILVER_PROMU:
       p.type = SILVER;
-      p.statut = NON_PROMU;
       break;
     }
-  default:
-    break;
+    {
+    default:
+      break;
+    }
+    p.type = NON_PROMU;
   }
   return p;
 }
